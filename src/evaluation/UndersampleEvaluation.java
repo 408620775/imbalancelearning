@@ -37,6 +37,8 @@ public class UndersampleEvaluation extends MyEvaluation {
 		double num_tp2 = 0;
 		int numclass1 = 0;
 		int numclass2 = 0;
+		int numPredictClass1 = 0;
+		int numPredictClass2 = 0;
 		NominalPrediction np = null;
 		FastVector predictions = null;
 		FastVector cur_predictions = new FastVector();
@@ -81,6 +83,11 @@ public class UndersampleEvaluation extends MyEvaluation {
 				} else {
 					numclass2++;
 				}
+				if (np.predicted() == 0) {
+					numPredictClass1++;
+				} else {
+					numPredictClass2++;
+				}
 				if (np.actual() == np.predicted()) {
 					num_correct++;
 					if (np.actual() == 0) {
@@ -93,21 +100,21 @@ public class UndersampleEvaluation extends MyEvaluation {
 			cr.setAccuracy(num_correct / num_inst);
 			cr.setRecall1(num_tp1 / numclass1);
 			cr.setRecall2(num_tp2 / numclass2);
+			cr.setPrecision1(num_tp1 / numPredictClass1);
+			cr.setPrecision2(num_tp2 / numPredictClass2);
 			crs.addElement(cr);
-			// System.out.println(cr.accuracy+","+cr.auc+","+cr.recall1+","+cr.recall2);
+			System.out.println(cr.getRecall2() + "," + cr.getPrecision2() + ","
+					+ cr.getfMeasure2() + "," + cr.getAuc());
 			numclass1 = 0;
 			numclass2 = 0;
 			cur_predictions.removeAllElements();
 			num_correct = 0;
 			num_tp1 = 0;
 			num_tp2 = 0;
+			numPredictClass1 = 0;
+			numPredictClass2 = 0;
 		}
 		m_NumFolds = numFolds;
-
-		/*
-		 * if (classificationOutput != null) classificationOutput.printFooter();
-		 */
-
 	}
 
 }
