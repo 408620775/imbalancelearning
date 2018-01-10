@@ -6,11 +6,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.PrintUtil;
 import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
 import classification.Classification;
-import dataprocess.Util;
 
 public class Start {
 
@@ -20,19 +20,18 @@ public class Start {
         // String projects[] = { "MyLucene", "MyTomcat", "MyJedit", "MyAnt",
         // "MySynapse", "MyVoldemort", "MyItextpdf", "MyBuck", "MyFlink",
         // "MyHadoop" };
-        String[] projects = { "MyAnt", "MyBuck", "MyFlink", "MyHadoop",
+        String[] projects = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop",
                 "MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat",
-                "MyVoldemort" };
+                "MyVoldemort"};
         // String[] projects = { "MyBuck" };
-        Util util = new Util();
         String predict_result = "";
         // String[] bases = { "j48", "RF", "naivebayes", "smo" };
-        String[] bases = { "j48" };
+        String[] bases = {"j48"};
         System.out.println("Arff Fold is :" + arffPath);
         for (String base : bases) {
             String output_file = base + "Result.csv";
             String measure_name = "project, method, recall-1, precision-1, fMeasure-1, auc \n";
-            util.saveResult(measure_name, output_file);
+            PrintUtil.saveResult(measure_name, output_file);
             System.out.println(base + " for detail");
             System.out.println();
             for (int i = 0; i < projects.length; i++) {
@@ -82,7 +81,7 @@ public class Start {
                 Classification classification = new Classification(data);
                 predict_result = classification.predict(base, project, 10,
                         ins_Loc);
-                util.appendResult(predict_result, output_file);
+                PrintUtil.appendResult(predict_result, output_file);
             }
         }
 

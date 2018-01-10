@@ -17,7 +17,6 @@ import classification.bagging.BaggingClassification;
 import classification.bagging.ResampleInBaggingClassification;
 import classification.boosting.BoostingClassification;
 import classification.boosting.ResampleInBoostingClassification;
-import dataprocess.Util;
 
 public class Classification {
 
@@ -26,7 +25,6 @@ public class Classification {
 	Classifier classifier;
 	String output_file;
 	String output_file_matrix;
-	Util util = new Util();
 
 	public Classification(Instances data) {
 		this.data = data;

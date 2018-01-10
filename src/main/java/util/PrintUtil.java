@@ -1,5 +1,8 @@
 package util;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class PrintUtil {
@@ -33,4 +36,19 @@ public class PrintUtil {
         return str;
     }
 
+    public static void saveResult(String result, String file) throws IOException {
+        FileWriter fw=new FileWriter(file, false);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(result);
+        bw.flush();
+        bw.close();
+    }
+
+    public static void appendResult(String result, String file) throws IOException{
+        FileWriter fa=new FileWriter(file, true);
+        BufferedWriter ba = new BufferedWriter(fa);
+        ba.write(result);
+        ba.flush();
+        ba.close();
+    }
 }
