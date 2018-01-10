@@ -1,3 +1,5 @@
+package main;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -6,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import util.PrintUtil;
 import weka.core.AttributeStats;
 import weka.core.Instance;
@@ -13,6 +16,9 @@ import weka.core.Instances;
 import classification.Classification;
 
 public class Start {
+    private static Logger logger = Logger.getLogger(Start.class);
+    public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
+    public static String CUR_DETAIL_FILENAME = "";
 
     public static void main(String argv[]) throws Exception {
         String LOCFilePath = "LOCFiles";
@@ -27,30 +33,27 @@ public class Start {
         String predict_result = "";
         // String[] bases = { "j48", "RF", "naivebayes", "smo" };
         String[] bases = {"j48"};
-        System.out.println("Arff Fold is :" + arffPath);
+        logger.info("Arff Fold is :" + arffPath);
         for (String base : bases) {
             String output_file = base + "Result.csv";
             String measure_name = "project, method, recall-1, precision-1, fMeasure-1, auc \n";
             PrintUtil.saveResult(measure_name, output_file);
-            System.out.println(base + " for detail");
-            System.out.println();
+            logger.info(base + " for detail");
             for (int i = 0; i < projects.length; i++) {
                 String project = projects[i];
-                System.out.println(project);
-                // read in the input arff file
+                CUR_DETAIL_FILENAME = base + "_" + project;
+                logger.info(project);
                 String inputfile = arffPath + "/" + project + ".arff";
-                // String inputfile = arffPath + "/" + project + ".arff";
                 FileReader fr = new FileReader(inputfile);
                 BufferedReader br = new BufferedReader(fr);
                 Instances data = new Instances(br);
                 data.setClassIndex(data.numAttributes() - 1);
-                // print out number of instances
-                System.out.println("Total number of instances in Arff file : "
+                logger.info("Total number of instances in Arff file : "
                         + data.numInstances());
                 AttributeStats as = data
                         .attributeStats(data.numAttributes() - 1);
                 int count[] = as.nominalCounts;
-                System.out.println("Number of buggy instances: " + count[1]);
+                logger.info("Number of buggy instances: " + count[1]);
 
                 List<List<Integer>> changedLineList = new ArrayList<List<Integer>>();
                 br = new BufferedReader(new FileReader(new File(LOCFilePath
@@ -69,8 +72,7 @@ public class Start {
                 }
                 br.close();
                 if (changedLineList.size() != data.numInstances()) {
-                    System.out
-                            .println("Error! The number in LOC File is different "
+                    logger.error("Error! The number in LOC File is different "
                                     + "with the number in Arff File!");
                     continue;
                 }
@@ -79,7 +81,7 @@ public class Start {
                     ins_Loc.put(data.instance(j), changedLineList.get(j));
                 }
                 Classification classification = new Classification(data);
-                predict_result = classification.predict(base, project, 10,
+                predict_result = classification.predict(base, project, 100,
                         ins_Loc);
                 PrintUtil.appendResult(predict_result, output_file);
             }

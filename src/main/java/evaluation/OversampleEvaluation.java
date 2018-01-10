@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import main.Start;
 import org.apache.log4j.Logger;
 import resample.OverSubsample;
 import util.PrintUtil;
@@ -105,7 +106,7 @@ public class OversampleEvaluation extends MyEvaluation {
             cr.setPrecision1(num_tp1 / numPredictClass1);
             cr.setPrecision2(num_tp2 / numPredictClass2);
             crs.addElement(cr);
-            System.out.println(PrintUtil.formatDouble(
+            String detaileString = PrintUtil.formatDouble(
                     PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getRecall2())
                     + ","
                     + PrintUtil.formatDouble(
@@ -117,7 +118,9 @@ public class OversampleEvaluation extends MyEvaluation {
                             cr.getfMeasure2())
                     + ","
                     + PrintUtil.formatDouble(
-                            PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getAuc()));
+                            PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getAuc());
+            logger.info(detaileString);
+            PrintUtil.appendResult(detaileString, Start.CUR_DETAIL_FILENAME);
             numclass1 = 0;
             numclass2 = 0;
             cur_predictions.removeAllElements();

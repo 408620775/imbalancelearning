@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import main.Start;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
 import weka.classifiers.Classifier;
@@ -57,9 +58,7 @@ public class SmotesampleEvaluation extends MyEvaluation {
             int count[] = as.nominalCounts;
             double percent = 100 * (((double) count[0]) / count[1]) - 100;
             smote.setPercentage(percent);
-            // System.out.println("old train size " + train.numInstances());
             train = Filter.useFilter(train, smote);
-            // System.out.println("new train size " + train.numInstances());
             setPriors(train);
             Classifier copiedClassifier = Classifier.makeCopy(classifier);
             copiedClassifier.buildClassifier(train);
@@ -107,7 +106,7 @@ public class SmotesampleEvaluation extends MyEvaluation {
             cr.setPrecision1(num_tp1 / numPredictClass1);
             cr.setPrecision2(num_tp2 / numPredictClass2);
             crs.addElement(cr);
-            System.out.println(PrintUtil.formatDouble(
+            String detailString=PrintUtil.formatDouble(
                     PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getRecall2())
                     + ","
                     + PrintUtil.formatDouble(
@@ -119,7 +118,9 @@ public class SmotesampleEvaluation extends MyEvaluation {
                             cr.getfMeasure2())
                     + ","
                     + PrintUtil.formatDouble(
-                            PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getAuc()));
+                            PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getAuc());
+            logger.info(detailString);
+            PrintUtil.appendResult(detailString, Start.CUR_DETAIL_FILENAME);
             numclass1 = 0;
             numclass2 = 0;
             cur_predictions.removeAllElements();
