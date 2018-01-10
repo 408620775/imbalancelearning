@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import util.InstanceUtil;
 import weka.classifiers.Evaluation;
 import weka.classifiers.evaluation.ThresholdCurve;
@@ -15,12 +16,14 @@ import weka.core.Instance;
 import weka.core.Instances;
 
 public abstract class MyEvaluation extends Evaluation {
-
+    private static Logger logger = Logger.getLogger(MyEvaluation.class);
+    public static int COST_EFFECTIVE_RATIO_STEP = 101;
     FastVector crs = null;
     Map<Instance, double[]> ins_actual_predict = new LinkedHashMap<Instance, double[]>();
     Map<Instance, List<Integer>> ins_loc;
-    double[] costEffectiveness = new double[101];
+    double[] costEffectiveness = new double[COST_EFFECTIVE_RATIO_STEP];
     public static int INSTANCE_CHANGE_LINE_INDEX = 4;
+    public static int EVALUATION_INDEX_NUM = 4;
 
     public MyEvaluation(Instances data, Map<Instance, List<Integer>> ins_loc)
             throws Exception {
@@ -60,7 +63,7 @@ public abstract class MyEvaluation extends Evaluation {
                 }
             }
             if (matchIndex == -1) {
-                System.out.println("Error! The mismatch between the "
+                logger.error("Error! The mismatch between the "
                         + "instance in ten fold cross validation "
                         + "and the instance in changedLine");
                 return null;
@@ -91,10 +94,8 @@ public abstract class MyEvaluation extends Evaluation {
                 }
             }
         });
-        // PrintUtil.printListList(rankTable);//
         double alreadyFind = 0.0;
         double alreadyCheckLine = 0;
-        // System.out.println("rankTable.size():" + rankTable.size());
         for (int i = 0; i < rankTable.size(); i++) {
             List<Double> actual_predict_change = rankTable.get(i);
             double findRatio = 0;

@@ -19,17 +19,17 @@ public class Start {
     private static Logger logger = Logger.getLogger(Start.class);
     public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
     public static String CUR_DETAIL_FILENAME = "";
-
+    public static String CUR_COST_EFFECTIVE_RECORD = "";
     public static void main(String argv[]) throws Exception {
         String LOCFilePath = "LOCFiles";
         String arffPath = "Arffs_old_paper";
         // String projects[] = { "MyLucene", "MyTomcat", "MyJedit", "MyAnt",
         // "MySynapse", "MyVoldemort", "MyItextpdf", "MyBuck", "MyFlink",
         // "MyHadoop" };
-        String[] projects = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop",
-                "MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat",
-                "MyVoldemort"};
-        // String[] projects = { "MyBuck" };
+//        String[] projects = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop",
+//                "MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat",
+//                "MyVoldemort"};
+        String[] projects = {"MyBuck"};
         String predict_result = "";
         // String[] bases = { "j48", "RF", "naivebayes", "smo" };
         String[] bases = {"j48"};
@@ -41,7 +41,8 @@ public class Start {
             logger.info(base + " for detail");
             for (int i = 0; i < projects.length; i++) {
                 String project = projects[i];
-                CUR_DETAIL_FILENAME = base + "_" + project;
+                CUR_DETAIL_FILENAME = base + "_" + project+"_"+"DETAIL";
+                CUR_COST_EFFECTIVE_RECORD = base+"_"+project+"_"+"COST";
                 logger.info(project);
                 String inputfile = arffPath + "/" + project + ".arff";
                 FileReader fr = new FileReader(inputfile);
@@ -73,7 +74,7 @@ public class Start {
                 br.close();
                 if (changedLineList.size() != data.numInstances()) {
                     logger.error("Error! The number in LOC File is different "
-                                    + "with the number in Arff File!");
+                            + "with the number in Arff File!");
                     continue;
                 }
                 Map<Instance, List<Integer>> ins_Loc = new LinkedHashMap<>();
