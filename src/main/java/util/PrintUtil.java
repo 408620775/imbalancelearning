@@ -60,7 +60,7 @@ public class PrintUtil {
 
     public static double formatDouble(int decimal, double d) {
         BigDecimal bigDecimal = new BigDecimal(d);
-        return bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return bigDecimal.setScale(decimal, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     public static void saveResult(String result, String file) throws IOException {
