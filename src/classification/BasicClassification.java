@@ -98,8 +98,6 @@ public class BasicClassification {
 		double fmeasure_1 = eval.fMeasure(1);
 		// double gmean = Math.sqrt(recall_0 * recall_1);
 		double auc = eval.areaUnderROC(0);
-		System.out.println(recall_1 + " " + precison_1 + " " + fmeasure_1 + " "
-				+ auc);
 		validationResult[0] += recall_1;
 		validationResult[1] += precison_1;
 		validationResult[2] += fmeasure_1;

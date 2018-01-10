@@ -18,7 +18,7 @@ public class Start {
 
 	public static void main(String argv[]) throws Exception {
 		String LOCFilePath = "LOCFiles";
-		String arffPath = "Arffs_Line";
+		String arffPath = "Arffs_old_paper";
 		// String projects[] = { "MyLucene", "MyTomcat", "MyJedit", "MyAnt",
 		// "MySynapse", "MyVoldemort", "MyItextpdf", "MyBuck", "MyFlink",
 		// "MyHadoop" };
@@ -28,8 +28,8 @@ public class Start {
 		// String[] projects = { "MyBuck" };
 		Util util = new Util();
 		String predict_result = "";
-		String[] bases = { "j48", "RF", "naivebayes", "smo" };
-		// String[] bases = { "j48" };
+		// String[] bases = { "j48", "RF", "naivebayes", "smo" };
+		String[] bases = { "j48" };
 		System.out.println("Arff Fold is :" + arffPath);
 		for (String base : bases) {
 			String output_file = base + "Result.csv";

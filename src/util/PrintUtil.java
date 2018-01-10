@@ -3,6 +3,8 @@ package util;
 import java.util.List;
 
 public class PrintUtil {
+	public static int CROSSVAILD_OUTPUT_DECIMAL = 4;
+
 	public static void printListList(List<List<Double>> rankTable) {
 		for (int i = 0; i < rankTable.size(); i++) {
 			List<Double> list = rankTable.get(i);
@@ -25,4 +27,10 @@ public class PrintUtil {
 		System.out.print(ratioes[ratioes.length - 1]);
 		System.out.println();
 	}
+
+	public static String formatDouble(int decimal, double d) {
+		String str = String.format("%." + decimal + "f", d);
+		return str;
+	}
+
 }

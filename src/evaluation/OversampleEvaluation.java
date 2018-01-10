@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 import resample.OverSubsample;
+import util.PrintUtil;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.NominalPrediction;
 import weka.core.FastVector;
@@ -103,8 +104,19 @@ public class OversampleEvaluation extends MyEvaluation {
 			cr.setPrecision1(num_tp1 / numPredictClass1);
 			cr.setPrecision2(num_tp2 / numPredictClass2);
 			crs.addElement(cr);
-			System.out.println(cr.getRecall2() + "," + cr.getPrecision2() + ","
-					+ cr.getfMeasure2() + "," + cr.getAuc());
+			System.out.println(PrintUtil.formatDouble(
+					PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getRecall2())
+					+ ","
+					+ PrintUtil.formatDouble(
+							PrintUtil.CROSSVAILD_OUTPUT_DECIMAL,
+							cr.getPrecision2())
+					+ ","
+					+ PrintUtil.formatDouble(
+							PrintUtil.CROSSVAILD_OUTPUT_DECIMAL,
+							cr.getfMeasure2())
+					+ ","
+					+ PrintUtil.formatDouble(
+							PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getAuc()));
 			numclass1 = 0;
 			numclass2 = 0;
 			cur_predictions.removeAllElements();
