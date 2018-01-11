@@ -1,5 +1,6 @@
 package classification.boosting;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import classification.BasicClassification;
 public class ResampleInBoostingClassification extends BasicClassification {
 
     private static Logger logger = Logger.getLogger(ResampleInBoostingClassification.class);
+    public static List<String> METHOD_NAMES = Arrays.asList("overboost", "underboost", "smoteboost");
 
     public ResampleInBoostingClassification(Instances data,
                                             Map<Instance, List<Integer>> ins_Loc) {
@@ -41,8 +43,9 @@ public class ResampleInBoostingClassification extends BasicClassification {
         SmoteBoosting boost_classifier = new SmoteBoosting();
         boost_classifier.setClassifier(classifier);
         boost_classifier.setUseResampling(true);
-        logger.info("smoteboost");
-        PrintUtil.appendResult("smoteboost", Start.CUR_DETAIL_FILENAME);
+        logger.info(METHOD_NAMES.get(2));
+        PrintUtil.appendResult(METHOD_NAMES.get(2), Start.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(2), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
@@ -51,15 +54,16 @@ public class ResampleInBoostingClassification extends BasicClassification {
         }
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult(",smoteinboost", classifier_name, validationResult,
+        return getResult(","+METHOD_NAMES.get(2), classifier_name, validationResult,
                 times);
     }
 
     public String getUnderBoostClassificationResult(Classifier classifier,
                                                     String classifier_name, int times) throws Exception {
         UnderBoosting boost_classifier = new UnderBoosting();
-        logger.info("underboost");
-        PrintUtil.appendResult("underboost", Start.CUR_DETAIL_FILENAME);
+        logger.info(METHOD_NAMES.get(1));
+        PrintUtil.appendResult(METHOD_NAMES.get(1), Start.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(1), Start.CUR_COST_EFFECTIVE_RECORD);
         boost_classifier.setClassifier(classifier);
         boost_classifier.setUseResampling(true);
         startTime = System.currentTimeMillis();
@@ -70,15 +74,16 @@ public class ResampleInBoostingClassification extends BasicClassification {
         }
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult(",underinboost", classifier_name, validationResult,
+        return getResult(","+METHOD_NAMES.get(1), classifier_name, validationResult,
                 times);
     }
 
     private String getOverBoostClassificationResult(Classifier classifier,
                                                     String classifier_name, int times) throws Exception {
         OverBoosting boost_classifier = new OverBoosting();
-        logger.info("overboost");
-        PrintUtil.appendResult("overboost", Start.CUR_DETAIL_FILENAME);
+        logger.info(METHOD_NAMES.get(0));
+        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_DETAIL_FILENAME);
         boost_classifier.setClassifier(classifier);
         boost_classifier.setUseResampling(true);
         startTime = System.currentTimeMillis();
@@ -89,7 +94,7 @@ public class ResampleInBoostingClassification extends BasicClassification {
         }
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult("overinboost", classifier_name, validationResult,
+        return getResult(METHOD_NAMES.get(0), classifier_name, validationResult,
                 times);
     }
 

@@ -1,5 +1,6 @@
 package classification;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import weka.core.Instances;
 
 public class SimpleClassification extends BasicClassification {
     private static Logger logger = Logger.getLogger(SimpleClassification.class);
+    public static List<String> METHOD_NAMES = Arrays.asList("simple");
 
     public SimpleClassification(Instances data,
                                 Map<Instance, List<Integer>> ins_Loc) {
@@ -21,8 +23,9 @@ public class SimpleClassification extends BasicClassification {
 
     public String getClassificationResult(Classifier classifier,
                                           String classifier_name, int times) throws Exception {
-        logger.info("Simple");
-        PrintUtil.appendResult("Simple", Start.CUR_DETAIL_FILENAME);
+        logger.info(METHOD_NAMES.get(0));
+        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
@@ -31,6 +34,6 @@ public class SimpleClassification extends BasicClassification {
         }
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult("simple", classifier_name, validationResult, times);
+        return getResult(METHOD_NAMES.get(0), classifier_name, validationResult, times);
     }
 }

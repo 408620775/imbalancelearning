@@ -1,5 +1,6 @@
 package classification.bagging;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import classification.BasicClassification;
 
 public class BaggingClassification extends BasicClassification {
     public static Logger logger = Logger.getLogger(BaggingClassification.class);
+    public static List<String> METHOD_NAMES = Arrays.asList("bag");
 
     public BaggingClassification(Instances data,
                                  Map<Instance, List<Integer>> ins_Loc) {
@@ -26,8 +28,9 @@ public class BaggingClassification extends BasicClassification {
                                           String classifier_name, int times) throws Exception {
         Bagging bag_classifier = new Bagging();
         bag_classifier.setClassifier(classifier);
-        logger.info("bagging");
-        PrintUtil.appendResult("bagging", Start.CUR_DETAIL_FILENAME);
+        logger.info(METHOD_NAMES.get(0));
+        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
@@ -36,7 +39,7 @@ public class BaggingClassification extends BasicClassification {
         }
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult("bag", classifier_name, validationResult, times);
+        return getResult(METHOD_NAMES.get(0), classifier_name, validationResult, times);
     }
 
 }

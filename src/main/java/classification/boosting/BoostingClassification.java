@@ -1,5 +1,6 @@
 package classification.boosting;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import classification.BasicClassification;
 public class BoostingClassification extends BasicClassification {
 
     private static Logger logger = Logger.getLogger(BoostingClassification.class);
+    public static List<String> METHOD_NAMES = Arrays.asList("boost");
 
     public BoostingClassification(Instances data,
                                   Map<Instance, List<Integer>> ins_Loc) {
@@ -27,8 +29,9 @@ public class BoostingClassification extends BasicClassification {
                                           String classifier_name, int times) throws Exception {
         AdaBoostM1 boost_classifier = new AdaBoostM1();
         boost_classifier.setClassifier(classifier);
-        logger.info("boosting");
-        PrintUtil.appendResult("boost", Start.CUR_DETAIL_FILENAME);
+        logger.info(METHOD_NAMES.get(0));
+        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
@@ -37,7 +40,7 @@ public class BoostingClassification extends BasicClassification {
         }
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult("boost", classifier_name, validationResult, times);
+        return getResult(METHOD_NAMES.get(0), classifier_name, validationResult, times);
     }
 
 }
