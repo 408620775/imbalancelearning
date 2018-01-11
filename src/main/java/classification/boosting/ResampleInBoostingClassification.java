@@ -19,7 +19,7 @@ import classification.BasicClassification;
 public class ResampleInBoostingClassification extends BasicClassification {
 
     private static Logger logger = Logger.getLogger(ResampleInBoostingClassification.class);
-    public static List<String> METHOD_NAMES = Arrays.asList("overboost", "underboost", "smoteboost");
+    public static List<String> METHOD_NAMES = Arrays.asList("ROSBoost", "RUSBoost", "SmoteBoost");
 
     public ResampleInBoostingClassification(Instances data,
                                             Map<Instance, List<Integer>> ins_Loc) {

@@ -15,7 +15,7 @@ import evaluation.MyEvaluation;
 
 public class ResampleSimpleClassification extends BasicClassification {
     private static Logger logger = Logger.getLogger(ResampleSimpleClassification.class);
-    public static List<String> METHOD_NAMES = Arrays.asList("oversample", "undersample", "smotesample");
+    public static List<String> METHOD_NAMES = Arrays.asList("ROS", "RUS", "Smote");
 
     public ResampleSimpleClassification(Instances data,
                                         Map<Instance, List<Integer>> ins_Loc) {

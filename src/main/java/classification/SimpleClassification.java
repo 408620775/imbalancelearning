@@ -14,7 +14,7 @@ import weka.core.Instances;
 
 public class SimpleClassification extends BasicClassification {
     private static Logger logger = Logger.getLogger(SimpleClassification.class);
-    public static List<String> METHOD_NAMES = Arrays.asList("simple");
+    public static List<String> METHOD_NAMES = Arrays.asList("Simple");
 
     public SimpleClassification(Instances data,
                                 Map<Instance, List<Integer>> ins_Loc) {

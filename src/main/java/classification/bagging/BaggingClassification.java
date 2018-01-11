@@ -17,7 +17,7 @@ import classification.BasicClassification;
 
 public class BaggingClassification extends BasicClassification {
     public static Logger logger = Logger.getLogger(BaggingClassification.class);
-    public static List<String> METHOD_NAMES = Arrays.asList("bag");
+    public static List<String> METHOD_NAMES = Arrays.asList("Bag");
 
     public BaggingClassification(Instances data,
                                  Map<Instance, List<Integer>> ins_Loc) {

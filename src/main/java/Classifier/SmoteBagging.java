@@ -13,149 +13,149 @@ import weka.filters.supervised.instance.SMOTE;
 
 
 public class SmoteBagging extends Bagging{
-	/** 
-	 * Stump method for building the classifiers.
-	 *
-	 * @param data the training data to be used for generating the
-	 * bagged classifier.
-	 * @exception Exception if the classifier could not be built successfully
-	 */
-	public void checkClassifier(Instances data) throws Exception {
+    /**
+     * Stump method for building the classifiers.
+     *
+     * @param data the training data to be used for generating the
+     * bagged classifier.
+     * @exception Exception if the classifier could not be built successfully
+     */
+    public void checkClassifier(Instances data) throws Exception {
 
-		if (m_Classifier == null) {
-			throw new Exception("A base classifier has not been specified!");
-		}
-		m_Classifiers = Classifier.makeCopies(m_Classifier, m_NumIterations);
-	}
+        if (m_Classifier == null) {
+            throw new Exception("A base classifier has not been specified!");
+        }
+        m_Classifiers = Classifier.makeCopies(m_Classifier, m_NumIterations);
+    }
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5403874282828036162L;
-	
-	@Override
-	public void buildClassifier(Instances data) throws Exception {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5403874282828036162L;
 
-	    // can classifier handle the data?
-	    getCapabilities().testWithFail(data);
+    @Override
+    public void buildClassifier(Instances data) throws Exception {
 
-	    // remove instances with missing class
-	    data = new Instances(data);
-	    data.deleteWithMissingClass();
+        // can classifier handle the data?
+        getCapabilities().testWithFail(data);
 
-	    checkClassifier(data);
+        // remove instances with missing class
+        data = new Instances(data);
+        data.deleteWithMissingClass();
 
-	    if (m_CalcOutOfBag && (m_BagSizePercent != 100)) {
-	      throw new IllegalArgumentException("Bag size needs to be 100% if "
-	          + "out-of-bag error is to be calculated!");
-	    }
+        checkClassifier(data);
 
-	    int bagSize = data.numInstances() * m_BagSizePercent / 100;
-	    Random random = new Random(m_Seed);
+        if (m_CalcOutOfBag && (m_BagSizePercent != 100)) {
+          throw new IllegalArgumentException("Bag size needs to be 100% if "
+              + "out-of-bag error is to be calculated!");
+        }
 
-	    boolean[][] inBag = null;
-	    if (m_CalcOutOfBag)
-	      inBag = new boolean[m_Classifiers.length][];
+        int bagSize = data.numInstances() * m_BagSizePercent / 100;
+        Random random = new Random(m_Seed);
 
-	    for (int j = 0; j < m_Classifiers.length; j++) {
-	      Instances bagData = null;
+        boolean[][] inBag = null;
+        if (m_CalcOutOfBag)
+          inBag = new boolean[m_Classifiers.length][];
 
-	      // create the in-bag dataset
-	      if (m_CalcOutOfBag) {
-	        inBag[j] = new boolean[data.numInstances()];
-	        // bagData = resampleWithWeights(data, random, inBag[j]);
-	        bagData = data.resampleWithWeights(random, inBag[j]);
-	      } else {
-	        //bagData = data.resampleWithWeights(random);
-	    	  //rewrite the sampling method and use under sampling
-	    	  Instances tempData = new Instances(data);
-	    	  tempData.randomize(random);
-	    	  SMOTE smotesample = new SMOTE();
-	    	  smotesample.setInputFormat(tempData);
-	    	  AttributeStats as = tempData.attributeStats(tempData.numAttributes()-1);
-	    	  int count[] = as.nominalCounts;
-	    	  double percent = 100*(((double)count[0])/count[1])-100;
-	    	  smotesample.setPercentage(percent);
-	    	  bagData = Filter.useFilter(tempData, smotesample);	
-	        if (bagSize < data.numInstances()) {
-	          bagData.randomize(random);
-	          Instances newBagData = new Instances(bagData, 0, bagSize);
-	          bagData = newBagData;
-	        }
-	      }
+        for (int j = 0; j < m_Classifiers.length; j++) {
+          Instances bagData = null;
 
-	      if (m_Classifier instanceof Randomizable) {
-	        ((Randomizable) m_Classifiers[j]).setSeed(random.nextInt());
-	      }
+          // create the in-bag dataset
+          if (m_CalcOutOfBag) {
+            inBag[j] = new boolean[data.numInstances()];
+            // bagData = resampleWithWeights(data, random, inBag[j]);
+            bagData = data.resampleWithWeights(random, inBag[j]);
+          } else {
+            //bagData = data.resampleWithWeights(random);
+              //rewrite the sampling method and use under sampling
+              Instances tempData = new Instances(data);
+              tempData.randomize(random);
+              SMOTE smotesample = new SMOTE();
+              smotesample.setInputFormat(tempData);
+              AttributeStats as = tempData.attributeStats(tempData.numAttributes()-1);
+              int count[] = as.nominalCounts;
+              double percent = 100*(((double)count[0])/count[1])-100;
+              smotesample.setPercentage(percent);
+              bagData = Filter.useFilter(tempData, smotesample);
+            if (bagSize < data.numInstances()) {
+              bagData.randomize(random);
+              Instances newBagData = new Instances(bagData, 0, bagSize);
+              bagData = newBagData;
+            }
+          }
 
-	      // build the classifier
-	      m_Classifiers[j].buildClassifier(bagData);
-	    }
+          if (m_Classifier instanceof Randomizable) {
+            ((Randomizable) m_Classifiers[j]).setSeed(random.nextInt());
+          }
 
-	    // calc OOB error?
-	    if (getCalcOutOfBag()) {
-	      double outOfBagCount = 0.0;
-	      double errorSum = 0.0;
-	      boolean numeric = data.classAttribute().isNumeric();
+          // build the classifier
+          m_Classifiers[j].buildClassifier(bagData);
+        }
 
-	      for (int i = 0; i < data.numInstances(); i++) {
-	        double vote;
-	        double[] votes;
-	        if (numeric)
-	          votes = new double[1];
-	        else
-	          votes = new double[data.numClasses()];
+        // calc OOB error?
+        if (getCalcOutOfBag()) {
+          double outOfBagCount = 0.0;
+          double errorSum = 0.0;
+          boolean numeric = data.classAttribute().isNumeric();
 
-	        // determine predictions for instance
-	        int voteCount = 0;
-	        for (int j = 0; j < m_Classifiers.length; j++) {
-	          if (inBag[j][i])
-	            continue;
+          for (int i = 0; i < data.numInstances(); i++) {
+            double vote;
+            double[] votes;
+            if (numeric)
+              votes = new double[1];
+            else
+              votes = new double[data.numClasses()];
 
-	          voteCount++;
-	          // double pred = m_Classifiers[j].classifyInstance(data.instance(i));
-	          if (numeric) {
-	            // votes[0] += pred;
-	            votes[0] = m_Classifiers[j].classifyInstance(data.instance(i));
-	          } else {
-	            // votes[(int) pred]++;
-	            double[] newProbs = m_Classifiers[j].distributionForInstance(data
-	                .instance(i));
-	            // average the probability estimates
-	            for (int k = 0; k < newProbs.length; k++) {
-	              votes[k] += newProbs[k];
-	            }
-	          }
-	        }
+            // determine predictions for instance
+            int voteCount = 0;
+            for (int j = 0; j < m_Classifiers.length; j++) {
+              if (inBag[j][i])
+                continue;
 
-	        // "vote"
-	        if (numeric) {
-	          vote = votes[0];
-	          if (voteCount > 0) {
-	            vote /= voteCount; // average
-	          }
-	        } else {
-	          if (Utils.eq(Utils.sum(votes), 0)) {
-	          } else {
-	            Utils.normalize(votes);
-	          }
-	          vote = Utils.maxIndex(votes); // predicted class
-	        }
+              voteCount++;
+              // double pred = m_Classifiers[j].classifyInstance(data.instance(i));
+              if (numeric) {
+                // votes[0] += pred;
+                votes[0] = m_Classifiers[j].classifyInstance(data.instance(i));
+              } else {
+                // votes[(int) pred]++;
+                double[] newProbs = m_Classifiers[j].distributionForInstance(data
+                    .instance(i));
+                // average the probability estimates
+                for (int k = 0; k < newProbs.length; k++) {
+                  votes[k] += newProbs[k];
+                }
+              }
+            }
 
-	        // error for instance
-	        outOfBagCount += data.instance(i).weight();
-	        if (numeric) {
-	          errorSum += StrictMath.abs(vote - data.instance(i).classValue())
-	              * data.instance(i).weight();
-	        } else {
-	          if (vote != data.instance(i).classValue())
-	            errorSum += data.instance(i).weight();
-	        }
-	      }
+            // "vote"
+            if (numeric) {
+              vote = votes[0];
+              if (voteCount > 0) {
+                vote /= voteCount; // average
+              }
+            } else {
+              if (Utils.eq(Utils.sum(votes), 0)) {
+              } else {
+                Utils.normalize(votes);
+              }
+              vote = Utils.maxIndex(votes); // predicted class
+            }
 
-	      m_OutOfBagError = errorSum / outOfBagCount;
-	    } else {
-	      m_OutOfBagError = 0;
-	    }
-	  }
+            // error for instance
+            outOfBagCount += data.instance(i).weight();
+            if (numeric) {
+              errorSum += StrictMath.abs(vote - data.instance(i).classValue())
+                  * data.instance(i).weight();
+            } else {
+              if (vote != data.instance(i).classValue())
+                errorSum += data.instance(i).weight();
+            }
+          }
+
+          m_OutOfBagError = errorSum / outOfBagCount;
+        } else {
+          m_OutOfBagError = 0;
+        }
+      }
 }

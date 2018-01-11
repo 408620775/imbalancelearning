@@ -17,7 +17,7 @@ import classification.BasicClassification;
 public class BoostingClassification extends BasicClassification {
 
     private static Logger logger = Logger.getLogger(BoostingClassification.class);
-    public static List<String> METHOD_NAMES = Arrays.asList("boost");
+    public static List<String> METHOD_NAMES = Arrays.asList("Boost");
 
     public BoostingClassification(Instances data,
                                   Map<Instance, List<Integer>> ins_Loc) {

@@ -27,9 +27,9 @@ public class Classification {
     String output_file;
     String output_file_matrix;
     //Fix me , not equal with SimpleClassification.java.
-    public static List<String> METHOD_NAMES = Arrays.asList("Simple", "oversample", "undersample", "smotesample",
-            "bagging", "overbag", "underbag", "smotebag", "boost", "overboost", "underboost", "smoteboost");
-    public static List<String> EVALUATION_NAMES = Arrays.asList("R1", "P1", "f1", "AUC");
+    public static List<String> METHOD_NAMES = Arrays.asList("Simple", "ROS", "RUS", "Smote",
+            "Bag", "ROSBag", "RUSBag", "SmoteBag", "Boost", "ROSBoost", "RUSBoost", "SmoteBoost");
+    public static List<String> EVALUATION_NAMES = Arrays.asList("R1", "P1", "F1", "AUC");
     public static int DETAIL_NUM = 1000;
 
     public Classification(Instances data) {

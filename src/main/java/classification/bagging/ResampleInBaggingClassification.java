@@ -20,7 +20,7 @@ import evaluation.MyEvaluation;
 
 public class ResampleInBaggingClassification extends BasicClassification {
     public static Logger logger = Logger.getLogger(ResampleSimpleClassification.class);
-    public static List<String> METHOD_NAMES = Arrays.asList("overbag", "underbag", "smotebag");
+    public static List<String> METHOD_NAMES = Arrays.asList("ROSBag", "RUSBag", "SmoteBag");
 
     public ResampleInBaggingClassification(Instances data,
                                            Map<Instance, List<Integer>> ins_Loc) {
