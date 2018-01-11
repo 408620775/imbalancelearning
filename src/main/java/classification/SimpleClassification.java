@@ -30,7 +30,7 @@ public class SimpleClassification extends BasicClassification {
             updateResult(validationResult, eval);
         }
         endTime = System.currentTimeMillis();
-        System.out.println("Time:" + (endTime - startTime));
+        logger.info("Time:" + (endTime - startTime));
         return getResult("simple", classifier_name, validationResult, times);
     }
 }
