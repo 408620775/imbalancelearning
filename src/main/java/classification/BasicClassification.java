@@ -10,7 +10,6 @@ import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
-import bean.EvaluationInfo;
 import evaluation.MyEvaluation;
 import evaluation.NonesampleEvaluation;
 import evaluation.OversampleEvaluation;
@@ -24,7 +23,6 @@ public class BasicClassification {
 
     protected Instances data;
     DecimalFormat df;
-    EvaluationInfo ei;
     public long startTime;
     public long endTime;
     Map<Instance, List<Integer>> ins_Loc;
