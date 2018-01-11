@@ -27,8 +27,10 @@ public class Classification {
     String output_file;
     String output_file_matrix;
     //Fix me , not equal with SimpleClassification.java.
-    public static List<String> METHOD_NAMES = Arrays.asList("Simple","oversample","undersample","smotesample",
-            "bagging","overbag","underbag","smotebag","boost","overboost","underboost","smoteboost");
+    public static List<String> METHOD_NAMES = Arrays.asList("Simple", "oversample", "undersample", "smotesample",
+            "bagging", "overbag", "underbag", "smotebag", "boost", "overboost", "underboost", "smoteboost");
+    public static List<String> EVALUATION_NAMES = Arrays.asList("R1", "P1", "f1", "AUC");
+    public static int DETAIL_NUM = 1000;
 
     public Classification(Instances data) {
         this.data = data;
@@ -69,7 +71,7 @@ public class Classification {
                           int times, Map<Instance, List<Integer>> ins_Loc) throws Exception {
 
         setClassifier(classifier_name_input);
-
+        DETAIL_NUM = times * 10;
         BasicClassification use_classification = new SimpleClassification(data,
                 ins_Loc);
         String predict_result = "";
