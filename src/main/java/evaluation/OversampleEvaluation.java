@@ -119,7 +119,6 @@ public class OversampleEvaluation extends MyEvaluation {
                     + ","
                     + PrintUtil.formatDouble(
                             PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getAuc());
-            logger.info(detaileString);
             PrintUtil.appendResult(detaileString, Start.CUR_DETAIL_FILENAME);
             numclass1 = 0;
             numclass2 = 0;

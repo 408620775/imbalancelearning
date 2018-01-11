@@ -66,7 +66,7 @@ public class PrintUtil {
     public static void saveResult(String result, String file) throws IOException {
         FileWriter fw = new FileWriter(file, false);
         BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(result);
+        bw.write(result+"\n");
         bw.flush();
         bw.close();
     }
@@ -74,7 +74,7 @@ public class PrintUtil {
     public static void appendResult(String result, String file) throws IOException {
         FileWriter fa = new FileWriter(file, true);
         BufferedWriter ba = new BufferedWriter(fa);
-        ba.write(result);
+        ba.write(result+"\n");
         ba.flush();
         ba.close();
     }

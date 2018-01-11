@@ -113,7 +113,6 @@ public class NonesampleEvaluation extends MyEvaluation {
                     + ","
                     + PrintUtil.formatDouble(
                     PrintUtil.CROSSVAILD_OUTPUT_DECIMAL, cr.getAuc());
-            logger.info(detailString);
             PrintUtil.appendResult(detailString, Start.CUR_DETAIL_FILENAME);
             numclass1 = 0;
             numclass2 = 0;

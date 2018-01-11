@@ -65,7 +65,7 @@ public class ResampleInBaggingClassification extends BasicClassification {
         startTime = System.currentTimeMillis();
         validationResult = new double[MyEvaluation.EVALUATION_INDEX_NUM];
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
-        for (int randomSeed = 1; randomSeed <= 10; randomSeed++) {
+        for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(bag_classifier, randomSeed, "none");
             updateResult(validationResult, eval);
             updateCostEffective(eval);

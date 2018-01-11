@@ -20,6 +20,7 @@ public class Start {
     public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
     public static String CUR_DETAIL_FILENAME = "";
     public static String CUR_COST_EFFECTIVE_RECORD = "";
+
     public static void main(String argv[]) throws Exception {
         String LOCFilePath = "LOCFiles";
         String arffPath = "Arffs_old_paper";
@@ -31,18 +32,18 @@ public class Start {
                 "MyVoldemort"};
         //String[] projects = {"MyBuck"};
         String predict_result = "";
-        String[] bases = { "j48", "RF", "naivebayes", "smo" };
-        //String[] bases = {"j48"};
+        //String[] bases = { "j48", "RF", "naivebayes", "smo" };
+        String[] bases = {"RF"};
         logger.info("Arff Fold is :" + arffPath);
         for (String base : bases) {
             String output_file = base + "Result.csv";
-            String measure_name = "project, method, recall-1, precision-1, fMeasure-1, auc \n";
+            String measure_name = "project, method, recall-1, precision-1, fMeasure-1, auc";
             PrintUtil.saveResult(measure_name, output_file);
             logger.info(base + " for detail");
             for (int i = 0; i < projects.length; i++) {
                 String project = projects[i];
-                CUR_DETAIL_FILENAME = base + "_" + project+"_"+"DETAIL";
-                CUR_COST_EFFECTIVE_RECORD = base+"_"+project+"_"+"COST";
+                CUR_DETAIL_FILENAME = base + "_" + project + "_" + "DETAIL";
+                CUR_COST_EFFECTIVE_RECORD = base + "_" + project + "_" + "COST";
                 logger.info(project);
                 String inputfile = arffPath + "/" + project + ".arff";
                 FileReader fr = new FileReader(inputfile);
