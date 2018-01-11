@@ -24,14 +24,16 @@ public class DataProcessUtil {
             evaluation_method_values.put(evaluation_names.get(i), method_values);
         }
         readDetailFileToMap(evaluation_method_values, detaileFilePath, method_names, evaluation_names, detailNum);
-        writeDetailMapToFile(evaluation_method_values, SK_ESDFoldPath, detailNum);
+        writeDetailMapToFile(evaluation_method_values, SK_ESDFoldPath, detailNum, detaileFilePath.substring
+                (detaileFilePath.lastIndexOf("/") + 1));
     }
 
     private static void writeDetailMapToFile(Map<String, Map<String, String[]>> evaluation_method_values, String
-            SK_ESDFoldPath, int detailNum) throws IOException {
+            SK_ESDFoldPath, int detailNum, String originFileName) throws IOException {
         for (String evaluation : evaluation_method_values.keySet()) {
-            File sk_detail_file = new File(SK_ESDFoldPath + "/" + evaluation);
+            File sk_detail_file = new File(SK_ESDFoldPath + "/" + evaluation + "_" + originFileName + ".csv");
             if (!sk_detail_file.exists()) {
+                System.out.println(sk_detail_file);
                 sk_detail_file.createNewFile();
             }
             Map<String, String[]> method_values = evaluation_method_values.get(evaluation);
@@ -66,10 +68,11 @@ public class DataProcessUtil {
                 line = bReader.readLine();
                 String[] array = line.split(",");
                 for (int j = 0; j < evaluation_names.size(); j++) {
-                    evaluation_method_values.get(j).get(method_names.get(curMethdoIndex))[i] = array[j];
+                    evaluation_method_values.get(evaluation_names.get(j)).get(method_names.get(curMethdoIndex))[i] =
+                            array[j];
                 }
-                curMethdoIndex++;
             }
+            curMethdoIndex++;
         }
         bReader.close();
     }
