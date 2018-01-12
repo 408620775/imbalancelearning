@@ -8,6 +8,12 @@ import static org.junit.Assert.*;
 
 public class PrintUtilTest {
     @Test
+    public void formatDouble() throws Exception {
+        double format = PrintUtil.formatDouble(4,0.0);
+        System.out.println(format);
+    }
+
+    @Test
     public void arrayStringFormat() throws Exception {
         double[] test ={1.3,2.345,3.456,4.3233,7,10.22345};
         Assert.assertTrue(PrintUtil.arrayStringFormat(test,2).equals("1.30,2.35,3.46,4.32,7.00,10.22"));

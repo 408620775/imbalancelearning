@@ -18,6 +18,9 @@ import classification.Classification;
 public class Start {
     private static Logger logger = Logger.getLogger(Start.class);
     public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
+    public static String DETAIL_FILES_PATH = "DetailFiles/";
+    public static String COST_FILES_PATH = "CostFiles/";
+    public static String RESULT_FILES_PATH = "ResultFiles/";
     public static String CUR_DETAIL_FILENAME = "";
     public static String CUR_COST_EFFECTIVE_RECORD = "";
 
@@ -27,23 +30,27 @@ public class Start {
         // String projects[] = { "MyLucene", "MyTomcat", "MyJedit", "MyAnt",
         // "MySynapse", "MyVoldemort", "MyItextpdf", "MyBuck", "MyFlink",
         // "MyHadoop" };
-        String[] projects = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop",
-                "MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat",
-                "MyVoldemort"};
-        //String[] projects = {"MyBuck"};
+//        String[] projects = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop",
+//                "MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat",
+//                "MyVoldemort"};
+        String[] projects = {"MyBuck"};
         String predict_result = "";
         //String[] bases = { "j48", "RF", "naivebayes", "smo" };
-        String[] bases = {"RF"};
+        String[] bases = {"smo"};
         logger.info("Arff Fold is :" + arffPath);
         for (String base : bases) {
-            String output_file = base + "Result.csv";
+            String output_file = RESULT_FILES_PATH + base + "Result.csv";
             String measure_name = "project, method, recall-1, precision-1, fMeasure-1, auc";
             PrintUtil.saveResult(measure_name, output_file);
             logger.info(base + " for detail");
             for (int i = 0; i < projects.length; i++) {
                 String project = projects[i];
-                CUR_DETAIL_FILENAME = base + "_" + project + "_" + "DETAIL";
-                CUR_COST_EFFECTIVE_RECORD = base + "_" + project + "_" + "COST";
+                CUR_DETAIL_FILENAME = DETAIL_FILES_PATH + base + "_" + project + "_" + "DETAIL";
+                CUR_COST_EFFECTIVE_RECORD = COST_FILES_PATH + base + "_" + project + "_" + "COST";
+                File cur_detail_file = new File(CUR_DETAIL_FILENAME);
+                cur_detail_file.delete();
+                File cur_cost_file = new File(CUR_COST_EFFECTIVE_RECORD);
+                cur_detail_file.delete();
                 logger.info(project);
                 String inputfile = arffPath + "/" + project + ".arff";
                 FileReader fr = new FileReader(inputfile);
