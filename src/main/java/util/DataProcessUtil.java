@@ -55,7 +55,9 @@ public class DataProcessUtil {
         }
     }
 
-    private static void readDetailFileToMap(Map<String, Map<String, String[]>> evaluation_method_values, String detaileFilePath, List<String> method_names, List<String> evaluation_names, int detailNum) throws Exception {
+    private static void readDetailFileToMap(Map<String, Map<String, String[]>> evaluation_method_values,
+                                            String detaileFilePath, List<String> method_names,
+                                            List<String> evaluation_names, int detailNum) throws Exception {
         BufferedReader bReader = new BufferedReader(new FileReader(new File(detaileFilePath)));
         int curMethdoIndex = 0;
         String line;
@@ -75,5 +77,23 @@ public class DataProcessUtil {
             curMethdoIndex++;
         }
         bReader.close();
+    }
+
+    public static void covertAllDetailFileToSK_ESDFile(String detailFloderPath, String SK_ESDFoldPath, int detailNum,
+                                                       List<String> method_names, List<String> evaluation_names) throws Exception {
+        File detaildFloder = new File(detailFloderPath);
+        if (!detaildFloder.exists()) {
+            return;
+        }
+        File[] detaildFiles = detaildFloder.listFiles();
+        for (int i = 0; i < detaildFiles.length; i++) {
+            File curFile = detaildFiles[i];
+            File saveFloder = new File(SK_ESDFoldPath + "/" + Character.toUpperCase(curFile.getName().charAt(0)) + "_SK_ESD");
+            if (!saveFloder.exists()) {
+                saveFloder.mkdirs();
+            }
+            covertDetailFileToSK_ESDFile(curFile.getAbsolutePath(), saveFloder.getAbsolutePath(), detailNum,
+                    method_names, evaluation_names);
+        }
     }
 }

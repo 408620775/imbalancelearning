@@ -30,13 +30,13 @@ public class Start {
         // String projects[] = { "MyLucene", "MyTomcat", "MyJedit", "MyAnt",
         // "MySynapse", "MyVoldemort", "MyItextpdf", "MyBuck", "MyFlink",
         // "MyHadoop" };
-//        String[] projects = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop",
-//                "MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat",
-//                "MyVoldemort"};
-        String[] projects = {"MyBuck"};
+        String[] projects = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop",
+                "MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat",
+                "MyVoldemort"};
+        //String[] projects = {"MyBuck"};
         String predict_result = "";
         //String[] bases = { "j48", "RF", "naivebayes", "smo" };
-        String[] bases = {"smo"};
+        String[] bases = {"naivebayes"};
         logger.info("Arff Fold is :" + arffPath);
         for (String base : bases) {
             String output_file = RESULT_FILES_PATH + base + "Result.csv";
