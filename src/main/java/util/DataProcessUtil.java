@@ -1,5 +1,7 @@
 package util;
 
+import classification.Classification;
+import main.Start;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -10,6 +12,61 @@ import java.util.Map;
 
 public class DataProcessUtil {
     private static Logger logger = Logger.getLogger(DataProcessUtil.class);
+    public static String SK_RESULT_FOLDER = "ResultFiles";
+    public static String FILENAME_DELIMITER = "_";
+
+    public static void getProjectRankOfMethod(String resultFolder) {
+        for (String baseLearner : Start.BASE_LEARNERS) {
+            Map<String, Map<String, Map<String, Integer>>> method_evaluation_project_rank = getPaperTable(baseLearner);
+        }
+    }
+
+    private static Map<String, Map<String, Map<String, Integer>>> getPaperTable(String baseLearner) throws IOException {
+        Map<String, Map<String, Map<String, Integer>>> method_evaluation_project_rank = initialPaperTableMap();
+        for (String evaluation : Classification.EVALUATION_NAMES) {
+            String fileName = Character.toUpperCase(baseLearner.charAt(0)) + FILENAME_DELIMITER +
+                    evaluation + FILENAME_DELIMITER + "Rank";
+            BufferedReader bReader = new BufferedReader(new FileReader(new File(fileName)));
+            String line;
+            while ((line = bReader.readLine()) != null) {
+                String projectName = "";
+                String methodName = "";
+                String evaluationName = evaluation;
+                Integer rankValue = 0;
+                for (String project : Start.PROJECTS) {
+                    if (!line.equals(project)) {
+                        continue;
+                    }
+                    projectName = project;
+                    line = bReader.readLine();
+                    for (int i = 0; i < Classification.METHOD_NAMES.size(); i++) {
+                        line = bReader.readLine();
+                        if (!line.substring(1).startsWith(Classification.METHOD_NAMES.get(i))) {
+                            continue;
+                        }
+                        methodName = Classification.METHOD_NAMES.get(i);
+                        rankValue = Integer.parseInt(line.split(",")[1]);
+                        method_evaluation_project_rank.get(methodName).get(evaluation).put(projectName, rankValue);
+                    }
+                }
+            }
+
+        }
+        return method_evaluation_project_rank;
+    }
+
+    private static Map<String, Map<String, Map<String, Integer>>> initialPaperTableMap() {
+        Map<String, Map<String, Map<String, Integer>>> method_evaluation_project_rank = new LinkedHashMap<>();
+        for (String methodName : Classification.METHOD_NAMES) {
+            Map<String, Map<String, Integer>> evaluation_project_rank = new LinkedHashMap<>();
+            for (String evaluationName : Classification.EVALUATION_NAMES) {
+                Map<String, Integer> project_rank = new LinkedHashMap<>();
+                evaluation_project_rank.put(evaluationName, project_rank);
+            }
+            method_evaluation_project_rank.put(methodName, evaluation_project_rank);
+        }
+        return method_evaluation_project_rank;
+    }
 
     public static void covertDetailFileToSK_ESDFile(String detaileFilePath, String SK_ESDFoldPath, int detailNum,
                                                     List<String> method_names, List<String> evaluation_names)
