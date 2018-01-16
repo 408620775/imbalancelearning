@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import main.Start;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
+import util.PropertySetUtil;
 import weka.classifiers.Classifier;
-import weka.classifiers.evaluation.NominalPrediction;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -60,7 +59,7 @@ public class UndersampleEvaluation extends MyEvaluation {
                     numPredictClass2[0], cur_predictions);
             crs.addElement(cr);
             String detailString = getCrDetailString(cr);
-            PrintUtil.appendResult(detailString, Start.CUR_DETAIL_FILENAME);
+            PrintUtil.appendResult(detailString, PropertySetUtil.CUR_DETAIL_FILENAME);
             clearForNextFold();
         }
         m_NumFolds = numFolds;

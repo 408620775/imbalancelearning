@@ -1,11 +1,8 @@
 package util;
 
-import main.Start;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class PrintUtilTest {
     @Test
@@ -45,7 +42,7 @@ public class PrintUtilTest {
 
     @Test
     public void testForOrder() {
-        String[] test = Start.PROJECTS;
+        String[] test = PropertySetUtil.PROJECTS;
         for (int i = 0; i < 100; i++) {
             StringBuffer sBuffer = new StringBuffer();
             StringBuffer cBuffer = new StringBuffer();

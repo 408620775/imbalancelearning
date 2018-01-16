@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import main.Start;
 import util.PrintUtil;
 import util.PropertySetUtil;
 import weka.classifiers.Classifier;
@@ -132,8 +131,8 @@ public class BasicClassification {
     protected void writeCostEffective(int times) throws IOException {
         if (PropertySetUtil.CALCULATION_COST) {
             double[] cost = getCostEffective(times);
-            PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, BIT_NUM_AFTER_DECIMAL), Start.CUR_COST_EFFECTIVE_RECORD);
-            PrintUtil.appendResult(PrintUtil.formatDouble(BIT_NUM_AFTER_DECIMAL, cost[PropertySetUtil.PENCENTAGE_OF_CONCERN]) + "", Start
+            PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, BIT_NUM_AFTER_DECIMAL), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
+            PrintUtil.appendResult(PrintUtil.formatDouble(BIT_NUM_AFTER_DECIMAL, cost[PropertySetUtil.PENCENTAGE_OF_CONCERN]) + "", PropertySetUtil
                     .CUR_COST_EFFECTIVE_RECORD);
         }
     }

@@ -4,11 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import main.Start;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
+import util.PropertySetUtil;
 import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
 import evaluation.MyEvaluation;
@@ -29,8 +28,8 @@ public class ResampleSimpleClassification extends BasicClassification {
         double validationResult2[] = new double[4];
         double validationResult3[] = new double[4];
         logger.info(METHOD_NAMES.get(0));
-        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
@@ -43,8 +42,8 @@ public class ResampleSimpleClassification extends BasicClassification {
         logger.info("Time:" + (endTime - startTime));
 
         logger.info(METHOD_NAMES.get(1));
-        PrintUtil.appendResult(METHOD_NAMES.get(1), Start.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(1), Start.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertySetUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
@@ -57,8 +56,8 @@ public class ResampleSimpleClassification extends BasicClassification {
         logger.info("Time:" + (endTime - startTime));
 
         logger.info(METHOD_NAMES.get(2));
-        PrintUtil.appendResult(METHOD_NAMES.get(2), Start.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(2), Start.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertySetUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {

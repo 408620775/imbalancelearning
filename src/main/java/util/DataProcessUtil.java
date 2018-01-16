@@ -1,7 +1,6 @@
 package util;
 
 import classification.Classification;
-import main.Start;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -18,7 +17,7 @@ public class DataProcessUtil {
     public static String AVERAGE_NAME = "Avg";
 
     public static void getProjectRankOfMethod(String resultFolder) throws IOException {
-        for (String baseLearner : Start.BASE_LEARNERS) {
+        for (String baseLearner : PropertySetUtil.BASE_LEARNERS) {
             Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = getPaperTable(baseLearner);
             writePaperTableAccordBase(method_evaluation_project_rank, baseLearner);
         }
@@ -30,7 +29,7 @@ public class DataProcessUtil {
         File saveFile = new File(savePath);
         StringBuffer line = new StringBuffer();
         line.append(",,");
-        for (String project : Start.PROJECTS) {
+        for (String project : PropertySetUtil.PROJECTS) {
             line.append(project + ",");
         }
         line.append(AVERAGE_NAME);
@@ -42,7 +41,7 @@ public class DataProcessUtil {
                     line.append(methodName);
                 }
                 line.append("," + Classification.EVALUATION_NAMES.get(i));
-                for (String project : Start.PROJECTS) {
+                for (String project : PropertySetUtil.PROJECTS) {
                     line.append("," + method_evaluation_project_rank.get(methodName).get(Classification.EVALUATION_NAMES
                             .get(i)).get(project));
                 }
@@ -65,7 +64,7 @@ public class DataProcessUtil {
                 String methodName = "";
                 String evaluationName = evaluation;
                 Double rankValue = 0.0;
-                for (String project : Start.PROJECTS) {
+                for (String project : PropertySetUtil.PROJECTS) {
                     if (!line.equals(project)) {
                         continue;
                     }

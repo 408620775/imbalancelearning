@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import evaluation.MyEvaluation;
-import main.Start;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
+import util.PropertySetUtil;
 import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -31,8 +30,8 @@ public class BoostingClassification extends BasicClassification {
         AdaBoostM1 boost_classifier = new AdaBoostM1();
         boost_classifier.setClassifier(classifier);
         logger.info(METHOD_NAMES.get(0));
-        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];

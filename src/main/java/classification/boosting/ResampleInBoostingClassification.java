@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import evaluation.MyEvaluation;
-import main.Start;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
+import util.PropertySetUtil;
 import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
 import Classifier.OverBoosting;
@@ -45,8 +44,8 @@ public class ResampleInBoostingClassification extends BasicClassification {
         boost_classifier.setClassifier(classifier);
         boost_classifier.setUseResampling(true);
         logger.info(METHOD_NAMES.get(2));
-        PrintUtil.appendResult(METHOD_NAMES.get(2), Start.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(2), Start.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertySetUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
@@ -66,8 +65,8 @@ public class ResampleInBoostingClassification extends BasicClassification {
                                                     String classifier_name, int times) throws Exception {
         UnderBoosting boost_classifier = new UnderBoosting();
         logger.info(METHOD_NAMES.get(1));
-        PrintUtil.appendResult(METHOD_NAMES.get(1), Start.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(1), Start.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertySetUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
         boost_classifier.setClassifier(classifier);
         boost_classifier.setUseResampling(true);
         startTime = System.currentTimeMillis();
@@ -89,8 +88,8 @@ public class ResampleInBoostingClassification extends BasicClassification {
                                                     String classifier_name, int times) throws Exception {
         OverBoosting boost_classifier = new OverBoosting();
         logger.info(METHOD_NAMES.get(0));
-        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
-        PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_DETAIL_FILENAME);
         boost_classifier.setClassifier(classifier);
         boost_classifier.setUseResampling(true);
         startTime = System.currentTimeMillis();
