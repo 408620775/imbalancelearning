@@ -59,9 +59,10 @@ public abstract class MyEvaluation extends Evaluation {
         return crs;
     }
 
-    public double get20PbCost(){
+    public double get20PbCost() {
         return 0;
     }
+
     public double[] getCostEffectiveness() {
         int total_actual_bug_num = 0;
         double total_changedLine_num = 0;
@@ -234,20 +235,17 @@ public abstract class MyEvaluation extends Evaluation {
         costEffectiveness = new double[COST_EFFECTIVE_RATIO_STEP];
         cur_predictions = new FastVector();
         crs = new FastVector();
+        ins_actual_predict = new LinkedHashMap<>();
     }
 
     void clearForNextFold() {
         numclass1[0] = 0;
         numclass2[0] = 0;
-        cur_predictions.removeAllElements();
         num_correct[0] = 0;
         num_tp1[0] = 0;
         num_tp2[0] = 0;
         numPredictClass1[0] = 0;
         numPredictClass2[0] = 0;
-        costEffectiveness = new double[COST_EFFECTIVE_RATIO_STEP];
         cur_predictions = new FastVector();
-        crs = new FastVector();
-        ins_actual_predict = new LinkedHashMap<Instance, double[]>();
     }
 }

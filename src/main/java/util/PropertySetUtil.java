@@ -2,8 +2,7 @@ package util;
 
 public class PropertySetUtil {
     public static int PENCENTAGE_OF_CONCERN = 20;
-    public static boolean CALCULATION_COST = false;
-    public static boolean COUNT_COST_EFFECTIVENESS = false;
+    public static boolean CALCULATION_COST = true;
     public static String DETAIL_FILES_PATH = "DetailFiles/";
     public static String COST_FILES_PATH = "CostFiles/";
     public static String RESULT_FILES_PATH = "ResultFiles/";

@@ -20,10 +20,7 @@ public class Start {
     private static Logger logger = Logger.getLogger(Start.class);
 
     public static void main(String argv[]) throws Exception {
-        //getClassificationResult(LOC_FILE_PATH, ARFF_PATH, PROJECTS, BASE_LEARNERS, 100);
-//        DataProcessUtil.covertAllDetailFileToSK_ESDFile(DEFAULT_DETAIL_FOLDER, DEFAULT_SKESD_FOLDER,
-//                Classification.DETAIL_NUM, Classification.METHOD_NAMES, Classification.EVALUATION_NAMES);
-        getClassificationResult(PropertySetUtil.LOC_FILE_PATH, PropertySetUtil.ARFF_PATH, PropertySetUtil.PROJECTS, PropertySetUtil.BASE_LEARNERS,100);
+        getClassificationResult(PropertySetUtil.LOC_FILE_PATH, PropertySetUtil.ARFF_PATH, PropertySetUtil.PROJECTS, PropertySetUtil.BASE_LEARNERS, 100);
     }
 
     private static void getClassificationResult(String locFilePath, String arffPath, String[] projects,
@@ -33,7 +30,7 @@ public class Start {
         for (String base : baseLearners) {
             String output_file_name = PropertySetUtil.RESULT_FILES_PATH + base + "Result.csv";
             File outFile = new File(output_file_name);
-            if (outFile.exists()){
+            if (outFile.exists()) {
                 outFile.delete();
             }
             String measure_name = "project, method, recall-1, precision-1, fMeasure-1, auc";
@@ -61,7 +58,7 @@ public class Start {
                 logger.info("Number of buggy instances: " + count[1]);
                 Map<Instance, List<Integer>> ins_Loc = null;
                 List<List<Integer>> changedLineList = null;
-                if (PropertySetUtil.COUNT_COST_EFFECTIVENESS) {
+                if (PropertySetUtil.CALCULATION_COST) {
                     ins_Loc = new LinkedHashMap<>();
                     changedLineList = new ArrayList<>();
                     br = new BufferedReader(new FileReader(new File(locFilePath
