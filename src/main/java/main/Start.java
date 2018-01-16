@@ -37,8 +37,8 @@ public class Start {
 
     public static void main(String argv[]) throws Exception {
         //getClassificationResult(LOC_FILE_PATH, ARFF_PATH, PROJECTS, BASE_LEARNERS, 100);
-        DataProcessUtil.covertAllDetailFileToSK_ESDFile(DEFAULT_DETAIL_FOLDER, DEFAULT_SKESD_FOLDER,
-                Classification.DETAIL_NUM, Classification.METHOD_NAMES, Classification.EVALUATION_NAMES);
+//        DataProcessUtil.covertAllDetailFileToSK_ESDFile(DEFAULT_DETAIL_FOLDER, DEFAULT_SKESD_FOLDER,
+//                Classification.DETAIL_NUM, Classification.METHOD_NAMES, Classification.EVALUATION_NAMES);
     }
 
     private static void getClassificationResult(String locFilePath, String arffPath, String[] projects,

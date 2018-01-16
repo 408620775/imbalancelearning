@@ -34,7 +34,6 @@ public class Classification {
 
     public Classification(Instances data) {
         this.data = data;
-
     }
 
     public void setClassifier(String classifier_name_input) {

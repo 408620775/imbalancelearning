@@ -12,19 +12,51 @@ import java.util.Map;
 
 public class DataProcessUtil {
     private static Logger logger = Logger.getLogger(DataProcessUtil.class);
-    public static String SK_RESULT_FOLDER = "ResultFiles";
+    public static String SK_RESULT_FOLDER = "SK_RESULT";
     public static String FILENAME_DELIMITER = "_";
+    public static String PAPER_TABLE_SAVE_PATH = "PaperTables";
+    public static String AVERAGE_NAME = "Avg";
 
-    public static void getProjectRankOfMethod(String resultFolder) {
+    public static void getProjectRankOfMethod(String resultFolder) throws IOException {
         for (String baseLearner : Start.BASE_LEARNERS) {
-            Map<String, Map<String, Map<String, Integer>>> method_evaluation_project_rank = getPaperTable(baseLearner);
+            Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = getPaperTable(baseLearner);
+            writePaperTableAccordBase(method_evaluation_project_rank, baseLearner);
         }
     }
 
-    private static Map<String, Map<String, Map<String, Integer>>> getPaperTable(String baseLearner) throws IOException {
-        Map<String, Map<String, Map<String, Integer>>> method_evaluation_project_rank = initialPaperTableMap();
+    static void writePaperTableAccordBase(Map<String, Map<String, Map<String, Double>>>
+                                                  method_evaluation_project_rank, String baseLearner) throws IOException {
+        String savePath = PAPER_TABLE_SAVE_PATH + "/" + baseLearner + "_paperRank.csv";
+        File saveFile = new File(savePath);
+        StringBuffer line = new StringBuffer();
+        line.append(",,");
+        for (String project : Start.PROJECTS) {
+            line.append(project + ",");
+        }
+        line.append(AVERAGE_NAME);
+        PrintUtil.appendResult(line.toString(), savePath);
+        for (String methodName : Classification.METHOD_NAMES) {
+            for (int i = 0; i < Classification.EVALUATION_NAMES.size(); i++) {
+                line = new StringBuffer();
+                if (i == 0) {
+                    line.append(methodName);
+                }
+                line.append("," + Classification.EVALUATION_NAMES.get(i));
+                for (String project : Start.PROJECTS) {
+                    line.append("," + method_evaluation_project_rank.get(methodName).get(Classification.EVALUATION_NAMES
+                            .get(i)).get(project));
+                }
+                line.append("," + method_evaluation_project_rank.get(methodName).get(Classification.EVALUATION_NAMES
+                        .get(i)).get(AVERAGE_NAME));
+                PrintUtil.appendResult(line.toString(), savePath);
+            }
+        }
+    }
+
+    static Map<String, Map<String, Map<String, Double>>> getPaperTable(String baseLearner) throws IOException {
+        Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = initialPaperTableMap();
         for (String evaluation : Classification.EVALUATION_NAMES) {
-            String fileName = Character.toUpperCase(baseLearner.charAt(0)) + FILENAME_DELIMITER +
+            String fileName = SK_RESULT_FOLDER+"/"+Character.toUpperCase(baseLearner.charAt(0)) + FILENAME_DELIMITER +
                     evaluation + FILENAME_DELIMITER + "Rank";
             BufferedReader bReader = new BufferedReader(new FileReader(new File(fileName)));
             String line;
@@ -32,7 +64,7 @@ public class DataProcessUtil {
                 String projectName = "";
                 String methodName = "";
                 String evaluationName = evaluation;
-                Integer rankValue = 0;
+                Double rankValue = 0.0;
                 for (String project : Start.PROJECTS) {
                     if (!line.equals(project)) {
                         continue;
@@ -41,26 +73,48 @@ public class DataProcessUtil {
                     line = bReader.readLine();
                     for (int i = 0; i < Classification.METHOD_NAMES.size(); i++) {
                         line = bReader.readLine();
-                        if (!line.substring(1).startsWith(Classification.METHOD_NAMES.get(i))) {
-                            continue;
+                        for (int j = 0; j < Classification.METHOD_NAMES.size(); j++) {
+                            if (!line.split(",")[0].replace("\"","").equals(Classification.METHOD_NAMES.get(j))) {
+                                continue;
+                            }
+                            methodName = Classification.METHOD_NAMES.get(j);
+                            rankValue = Double.parseDouble(line.split(",")[1]);
+                            method_evaluation_project_rank.get(methodName).get(evaluation).put(projectName, rankValue);
+                            break;
                         }
-                        methodName = Classification.METHOD_NAMES.get(i);
-                        rankValue = Integer.parseInt(line.split(",")[1]);
-                        method_evaluation_project_rank.get(methodName).get(evaluation).put(projectName, rankValue);
                     }
+                    break;
                 }
             }
 
         }
+        AddAverageRankAccordProject(method_evaluation_project_rank);
         return method_evaluation_project_rank;
     }
 
-    private static Map<String, Map<String, Map<String, Integer>>> initialPaperTableMap() {
-        Map<String, Map<String, Map<String, Integer>>> method_evaluation_project_rank = new LinkedHashMap<>();
+    private static void AddAverageRankAccordProject(Map<String, Map<String, Map<String, Double>>>
+                                                            method_evaluation_project_rank) {
         for (String methodName : Classification.METHOD_NAMES) {
-            Map<String, Map<String, Integer>> evaluation_project_rank = new LinkedHashMap<>();
             for (String evaluationName : Classification.EVALUATION_NAMES) {
-                Map<String, Integer> project_rank = new LinkedHashMap<>();
+                double avgRank = 0.0;
+                int projectNum = 0;
+                Map<String, Double> project_rank = method_evaluation_project_rank.get(methodName).get(evaluationName);
+                for (String projectName : project_rank.keySet()) {
+                    avgRank += project_rank.get(projectName);
+                    projectNum++;
+                }
+                avgRank /= projectNum;
+                method_evaluation_project_rank.get(methodName).get(evaluationName).put(AVERAGE_NAME, avgRank);
+            }
+        }
+    }
+
+    private static Map<String, Map<String, Map<String, Double>>> initialPaperTableMap() {
+        Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = new LinkedHashMap<>();
+        for (String methodName : Classification.METHOD_NAMES) {
+            Map<String, Map<String, Double>> evaluation_project_rank = new LinkedHashMap<>();
+            for (String evaluationName : Classification.EVALUATION_NAMES) {
+                Map<String, Double> project_rank = new LinkedHashMap<>();
                 evaluation_project_rank.put(evaluationName, project_rank);
             }
             method_evaluation_project_rank.put(methodName, evaluation_project_rank);
