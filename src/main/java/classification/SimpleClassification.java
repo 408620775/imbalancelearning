@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import evaluation.MyEvaluation;
 import main.Start;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
@@ -28,10 +29,13 @@ public class SimpleClassification extends BasicClassification {
         PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
+        ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
-            Evaluation eval = evaluate(classifier, randomSeed, "none");
+            MyEvaluation eval = evaluate(classifier, randomSeed, "none");
             updateResult(validationResult, eval);
+            updateCostEffective(eval);
         }
+        writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
         return getResult(METHOD_NAMES.get(0), classifier_name, validationResult, times);

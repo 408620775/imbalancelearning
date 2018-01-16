@@ -1,11 +1,15 @@
 package classification;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import main.Start;
+import util.PrintUtil;
+import util.PropertySetUtil;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
@@ -28,9 +32,7 @@ public class BasicClassification {
     Map<Instance, List<Integer>> ins_Loc;
     protected double validationResult[] = new double[4];
     public static double[] ratioes;
-    public static boolean calcutionCost = false;
     public static int BIT_NUM_AFTER_DECIMAL = 2;
-    public static int PENCENTAGE_OF_CONCERN = 20;
 
     public BasicClassification(Instances data,
                                Map<Instance, List<Integer>> ins_Loc) {
@@ -98,7 +100,7 @@ public class BasicClassification {
     }
 
     public void updateCostEffective(MyEvaluation eval) {
-        if (!calcutionCost) {
+        if (!PropertySetUtil.CALCULATION_COST) {
             return;
         }
         double[] oneceRatio = eval.getCostEffectiveness();
@@ -108,7 +110,7 @@ public class BasicClassification {
     }
 
     public double[] getCostEffective(int times) {
-        if (!calcutionCost) {
+        if (!PropertySetUtil.CALCULATION_COST) {
             return null;
         }
         for (int i = 0; i < ratioes.length; i++) {
@@ -127,5 +129,12 @@ public class BasicClassification {
         return "";
     }
 
-    ;
+    protected void writeCostEffective(int times) throws IOException {
+        if (PropertySetUtil.CALCULATION_COST) {
+            double[] cost = getCostEffective(times);
+            PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, BIT_NUM_AFTER_DECIMAL), Start.CUR_COST_EFFECTIVE_RECORD);
+            PrintUtil.appendResult(PrintUtil.formatDouble(BIT_NUM_AFTER_DECIMAL, cost[PropertySetUtil.PENCENTAGE_OF_CONCERN]) + "", Start
+                    .CUR_COST_EFFECTIVE_RECORD);
+        }
+    }
 }

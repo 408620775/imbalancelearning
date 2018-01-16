@@ -8,6 +8,7 @@ import classification.ResampleSimpleClassification;
 import main.Start;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
+import util.PropertySetUtil;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
@@ -48,14 +49,16 @@ public class ResampleInBaggingClassification extends BasicClassification {
         PrintUtil.appendResult(METHOD_NAMES.get(2), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
+        ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
-            Evaluation eval = evaluate(bag_classifier, randomSeed, "none");
+            MyEvaluation eval = evaluate(bag_classifier, randomSeed, "none");
             updateResult(validationResult, eval);
+            updateCostEffective(eval);
         }
+        writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
         return getResult("," + METHOD_NAMES.get(2), classifier_name, validationResult, times);
-
     }
 
     public String getUnderBagClassificationResult(Classifier classifier,
@@ -73,12 +76,7 @@ public class ResampleInBaggingClassification extends BasicClassification {
             updateResult(validationResult, eval);
             updateCostEffective(eval);
         }
-        if (calcutionCost) {
-            double[] cost = getCostEffective(times);
-            PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, BIT_NUM_AFTER_DECIMAL), Start.CUR_COST_EFFECTIVE_RECORD);
-            PrintUtil.appendResult(PrintUtil.formatDouble(BIT_NUM_AFTER_DECIMAL, cost[PENCENTAGE_OF_CONCERN]) + "", Start
-                    .CUR_COST_EFFECTIVE_RECORD);
-        }
+        writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
         return getResult("," + METHOD_NAMES.get(1), classifier_name, validationResult, times);
@@ -95,10 +93,13 @@ public class ResampleInBaggingClassification extends BasicClassification {
         PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
+        ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
-            Evaluation eval = evaluate(bag_classifier, randomSeed, "none");
+            MyEvaluation eval = evaluate(bag_classifier, randomSeed, "none");
             updateResult(validationResult, eval);
+            updateCostEffective(eval);
         }
+        writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
         return getResult(METHOD_NAMES.get(0), classifier_name, validationResult, times);

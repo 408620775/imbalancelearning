@@ -59,6 +59,9 @@ public abstract class MyEvaluation extends Evaluation {
         return crs;
     }
 
+    public double get20PbCost(){
+        return 0;
+    }
     public double[] getCostEffectiveness() {
         int total_actual_bug_num = 0;
         double total_changedLine_num = 0;

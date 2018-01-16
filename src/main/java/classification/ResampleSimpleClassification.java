@@ -32,10 +32,13 @@ public class ResampleSimpleClassification extends BasicClassification {
         PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(METHOD_NAMES.get(0), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
+        ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
-            Evaluation eval = evaluate(classifier, randomSeed, "over");
+            MyEvaluation eval = evaluate(classifier, randomSeed, "over");
             updateResult(validationResult1, eval);
+            updateCostEffective(eval);
         }
+        writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
 
@@ -43,10 +46,13 @@ public class ResampleSimpleClassification extends BasicClassification {
         PrintUtil.appendResult(METHOD_NAMES.get(1), Start.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(METHOD_NAMES.get(1), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
+        ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(classifier, randomSeed, "under");
             updateResult(validationResult2, eval);
+            updateCostEffective(eval);
         }
+        writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
 
@@ -54,10 +60,13 @@ public class ResampleSimpleClassification extends BasicClassification {
         PrintUtil.appendResult(METHOD_NAMES.get(2), Start.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(METHOD_NAMES.get(2), Start.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
+        ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
-            Evaluation eval = evaluate(classifier, randomSeed, "smote");
+            MyEvaluation eval = evaluate(classifier, randomSeed, "smote");
             updateResult(validationResult3, eval);
+            updateCostEffective(eval);
         }
+        writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
 
