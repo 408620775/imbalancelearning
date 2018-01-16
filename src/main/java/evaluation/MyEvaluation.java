@@ -24,18 +24,18 @@ public abstract class MyEvaluation extends Evaluation {
     public static int INSTANCE_CHANGE_LINE_INDEX = 4;
     public static int EVALUATION_INDEX_NUM = 4;
     int num_inst = 0;
-    double[] num_correct = new double[1];
-    double[] num_tp1 = new double[1];
-    double[] num_tp2 = new double[1];
-    double[] numclass1 = new double[1];
-    double[] numclass2 = new double[1];
-    double[] numPredictClass1 = new double[1];
-    double[] numPredictClass2 = new double[1];
-    double[] costEffectiveness = new double[COST_EFFECTIVE_RATIO_STEP];
-    FastVector cur_predictions = new FastVector();
-    FastVector crs = new FastVector();
-    Map<Instance, double[]> ins_actual_predict = new LinkedHashMap<Instance, double[]>();
-    Map<Instance, List<Integer>> ins_loc;
+    double[] num_correct = null;
+    double[] num_tp1 = null;
+    double[] num_tp2 = null;
+    double[] numclass1 = null;
+    double[] numclass2 = null;
+    double[] numPredictClass1 = null;
+    double[] numPredictClass2 = null;
+    double[] costEffectiveness = null;
+    FastVector cur_predictions = null;
+    FastVector crs = null;
+    Map<Instance, double[]> ins_actual_predict = null;
+    Map<Instance, List<Integer>> ins_loc = null;
 
     public MyEvaluation(Instances data, Map<Instance, List<Integer>> ins_loc)
             throws Exception {
@@ -219,6 +219,20 @@ public abstract class MyEvaluation extends Evaluation {
 
     }
 
+    void initialForCrossVaild() {
+        num_inst = 0;
+        num_correct = new double[1];
+        num_tp1 = new double[1];
+        num_tp2 = new double[1];
+        numclass1 = new double[1];
+        numclass2 = new double[1];
+        numPredictClass1 = new double[1];
+        numPredictClass2 = new double[1];
+        costEffectiveness = new double[COST_EFFECTIVE_RATIO_STEP];
+        cur_predictions = new FastVector();
+        crs = new FastVector();
+    }
+
     void clearForNextFold() {
         numclass1[0] = 0;
         numclass2[0] = 0;
@@ -228,5 +242,9 @@ public abstract class MyEvaluation extends Evaluation {
         num_tp2[0] = 0;
         numPredictClass1[0] = 0;
         numPredictClass2[0] = 0;
+        costEffectiveness = new double[COST_EFFECTIVE_RATIO_STEP];
+        cur_predictions = new FastVector();
+        crs = new FastVector();
+        ins_actual_predict = new LinkedHashMap<Instance, double[]>();
     }
 }

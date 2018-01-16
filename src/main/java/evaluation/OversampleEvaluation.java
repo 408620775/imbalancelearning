@@ -28,7 +28,7 @@ public class OversampleEvaluation extends MyEvaluation {
     public void crossValidateModel(Classifier classifier, Instances data,
                                    int numFolds, Random random, Object... forPredictionsPrinting)
             throws Exception {
-
+        initialForCrossVaild();
         // Make a copy of the data we can reorder
         data = new Instances(data);
         data.randomize(random);

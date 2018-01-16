@@ -26,6 +26,7 @@ public class NonesampleEvaluation extends MyEvaluation {
     public void crossValidateModel(Classifier classifier, Instances data,
                                    int numFolds, Random random, Object... forPredictionsPrinting)
             throws Exception {
+        initialForCrossVaild();
         data = new Instances(data);
         data.randomize(random);
         if (data.classAttribute().isNominal()) {
