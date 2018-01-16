@@ -31,9 +31,13 @@ public class Start {
         String predict_result = "";
         logger.info("Arff Fold is :" + arffPath);
         for (String base : baseLearners) {
-            String output_file = PropertySetUtil.RESULT_FILES_PATH + base + "Result.csv";
+            String output_file_name = PropertySetUtil.RESULT_FILES_PATH + base + "Result.csv";
+            File outFile = new File(output_file_name);
+            if (outFile.exists()){
+                outFile.delete();
+            }
             String measure_name = "project, method, recall-1, precision-1, fMeasure-1, auc";
-            PrintUtil.saveResult(measure_name, output_file);
+            PrintUtil.saveResult(measure_name, output_file_name);
             logger.info(base + " for detail");
             for (int i = 0; i < projects.length; i++) {
                 String project = projects[i];
@@ -42,7 +46,7 @@ public class Start {
                 File cur_detail_file = new File(PropertySetUtil.CUR_DETAIL_FILENAME);
                 cur_detail_file.delete();
                 File cur_cost_file = new File(PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
-                cur_detail_file.delete();
+                cur_cost_file.delete();
                 logger.info(project);
                 String inputfile = arffPath + "/" + project + ".arff";
                 FileReader fr = new FileReader(inputfile);
@@ -86,7 +90,7 @@ public class Start {
                 }
                 Classification classification = new Classification(data);
                 predict_result = classification.predict(base, project, times, ins_Loc);
-                PrintUtil.appendResult(predict_result, output_file);
+                PrintUtil.appendResult(predict_result, output_file_name);
             }
         }
     }
