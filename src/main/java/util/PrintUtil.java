@@ -88,12 +88,14 @@ public class PrintUtil {
         for (String project : PropertySetUtil.PROJECTS) {
             write.append("," + project);
         }
+        write.append(","+PropertySetUtil.AVG_NAME);
         write.append("\n");
         for (String methodName : Classification.METHOD_NAMES) {
             write.append(methodName + ",");
             for (String project : PropertySetUtil.PROJECTS) {
                 write.append(project_method_time.get(project).get(methodName) + ",");
             }
+            write.append(project_method_time.get(PropertySetUtil.AVG_NAME).get(methodName));
             write.append("\n");
         }
         saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + "_Time.csv");

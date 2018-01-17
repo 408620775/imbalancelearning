@@ -237,13 +237,17 @@ public class DataProcessUtil {
         }
     }
 
+    public static void getRunTimeCsvFile(String runTimeFile, String saveFolder, String baseLearn) throws IOException {
+        Map<String, Map<String, Integer>> project_method_runTime = runTimeOnProjectOfMethod(runTimeFile);
+        PrintUtil.printTimeTable(project_method_runTime, baseLearn, saveFolder);
+    }
+
     /**
      * @param runTimeFile Run time file when base classifer is determined.
-     * @param baseLearn   The name of base learner.
      * @return project_method_runTime map.
      * @throws IOException
      */
-    private static Map<String, Map<String, Integer>> runTimeOnProjectOfMethod(String runTimeFile, String baseLearn) throws
+    private static Map<String, Map<String, Integer>> runTimeOnProjectOfMethod(String runTimeFile) throws
             IOException {
         File file = new File(runTimeFile);
         String line;
@@ -251,7 +255,6 @@ public class DataProcessUtil {
         BufferedReader bReader = new BufferedReader(new FileReader(file));
         String projectName = "";
         String methodName = "";
-        Integer runTime = 0;
         while ((line = bReader.readLine()) != null) {
             if (projectName.equals("")) {
                 for (String project : PropertySetUtil.PROJECTS) {
@@ -262,10 +265,9 @@ public class DataProcessUtil {
                 }
                 continue;
             }
-            res.put(projectName, new LinkedHashMap<>());
             if (methodName.equals("")) {
                 for (String name : Classification.METHOD_NAMES) {
-                    if (line.endsWith(methodName)) {
+                    if (line.substring(line.lastIndexOf(')') + 2).equals(name)) {
                         methodName = name;
                         break;
                     }
@@ -275,17 +277,36 @@ public class DataProcessUtil {
 
             String endS = line.substring(line.lastIndexOf(')') + 2);
             if (endS.startsWith("Time")) {
-                res.get(projectName).put(methodName, Integer.parseInt(endS.split(":")[1]));
-                projectName = "";
+                if (res.get(projectName) == null) {
+                    res.put(projectName, new LinkedHashMap<>());
+                }
+                String runTime = endS.split(":")[1];
+                runTime = runTime.substring(0, runTime.length() - 3);
+                res.get(projectName).put(methodName, Integer.parseInt(runTime));
+                if (methodName.equals("SmoteBoost")) {
+                    projectName = "";
+                }
                 methodName = "";
-            } else {
-                continue;
             }
         }
+        addAvgTime(res);
         return res;
     }
 
+    private static void addAvgTime(Map<String, Map<String, Integer>> res) {
+        res.put(PropertySetUtil.AVG_NAME, new LinkedHashMap<>());
+        for (String methodName : Classification.METHOD_NAMES) {
+            long time = 0;
+            for (String project : PropertySetUtil.PROJECTS) {
+                time += res.get(project).get(methodName);
+            }
+            int avg = (int) (time / (long) PropertySetUtil.PROJECTS.length);
+            res.get(PropertySetUtil.AVG_NAME).put(methodName, avg);
+        }
+    }
+
     public static void main(String[] args) throws IOException {
-        getForTwoRankCsv("SK_RESULT");
+        //getForTwoRankCsv("SK_RESULT");
+        getRunTimeCsvFile("TimeFolder/j48_time_log", "TimeFolder", "j");
     }
 }

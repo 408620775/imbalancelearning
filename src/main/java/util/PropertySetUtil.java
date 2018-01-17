@@ -13,6 +13,7 @@ public class PropertySetUtil {
     public static String CUR_COST_EFFECTIVE_RECORD = "";
     public static String LOC_FILE_PATH = "LOCFiles";
     public static String ARFF_PATH = "Arffs_old_paper";
+    public static String AVG_NAME = "Avg";
     public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
     //public static String[] BASE_LEARNERS = {"j48", "RF", "naivebayes", "smo"};
     public static String[] BASE_LEARNERS = {"smo"};
