@@ -1,11 +1,14 @@
 package util;
 
+import classification.Classification;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 
 public class PrintUtil {
     public static int CROSSVAILD_OUTPUT_DECIMAL = 4;
@@ -66,7 +69,7 @@ public class PrintUtil {
     public static void saveResult(String result, String file) throws IOException {
         FileWriter fw = new FileWriter(file, false);
         BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(result+"\n");
+        bw.write(result + "\n");
         bw.flush();
         bw.close();
     }
@@ -74,8 +77,25 @@ public class PrintUtil {
     public static void appendResult(String result, String file) throws IOException {
         FileWriter fa = new FileWriter(file, true);
         BufferedWriter ba = new BufferedWriter(fa);
-        ba.write(result+"\n");
+        ba.write(result + "\n");
         ba.flush();
         ba.close();
+    }
+
+    public static void printTimeTable(Map<String, Map<String, Integer>> project_method_time, String baseLearn, String
+            saveFolderPath) throws IOException {
+        StringBuffer write = new StringBuffer();
+        for (String project : PropertySetUtil.PROJECTS) {
+            write.append("," + project);
+        }
+        write.append("\n");
+        for (String methodName : Classification.METHOD_NAMES) {
+            write.append(methodName + ",");
+            for (String project : PropertySetUtil.PROJECTS) {
+                write.append(project_method_time.get(project).get(methodName) + ",");
+            }
+            write.append("\n");
+        }
+        saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + "_Time.csv");
     }
 }

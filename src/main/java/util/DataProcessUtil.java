@@ -23,6 +23,36 @@ public class DataProcessUtil {
         }
     }
 
+    public static void getForTwoRankCsv(String resultFolder) throws IOException {
+        for (String baseLearner : PropertySetUtil.BASE_LEARNERS) {
+            Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = getPaperTable(baseLearner);
+            writeTwoRankAccordEvaluation(method_evaluation_project_rank, baseLearner);
+        }
+    }
+
+    static void writeTwoRankAccordEvaluation(Map<String, Map<String, Map<String, Double>>>
+                                                     method_evaluation_project_rank, String base) throws IOException {
+        for (String evaluationName : Classification.EVALUATION_NAMES) {
+            String saveFileName = PropertySetUtil.FOR_TWO_RANK + base + "_" + evaluationName + "_FirstRank.csv";
+            File saveFile = new File(saveFileName);
+            if (saveFile.exists()) {
+                saveFile.delete();
+            }
+            StringBuffer line = new StringBuffer();
+            for (String methodName : Classification.METHOD_NAMES) {
+                line.append(methodName + ",");
+            }
+            PrintUtil.appendResult(line.toString(), saveFileName);
+            for (String project : PropertySetUtil.PROJECTS) {
+                line = new StringBuffer();
+                for (String methodName : Classification.METHOD_NAMES) {
+                    line.append(method_evaluation_project_rank.get(methodName).get(evaluationName).get(project) + ",");
+                }
+                PrintUtil.appendResult(line.toString(), saveFileName);
+            }
+        }
+    }
+
     static void writePaperTableAccordBase(Map<String, Map<String, Map<String, Double>>>
                                                   method_evaluation_project_rank, String baseLearner) throws IOException {
         String savePath = PAPER_TABLE_SAVE_PATH + "/" + baseLearner + "_paperRank.csv";
@@ -55,7 +85,7 @@ public class DataProcessUtil {
     static Map<String, Map<String, Map<String, Double>>> getPaperTable(String baseLearner) throws IOException {
         Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = initialPaperTableMap();
         for (String evaluation : Classification.EVALUATION_NAMES) {
-            String fileName = SK_RESULT_FOLDER+"/"+Character.toUpperCase(baseLearner.charAt(0)) + FILENAME_DELIMITER +
+            String fileName = SK_RESULT_FOLDER + "/" + Character.toUpperCase(baseLearner.charAt(0)) + FILENAME_DELIMITER +
                     evaluation + FILENAME_DELIMITER + "Rank";
             BufferedReader bReader = new BufferedReader(new FileReader(new File(fileName)));
             String line;
@@ -73,7 +103,7 @@ public class DataProcessUtil {
                     for (int i = 0; i < Classification.METHOD_NAMES.size(); i++) {
                         line = bReader.readLine();
                         for (int j = 0; j < Classification.METHOD_NAMES.size(); j++) {
-                            if (!line.split(",")[0].replace("\"","").equals(Classification.METHOD_NAMES.get(j))) {
+                            if (!line.split(",")[0].replace("\"", "").equals(Classification.METHOD_NAMES.get(j))) {
                                 continue;
                             }
                             methodName = Classification.METHOD_NAMES.get(j);
@@ -205,5 +235,57 @@ public class DataProcessUtil {
             covertDetailFileToSK_ESDFile(curFile.getAbsolutePath(), saveFloder.getAbsolutePath(), detailNum,
                     method_names, evaluation_names);
         }
+    }
+
+    /**
+     * @param runTimeFile Run time file when base classifer is determined.
+     * @param baseLearn   The name of base learner.
+     * @return project_method_runTime map.
+     * @throws IOException
+     */
+    private static Map<String, Map<String, Integer>> runTimeOnProjectOfMethod(String runTimeFile, String baseLearn) throws
+            IOException {
+        File file = new File(runTimeFile);
+        String line;
+        Map<String, Map<String, Integer>> res = new LinkedHashMap<>();
+        BufferedReader bReader = new BufferedReader(new FileReader(file));
+        String projectName = "";
+        String methodName = "";
+        Integer runTime = 0;
+        while ((line = bReader.readLine()) != null) {
+            if (projectName.equals("")) {
+                for (String project : PropertySetUtil.PROJECTS) {
+                    if (line.endsWith(project)) {
+                        projectName = project;
+                        break;
+                    }
+                }
+                continue;
+            }
+            res.put(projectName, new LinkedHashMap<>());
+            if (methodName.equals("")) {
+                for (String name : Classification.METHOD_NAMES) {
+                    if (line.endsWith(methodName)) {
+                        methodName = name;
+                        break;
+                    }
+                }
+                continue;
+            }
+
+            String endS = line.substring(line.lastIndexOf(')') + 2);
+            if (endS.startsWith("Time")) {
+                res.get(projectName).put(methodName, Integer.parseInt(endS.split(":")[1]));
+                projectName = "";
+                methodName = "";
+            } else {
+                continue;
+            }
+        }
+        return res;
+    }
+
+    public static void main(String[] args) throws IOException {
+        getForTwoRankCsv("SK_RESULT");
     }
 }

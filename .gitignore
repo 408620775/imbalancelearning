@@ -12,3 +12,11 @@ logs/
 *_COST
 *_DETAIL
 SK_RESULT/
+CostFiles/
+DetailFiles/
+For_Two_Rank/
+OriginDetailFiles/
+PaperTables/
+ResultFiles/
+SK_ESD/
+testCovert/

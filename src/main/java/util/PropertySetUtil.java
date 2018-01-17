@@ -3,6 +3,7 @@ package util;
 public class PropertySetUtil {
     public static int PENCENTAGE_OF_CONCERN = 20;
     public static boolean CALCULATION_COST = true;
+    public static String FOR_TWO_RANK = "For_Two_Rank/";
     public static String DETAIL_FILES_PATH = "DetailFiles/";
     public static String COST_FILES_PATH = "CostFiles/";
     public static String RESULT_FILES_PATH = "ResultFiles/";
@@ -13,7 +14,8 @@ public class PropertySetUtil {
     public static String LOC_FILE_PATH = "LOCFiles";
     public static String ARFF_PATH = "Arffs_old_paper";
     public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
-    public static String[] BASE_LEARNERS = {"j48", "RF", "naivebayes", "smo"};
+    //public static String[] BASE_LEARNERS = {"j48", "RF", "naivebayes", "smo"};
+    public static String[] BASE_LEARNERS = {"smo"};
     public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
             "MySynapse", "MyTomcat", "MyVoldemort"};
 
