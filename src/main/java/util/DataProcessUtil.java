@@ -239,7 +239,7 @@ public class DataProcessUtil {
 
     public static void getRunTimeCsvFile(String runTimeFile, String saveFolder, String baseLearn) throws IOException {
         Map<String, Map<String, Integer>> project_method_runTime = runTimeOnProjectOfMethod(runTimeFile);
-        PrintUtil.printTimeTable(project_method_runTime, baseLearn, saveFolder);
+        PrintUtil.printIntegerTable(project_method_runTime, baseLearn, saveFolder, "_Time.csv");
     }
 
     /**
@@ -305,8 +305,65 @@ public class DataProcessUtil {
         }
     }
 
+    public static void getCost20Pb(String costFolderPath) throws IOException {
+        for (String baseLearner : PropertySetUtil.BASE_LEARNERS) {
+            Map<String, Map<String, Double>> curRes = getCost20PbUnderSpecifyBase(costFolderPath, baseLearner);
+            PrintUtil.printDoubleTable(curRes, baseLearner, costFolderPath, "_20PbCOST.csv");
+        }
+    }
+
+    public static Map<String, Map<String, Double>> getCost20PbUnderSpecifyBase(String costFolderPath, String base)
+            throws IOException {
+        if (base.equals("J") || base.equals("j48")) {
+            base = "j48";
+        } else if (base.equals("N") || base.equals("naivebayes")) {
+            base = "naivebayes";
+        } else if (base.equals("R") || base.equals("RF")) {
+            base = "RF";
+        } else if (base.equals("S") || base.equals("smo")) {
+            base = "smo";
+        } else {
+            return null;
+        }
+        Map<String, Map<String, Double>> project_method_cost = new LinkedHashMap<>();
+
+        for (String project : PropertySetUtil.PROJECTS) {
+            project_method_cost.put(project, new LinkedHashMap<>());
+        }
+        for (String project : PropertySetUtil.PROJECTS) {
+            BufferedReader bReader = new BufferedReader(new FileReader(costFolderPath + "/" + base + "_" + project + "_COST"));
+            String line;
+            while ((line = bReader.readLine()) != null) {
+                if (line.equals("")) {
+                    break;
+                }
+                String methodName = line;
+                line = bReader.readLine();
+                line = bReader.readLine();
+                double cost20Pb = Double.parseDouble(line);
+                project_method_cost.get(project).put(methodName, cost20Pb);
+            }
+        }
+        AddAvgCost(project_method_cost);
+        return project_method_cost;
+    }
+
+    private static void AddAvgCost(Map<String, Map<String, Double>> project_method_cost) {
+        project_method_cost.put(PropertySetUtil.AVG_NAME, new LinkedHashMap<>());
+        Map<String, Double> avg_map = project_method_cost.get(PropertySetUtil.AVG_NAME);
+        for (String methodName : Classification.METHOD_NAMES) {
+            double value = 0.0;
+            for (String project : PropertySetUtil.PROJECTS) {
+                value += project_method_cost.get(project).get(methodName);
+            }
+            value /= PropertySetUtil.PROJECTS.length;
+            avg_map.put(methodName, PrintUtil.formatDouble(2, value));
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         //getForTwoRankCsv("SK_RESULT");
-        getRunTimeCsvFile("TimeFolder/j48_time_log", "TimeFolder", "j");
+        //getRunTimeCsvFile("TimeFolder/smo_time_log", "TimeFolder", "s");
+        getCost20Pb("CostFiles");
     }
 }

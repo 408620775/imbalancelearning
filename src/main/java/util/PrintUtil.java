@@ -61,6 +61,13 @@ public class PrintUtil {
         return res;
     }
 
+    /**
+     * Keep a few decimal places
+     *
+     * @param decimal The number of digits behind the decimal point.
+     * @param d       The number which need formatted.
+     * @return The number after formatting.
+     */
     public static double formatDouble(int decimal, double d) {
         BigDecimal bigDecimal = new BigDecimal(d);
         return bigDecimal.setScale(decimal, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -82,22 +89,50 @@ public class PrintUtil {
         ba.close();
     }
 
-    public static void printTimeTable(Map<String, Map<String, Integer>> project_method_time, String baseLearn, String
-            saveFolderPath) throws IOException {
+    /**
+     * Print a two-dimensional table to a file.
+     *
+     * @param project_method_value Map which store the data.
+     * @param baseLearn            The name of base learner.
+     * @param saveFolderPath       Folder which the result file will store.
+     * @param typeString           Suffix information added in the file name.
+     * @throws IOException
+     */
+    public static void printIntegerTable(Map<String, Map<String, Integer>> project_method_value, String baseLearn,
+                                         String saveFolderPath, String typeString) throws IOException {
         StringBuffer write = new StringBuffer();
         for (String project : PropertySetUtil.PROJECTS) {
             write.append("," + project);
         }
-        write.append(","+PropertySetUtil.AVG_NAME);
+        write.append("," + PropertySetUtil.AVG_NAME);
         write.append("\n");
         for (String methodName : Classification.METHOD_NAMES) {
             write.append(methodName + ",");
             for (String project : PropertySetUtil.PROJECTS) {
-                write.append(project_method_time.get(project).get(methodName) + ",");
+                write.append(project_method_value.get(project).get(methodName) + ",");
             }
-            write.append(project_method_time.get(PropertySetUtil.AVG_NAME).get(methodName));
+            write.append(project_method_value.get(PropertySetUtil.AVG_NAME).get(methodName));
             write.append("\n");
         }
-        saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + "_Time.csv");
+        saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + typeString);
+    }
+
+    public static void printDoubleTable(Map<String, Map<String, Double>> project_method_value, String baseLearn,
+                                        String saveFolderPath, String typeString) throws IOException {
+        StringBuffer write = new StringBuffer();
+        for (String project : PropertySetUtil.PROJECTS) {
+            write.append("," + project);
+        }
+        write.append("," + PropertySetUtil.AVG_NAME);
+        write.append("\n");
+        for (String methodName : Classification.METHOD_NAMES) {
+            write.append(methodName + ",");
+            for (String project : PropertySetUtil.PROJECTS) {
+                write.append(project_method_value.get(project).get(methodName) + ",");
+            }
+            write.append(project_method_value.get(PropertySetUtil.AVG_NAME).get(methodName));
+            write.append("\n");
+        }
+        saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + typeString);
     }
 }

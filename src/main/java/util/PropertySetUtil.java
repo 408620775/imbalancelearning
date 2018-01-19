@@ -16,7 +16,7 @@ public class PropertySetUtil {
     public static String AVG_NAME = "Avg";
     public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
     //public static String[] BASE_LEARNERS = {"j48", "RF", "naivebayes", "smo"};
-    public static String[] BASE_LEARNERS = {"smo"};
+    public static String[] BASE_LEARNERS = {"naivebayes"};
     public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
             "MySynapse", "MyTomcat", "MyVoldemort"};
 

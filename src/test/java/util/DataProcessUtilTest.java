@@ -9,7 +9,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class DataProcessUtilTest {
-    @Test
+
     public void getProjectRankOfMethod() throws Exception {
         Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = DataProcessUtil.getPaperTable
                 ("J");
