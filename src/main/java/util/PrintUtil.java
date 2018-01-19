@@ -101,17 +101,17 @@ public class PrintUtil {
     public static void printIntegerTable(Map<String, Map<String, Integer>> project_method_value, String baseLearn,
                                          String saveFolderPath, String typeString) throws IOException {
         StringBuffer write = new StringBuffer();
-        for (String project : PropertySetUtil.PROJECTS) {
+        for (String project : PropertyUtil.PROJECTS) {
             write.append("," + project);
         }
-        write.append("," + PropertySetUtil.AVG_NAME);
+        write.append("," + PropertyUtil.AVG_NAME);
         write.append("\n");
         for (String methodName : Classification.METHOD_NAMES) {
             write.append(methodName + ",");
-            for (String project : PropertySetUtil.PROJECTS) {
+            for (String project : PropertyUtil.PROJECTS) {
                 write.append(project_method_value.get(project).get(methodName) + ",");
             }
-            write.append(project_method_value.get(PropertySetUtil.AVG_NAME).get(methodName));
+            write.append(project_method_value.get(PropertyUtil.AVG_NAME).get(methodName));
             write.append("\n");
         }
         saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + typeString);
@@ -120,17 +120,17 @@ public class PrintUtil {
     public static void printDoubleTable(Map<String, Map<String, Double>> project_method_value, String baseLearn,
                                         String saveFolderPath, String typeString) throws IOException {
         StringBuffer write = new StringBuffer();
-        for (String project : PropertySetUtil.PROJECTS) {
+        for (String project : PropertyUtil.PROJECTS) {
             write.append("," + project);
         }
-        write.append("," + PropertySetUtil.AVG_NAME);
+        write.append("," + PropertyUtil.AVG_NAME);
         write.append("\n");
         for (String methodName : Classification.METHOD_NAMES) {
             write.append(methodName + ",");
-            for (String project : PropertySetUtil.PROJECTS) {
+            for (String project : PropertyUtil.PROJECTS) {
                 write.append(project_method_value.get(project).get(methodName) + ",");
             }
-            write.append(project_method_value.get(PropertySetUtil.AVG_NAME).get(methodName));
+            write.append(project_method_value.get(PropertyUtil.AVG_NAME).get(methodName));
             write.append("\n");
         }
         saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + typeString);

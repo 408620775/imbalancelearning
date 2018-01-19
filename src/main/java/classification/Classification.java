@@ -24,8 +24,6 @@ public class Classification {
     Instances data;
     String classifier_name;
     Classifier classifier;
-    String output_file;
-    String output_file_matrix;
     //Fix me , not equal with SimpleClassification.java.
     public static List<String> METHOD_NAMES = Arrays.asList("Simple", "ROS", "RUS", "Smote",
             "Bag", "ROSBag", "RUSBag", "SmoteBag", "Boost", "ROSBoost", "RUSBoost", "SmoteBoost");

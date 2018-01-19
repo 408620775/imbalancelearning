@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import util.PrintUtil;
-import util.PropertySetUtil;
+import util.PropertyUtil;
 import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -20,7 +20,7 @@ public class Start {
     private static Logger logger = Logger.getLogger(Start.class);
 
     public static void main(String argv[]) throws Exception {
-        getClassificationResult(PropertySetUtil.LOC_FILE_PATH, PropertySetUtil.ARFF_PATH, PropertySetUtil.PROJECTS, PropertySetUtil.BASE_LEARNERS, 100);
+        getClassificationResult(PropertyUtil.LOC_FILE_PATH, PropertyUtil.ARFF_PATH, PropertyUtil.PROJECTS, PropertyUtil.BASE_LEARNERS, 100);
     }
 
     private static void getClassificationResult(String locFilePath, String arffPath, String[] projects,
@@ -28,7 +28,7 @@ public class Start {
         String predict_result = "";
         logger.info("Arff Fold is :" + arffPath);
         for (String base : baseLearners) {
-            String output_file_name = PropertySetUtil.RESULT_FILES_PATH + base + "Result.csv";
+            String output_file_name = PropertyUtil.RESULT_FILES_PATH + PropertyUtil.FILE_SEPARATOR + base + "Result.csv";
             File outFile = new File(output_file_name);
             if (outFile.exists()) {
                 outFile.delete();
@@ -38,11 +38,14 @@ public class Start {
             logger.info(base + " for detail");
             for (int i = 0; i < projects.length; i++) {
                 String project = projects[i];
-                PropertySetUtil.CUR_DETAIL_FILENAME = PropertySetUtil.DETAIL_FILES_PATH + base + "_" + project + "_" + "DETAIL";
-                PropertySetUtil.CUR_COST_EFFECTIVE_RECORD = PropertySetUtil.COST_FILES_PATH + base + "_" + project + "_" + "COST";
-                File cur_detail_file = new File(PropertySetUtil.CUR_DETAIL_FILENAME);
+                backupData();
+                PropertyUtil.CUR_DETAIL_FILENAME = PropertyUtil.DETAIL_FILES_PATH + PropertyUtil
+                        .FILE_SEPARATOR + PropertyUtil.FILE_SEPARATOR + base + "_" + project + "_" + "DETAIL";
+                PropertyUtil.CUR_COST_EFFECTIVE_RECORD = PropertyUtil.COST_FILES_PATH + PropertyUtil
+                        .FILE_SEPARATOR + base + "_" + project + "_" + "COST";
+                File cur_detail_file = new File(PropertyUtil.CUR_DETAIL_FILENAME);
                 cur_detail_file.delete();
-                File cur_cost_file = new File(PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
+                File cur_cost_file = new File(PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
                 cur_cost_file.delete();
                 logger.info(project);
                 String inputfile = arffPath + "/" + project + ".arff";
@@ -58,7 +61,7 @@ public class Start {
                 logger.info("Number of buggy instances: " + count[1]);
                 Map<Instance, List<Integer>> ins_Loc = null;
                 List<List<Integer>> changedLineList = null;
-                if (PropertySetUtil.CALCULATION_COST) {
+                if (PropertyUtil.CALCULATION_COST) {
                     ins_Loc = new LinkedHashMap<>();
                     changedLineList = new ArrayList<>();
                     br = new BufferedReader(new FileReader(new File(locFilePath
@@ -90,5 +93,9 @@ public class Start {
                 PrintUtil.appendResult(predict_result, output_file_name);
             }
         }
+    }
+
+    private static void backupData() {
+
     }
 }

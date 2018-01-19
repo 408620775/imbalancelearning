@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import util.PrintUtil;
-import util.PropertySetUtil;
+import util.PropertyUtil;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -38,8 +38,8 @@ public class ResampleSimpleClassification extends BasicClassification {
     private String getSmoteBagClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
         logger.info(METHOD_NAMES.get(2));
         validationResult = new double[4];
-        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertySetUtil.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertyUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
@@ -56,8 +56,8 @@ public class ResampleSimpleClassification extends BasicClassification {
     private String getUnderBagClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
         logger.info(METHOD_NAMES.get(1));
         validationResult = new double[4];
-        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertySetUtil.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertyUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
@@ -74,8 +74,8 @@ public class ResampleSimpleClassification extends BasicClassification {
     private String getOverClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
         logger.info(METHOD_NAMES.get(0));
         validationResult = new double[4];
-        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertyUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {

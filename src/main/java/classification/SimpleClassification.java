@@ -7,7 +7,7 @@ import java.util.Map;
 import evaluation.MyEvaluation;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
-import util.PropertySetUtil;
+import util.PropertyUtil;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -24,8 +24,8 @@ public class SimpleClassification extends BasicClassification {
     public String getClassificationResult(Classifier classifier,
                                           String classifier_name, int times) throws Exception {
         logger.info(METHOD_NAMES.get(0));
-        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertyUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         validationResult = new double[4];
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];

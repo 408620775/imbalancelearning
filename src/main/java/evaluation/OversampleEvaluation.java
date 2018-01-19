@@ -7,7 +7,7 @@ import java.util.Random;
 import org.apache.log4j.Logger;
 import resample.OverSubsample;
 import util.PrintUtil;
-import util.PropertySetUtil;
+import util.PropertyUtil;
 import weka.classifiers.Classifier;
 import weka.core.FastVector;
 import weka.core.Instance;
@@ -57,7 +57,7 @@ public class OversampleEvaluation extends MyEvaluation {
                     numPredictClass2[0], cur_predictions);
             crs.addElement(cr);
             String detailString = getCrDetailString(cr);
-            PrintUtil.appendResult(detailString, PropertySetUtil.CUR_DETAIL_FILENAME);
+            PrintUtil.appendResult(detailString, PropertyUtil.CUR_DETAIL_FILENAME);
             clearForNextFold();
         }
         m_NumFolds = numFolds;

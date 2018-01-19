@@ -42,7 +42,7 @@ public class PrintUtilTest {
 
     @Test
     public void testForOrder() {
-        String[] test = PropertySetUtil.PROJECTS;
+        String[] test = PropertyUtil.PROJECTS;
         for (int i = 0; i < 100; i++) {
             StringBuffer sBuffer = new StringBuffer();
             StringBuffer cBuffer = new StringBuffer();

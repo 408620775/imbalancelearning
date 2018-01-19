@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import util.PrintUtil;
-import util.PropertySetUtil;
+import util.PropertyUtil;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.core.Instance;
@@ -99,7 +99,7 @@ public class BasicClassification {
     }
 
     public void updateCostEffective(MyEvaluation eval) {
-        if (!PropertySetUtil.CALCULATION_COST) {
+        if (!PropertyUtil.CALCULATION_COST) {
             return;
         }
         double[] oneceRatio = eval.getCostEffectiveness();
@@ -109,7 +109,7 @@ public class BasicClassification {
     }
 
     public double[] getCostEffective(int times) {
-        if (!PropertySetUtil.CALCULATION_COST) {
+        if (!PropertyUtil.CALCULATION_COST) {
             return null;
         }
         for (int i = 0; i < ratioes.length; i++) {
@@ -129,10 +129,10 @@ public class BasicClassification {
     }
 
     protected void writeCostEffective(int times) throws IOException {
-        if (PropertySetUtil.CALCULATION_COST) {
+        if (PropertyUtil.CALCULATION_COST) {
             double[] cost = getCostEffective(times);
-            PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, BIT_NUM_AFTER_DECIMAL), PropertySetUtil.CUR_COST_EFFECTIVE_RECORD);
-            PrintUtil.appendResult(PrintUtil.formatDouble(BIT_NUM_AFTER_DECIMAL, cost[PropertySetUtil.PENCENTAGE_OF_CONCERN]) + "", PropertySetUtil
+            PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, BIT_NUM_AFTER_DECIMAL), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
+            PrintUtil.appendResult(PrintUtil.formatDouble(BIT_NUM_AFTER_DECIMAL, cost[PropertyUtil.PENCENTAGE_OF_CONCERN]) + "", PropertyUtil
                     .CUR_COST_EFFECTIVE_RECORD);
         }
     }
