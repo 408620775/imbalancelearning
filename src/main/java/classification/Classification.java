@@ -79,6 +79,7 @@ public class Classification {
                 + ","
                 + use_classification.classify(times, classifier,
                 classifier_name);
+
         use_classification = new ResampleSimpleClassification(data, ins_Loc);
         predict_result += ","
                 + use_classification.classify(times, classifier,
