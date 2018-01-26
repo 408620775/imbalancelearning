@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import util.DataStorageUtil;
 import util.PrintUtil;
 import util.PropertyUtil;
 import weka.classifiers.Classifier;
@@ -98,14 +99,15 @@ public class BasicClassification {
         return;
     }
 
-    public void updateCostEffective(MyEvaluation eval) {
+    public void updateCostEffective(MyEvaluation eval, String method_name) {
         if (!PropertyUtil.CALCULATION_COST) {
             return;
         }
-        double[] oneceRatio = eval.getCostEffectiveness();
-        for (int i = 0; i < oneceRatio.length; i++) {
-            ratioes[i] += oneceRatio[i];
+        double[] curCrossVaildCostValue = eval.getCostEffectiveness();
+        for (int i = 0; i < curCrossVaildCostValue.length; i++) {
+            ratioes[i] += curCrossVaildCostValue[i];
         }
+        DataStorageUtil.method_cost20pbs_skOne_basedOnProject.get(method_name).add(curCrossVaildCostValue[20]);
     }
 
     public double[] getCostEffective(int times) {
@@ -134,6 +136,7 @@ public class BasicClassification {
             PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, BIT_NUM_AFTER_DECIMAL), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
             PrintUtil.appendResult(PrintUtil.formatDouble(BIT_NUM_AFTER_DECIMAL, cost[PropertyUtil.PENCENTAGE_OF_CONCERN]) + "", PropertyUtil
                     .CUR_COST_EFFECTIVE_RECORD);
+
         }
     }
 }

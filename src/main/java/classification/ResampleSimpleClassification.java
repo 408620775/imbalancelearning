@@ -1,6 +1,5 @@
 package classification;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class ResampleSimpleClassification extends BasicClassification {
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(classifier, randomSeed, "smote");
             updateResult(validationResult, eval);
-            updateCostEffective(eval);
+            updateCostEffective(eval, METHOD_NAMES.get(0));
         }
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
@@ -63,7 +62,7 @@ public class ResampleSimpleClassification extends BasicClassification {
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(classifier, randomSeed, "under");
             updateResult(validationResult, eval);
-            updateCostEffective(eval);
+            updateCostEffective(eval, METHOD_NAMES.get(0));
         }
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
@@ -81,7 +80,7 @@ public class ResampleSimpleClassification extends BasicClassification {
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(classifier, randomSeed, "over");
             updateResult(validationResult, eval);
-            updateCostEffective(eval);
+            updateCostEffective(eval, METHOD_NAMES.get(0));
         }
         writeCostEffective(times);
         endTime = System.currentTimeMillis();

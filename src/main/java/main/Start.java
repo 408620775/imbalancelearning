@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 
 import org.apache.log4j.Logger;
+import util.DataProcessUtil;
+import util.DataStorageUtil;
 import util.PrintUtil;
 import util.PropertyUtil;
 import weka.core.AttributeStats;
@@ -41,12 +43,17 @@ public class Start {
                         .FILE_PATH_DELIMITER + PropertyUtil.FILE_PATH_DELIMITER + base + "_" + project + "_" + "DETAIL";
                 PropertyUtil.CUR_COST_EFFECTIVE_RECORD = PropertyUtil.COST_FOLDER_PATH + PropertyUtil
                         .FILE_PATH_DELIMITER + base + "_" + project + "_" + "COST";
+                PropertyUtil.CUR_COST_20PB_SK_ONE = PropertyUtil.COST_FOLDER_PATH + PropertyUtil
+                        .FILE_PATH_DELIMITER + "COST20Pb_" + base + "_" + project + "_DETAIL.csv";
                 File cur_detail_file = new File(PropertyUtil.CUR_DETAIL_FILENAME);
                 cur_detail_file.delete();
                 cur_detail_file.createNewFile();
                 File cur_cost_file = new File(PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
                 cur_cost_file.delete();
                 cur_detail_file.createNewFile();
+                File cur_cost20pb_file = new File(PropertyUtil.CUR_COST_20PB_SK_ONE);
+                cur_cost20pb_file.delete();
+                cur_cost20pb_file.createNewFile();
                 logger.info(project);
                 String inputfile = arffPath + "/" + project + ".arff";
                 BufferedReader br = new BufferedReader(new FileReader(inputfile));
@@ -61,7 +68,16 @@ public class Start {
                 logger.info("Number of buggy instances: " + count[1]);
                 Map<Instance, List<Integer>> ins_Loc = null;
                 if (PropertyUtil.CALCULATION_COST) {
-                    initialInsLoc(ins_Loc, data, locFilePath, project);
+                    if (!initialInsLoc(ins_Loc, data, locFilePath, project)){
+                        return;
+                    }
+                    DataStorageUtil.method_cost20pbs_skOne_basedOnProject = new LinkedHashMap<>();
+                    for (int j = 0; j < PropertyUtil.METHOD_USE_MAP.length; j++) {
+                        if (PropertyUtil.METHOD_USE_MAP[j]) {
+                            DataStorageUtil.method_cost20pbs_skOne_basedOnProject.put(PropertyUtil.METHOD_NAMES.get(j),
+                                    new ArrayList<>());
+                        }
+                    }
                 }
                 Classification classification = new Classification(data);
                 predict_result = classification.predict(base, project, times, ins_Loc);
@@ -70,8 +86,8 @@ public class Start {
         }
     }
 
-    private static void initialInsLoc(Map<Instance, List<Integer>> ins_loc, Instances data, String locFilePath,
-                                      String project) throws IOException {
+    private static boolean initialInsLoc(Map<Instance, List<Integer>> ins_loc, Instances data, String locFilePath,
+                                         String project) throws IOException {
         List<List<Integer>> changedLineList = new ArrayList<>();
         ins_loc = new LinkedHashMap<>();
         BufferedReader br = new BufferedReader(new FileReader(new File(locFilePath
@@ -92,10 +108,11 @@ public class Start {
         if (changedLineList.size() != data.numInstances()) {
             logger.error("Error! The number in LOC File is different "
                     + "with the number in Arff File!");
-            return;
+            return false;
         }
         for (int j = 0; j < data.numInstances(); j++) {
             ins_loc.put(data.instance(j), changedLineList.get(j));
         }
+        return true;
     }
 }

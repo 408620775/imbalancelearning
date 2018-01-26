@@ -14,6 +14,7 @@ public class PropertyUtil {
     public static String DEFAULT_SKESD_FOLDER = "SK_ESD";
     public static String CUR_DETAIL_FILENAME = "";
     public static String CUR_COST_EFFECTIVE_RECORD = "";
+    public static String CUR_COST_20PB_SK_ONE = "";
     public static String LOC_FILE_PATH = "LOCFiles";
     public static String ARFF_PATH = "Arffs_old_paper";
     public static String AVG_NAME = "Avg";

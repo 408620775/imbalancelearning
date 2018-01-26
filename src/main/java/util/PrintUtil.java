@@ -1,5 +1,7 @@
 package util;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PrintUtil {
+    private static Logger logger = Logger.getLogger(PrintUtil.class);
     public static int CROSSVAILD_OUTPUT_DECIMAL = 4;
 
     public static void printListList(List<List<Double>> rankTable) {
@@ -134,5 +137,44 @@ public class PrintUtil {
             write.append("\n");
         }
         saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + typeString);
+    }
+
+    public static void printSKOneMap(Map<String, List<Double>> map, String savePath) throws IOException {
+        List<Map.Entry<String, List<Double>>> list = new ArrayList<>();
+        list.addAll(map.entrySet());
+        StringBuffer sBuffer = new StringBuffer();
+        boolean vaild = checkLengthEqual(list);
+        if (!vaild) {
+            logger.error("Error Length For Print SK_ONE!");
+            return;
+        }
+        for (int i = 0; i < list.size() - 1; i++) {
+            sBuffer.append(list.get(i).getKey() + ",");
+        }
+        sBuffer.append(list.get(list.size() - 1).getKey() + "\n");
+        int len = list.get(0).getValue().size();
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < list.size() - 1; j++) {
+                sBuffer.append(list.get(j).getValue().get(i) + ",");
+            }
+            sBuffer.append(list.get(list.size() - 1).getValue().get(i) + "\n");
+        }
+        saveResult(sBuffer.toString(), savePath);
+    }
+
+    private static boolean checkLengthEqual(List<Map.Entry<String, List<Double>>> list) {
+        if (list == null || list.size() == 0) {
+            logger.error("Empty Map For print SK_ONE!");
+            return false;
+        }
+        if (list.size() == 1) {
+            return true;
+        }
+        for (int i = 1; i < list.size(); i++) {
+            if (list.get(i).getValue().size() != list.get(0).getValue().size()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

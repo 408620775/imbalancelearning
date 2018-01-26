@@ -52,7 +52,7 @@ public class ResampleInBoostingClassification extends BasicClassification {
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(boost_classifier, randomSeed, "none");
             updateResult(validationResult, eval);
-            updateCostEffective(eval);
+            updateCostEffective(eval, METHOD_NAMES.get(0));
         }
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
@@ -75,7 +75,7 @@ public class ResampleInBoostingClassification extends BasicClassification {
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(boost_classifier, randomSeed, "none");
             updateResult(validationResult, eval);
-            updateCostEffective(eval);
+            updateCostEffective(eval, METHOD_NAMES.get(0));
         }
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
@@ -98,7 +98,7 @@ public class ResampleInBoostingClassification extends BasicClassification {
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(boost_classifier, randomSeed, "none");
             updateResult(validationResult, eval);
-            updateCostEffective(eval);
+            updateCostEffective(eval, METHOD_NAMES.get(0));
         }
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
