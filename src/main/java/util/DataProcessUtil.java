@@ -101,13 +101,13 @@ public class DataProcessUtil {
                     }
                     projectName = project;
                     line = bReader.readLine();
-                    for (int i = 0; i < PropertyUtil.METHOD_NAMES.size(); i++) {
+                    for (int i = 0; i < PropertyUtil.METHOD_NAMES.length; i++) {
                         line = bReader.readLine();
-                        for (int j = 0; j < PropertyUtil.METHOD_NAMES.size(); j++) {
-                            if (!line.split(",")[0].replace("\"", "").equals(PropertyUtil.METHOD_NAMES.get(j))) {
+                        for (int j = 0; j < PropertyUtil.METHOD_NAMES.length; j++) {
+                            if (!line.split(",")[0].replace("\"", "").equals(PropertyUtil.METHOD_NAMES[j])) {
                                 continue;
                             }
-                            methodName = PropertyUtil.METHOD_NAMES.get(j);
+                            methodName = PropertyUtil.METHOD_NAMES[j];
                             rankValue = Double.parseDouble(line.split(",")[1]);
                             method_evaluation_project_rank.get(methodName).get(evaluation).put(projectName, rankValue);
                             break;
@@ -153,14 +153,14 @@ public class DataProcessUtil {
     }
 
     public static void covertDetailFileToSK_ESDFile(String detaileFilePath, String SK_ESDFoldPath, int detailNum,
-                                                    List<String> method_names, List<String> evaluation_names)
+                                                    String[] method_names, List<String> evaluation_names)
             throws Exception {
         Map<String, Map<String, String[]>> evaluation_method_values = new LinkedHashMap<>();
         for (int i = 0; i < evaluation_names.size(); i++) {
             Map<String, String[]> method_values = new LinkedHashMap<>();
-            for (int j = 0; j < method_names.size(); j++) {
+            for (int j = 0; j < method_names.length; j++) {
                 String[] values = new String[detailNum];
-                method_values.put(method_names.get(j), values);
+                method_values.put(method_names[j], values);
             }
             evaluation_method_values.put(evaluation_names.get(i), method_values);
         }
@@ -197,13 +197,13 @@ public class DataProcessUtil {
     }
 
     private static void readDetailFileToMap(Map<String, Map<String, String[]>> evaluation_method_values,
-                                            String detaileFilePath, List<String> method_names,
+                                            String detaileFilePath, String[] method_names,
                                             List<String> evaluation_names, int detailNum) throws Exception {
         BufferedReader bReader = new BufferedReader(new FileReader(new File(detaileFilePath)));
         int curMethdoIndex = 0;
         String line;
         while ((line = bReader.readLine()) != null) {
-            if (!line.equals(method_names.get(curMethdoIndex))) {
+            if (!line.equals(method_names[curMethdoIndex])) {
                 logger.error("covertDetailFileToMap Error!");
                 throw new Exception("covertDetailFileToMap Error!");
             }
@@ -211,7 +211,7 @@ public class DataProcessUtil {
                 line = bReader.readLine();
                 String[] array = line.split(",");
                 for (int j = 0; j < evaluation_names.size(); j++) {
-                    evaluation_method_values.get(evaluation_names.get(j)).get(method_names.get(curMethdoIndex))[i] =
+                    evaluation_method_values.get(evaluation_names.get(j)).get(method_names[curMethdoIndex])[i] =
                             array[j];
                 }
             }
@@ -221,7 +221,8 @@ public class DataProcessUtil {
     }
 
     public static void covertAllDetailFileToSK_ESDFile(String detailFloderPath, String SK_ESDFoldPath, int detailNum,
-                                                       List<String> method_names, List<String> evaluation_names) throws Exception {
+                                                       String[] method_names, List<String> evaluation_names) throws
+            Exception {
         File detaildFloder = new File(detailFloderPath);
         if (!detaildFloder.exists()) {
             return;
@@ -374,7 +375,7 @@ public class DataProcessUtil {
             }
             String[] array = line.split(",");
             String methodNmae = array[1];
-            if (methodNmae.equals(PropertyUtil.METHOD_NAMES.get(0))) {
+            if (methodNmae.equals(PropertyUtil.METHOD_NAMES[0])) {
                 projectNum++;
             }
             for (int i = 0; i < Classification.EVALUATION_NAMES.size(); i++) {
@@ -412,9 +413,9 @@ public class DataProcessUtil {
             return "N";
         } else if (resultFileName.startsWith("s") || resultFileName.startsWith("S")) {
             return "S";
-        } else if (resultFileName.startsWith("r")||resultFileName.startsWith("R")){
+        } else if (resultFileName.startsWith("r") || resultFileName.startsWith("R")) {
             return "RF";
-        }else {
+        } else {
             logger.error("Can't judge base name by name " + resultFileName);
             return null;
         }

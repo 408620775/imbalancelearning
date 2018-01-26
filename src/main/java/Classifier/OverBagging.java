@@ -12,13 +12,13 @@ import weka.filters.Filter;
 
 /*
  * This classifier extends Bagging, but rewrite the buildClassifier
- * method. It use oversample to create the trainind dataset for each base
+ * methodName. It use oversample to create the trainind dataset for each base
  * classifier
  */
 public class OverBagging extends Bagging {
 
     /**
-     * Stump method for building the classifiers.
+     * Stump methodName for building the classifiers.
      *
      * @param data
      *            the training data to be used for generating the bagged
@@ -73,7 +73,7 @@ public class OverBagging extends Bagging {
                 bagData = data.resampleWithWeights(random, inBag[j]);
             } else {
                 // bagData = data.rCopyOfUnderBaggingesampleWithWeights(random);
-                // rewrite the sampling method and use under sampling
+                // rewrite the sampling methodName and use under sampling
                 Instances tempData = new Instances(data);
                 tempData.randomize(random);
                 OverSubsample oversample = new OverSubsample();

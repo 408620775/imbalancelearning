@@ -21,7 +21,7 @@ import evaluation.SmotesampleEvaluation;
 import evaluation.UndersampleEvaluation;
 
 /*
- * This is the super class of other classification method
+ * This is the super class of other classification methodName
  */
 public class BasicClassification {
 
@@ -69,7 +69,7 @@ public class BasicClassification {
     }
 
     // save the interested result of the classification
-    public String getResult(String methodname, String classifiername,
+    public String getResult(String methodNamename, String classifiername,
                             double validationResult[], int times) throws Exception {
         df = (DecimalFormat) NumberFormat.getInstance();
         df.applyPattern("0.0");
@@ -77,7 +77,7 @@ public class BasicClassification {
         double precison_1 = validationResult[1] * 100 / times;
         double fmeasure_1 = validationResult[2] * 100 / times;
         double auc = validationResult[3] * 100 / times;
-        return methodname + ", " + df.format(recall_1) + ", "
+        return methodNamename + ", " + df.format(recall_1) + ", "
                 + df.format(precison_1) + ", " + df.format(fmeasure_1) + ","
                 + df.format(auc) + "\n";
     }
@@ -99,7 +99,7 @@ public class BasicClassification {
         return;
     }
 
-    public void updateCostEffective(MyEvaluation eval, String method_name) {
+    public void updateCostEffective(MyEvaluation eval, String methodName_name) {
         if (!PropertyUtil.CALCULATION_COST) {
             return;
         }
@@ -107,7 +107,7 @@ public class BasicClassification {
         for (int i = 0; i < curCrossVaildCostValue.length; i++) {
             ratioes[i] += curCrossVaildCostValue[i];
         }
-        DataStorageUtil.method_cost20pbs_skOne_basedOnProject.get(method_name).add(curCrossVaildCostValue[20]);
+        DataStorageUtil.method_cost20pbs_skOne_basedOnProject.get(methodName_name).add(curCrossVaildCostValue[20]);
     }
 
     public double[] getCostEffective(int times) {
@@ -136,7 +136,6 @@ public class BasicClassification {
             PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, BIT_NUM_AFTER_DECIMAL), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
             PrintUtil.appendResult(PrintUtil.formatDouble(BIT_NUM_AFTER_DECIMAL, cost[PropertyUtil.PENCENTAGE_OF_CONCERN]) + "", PropertyUtil
                     .CUR_COST_EFFECTIVE_RECORD);
-
         }
     }
 }

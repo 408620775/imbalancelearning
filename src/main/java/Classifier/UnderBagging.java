@@ -12,12 +12,12 @@ import weka.filters.supervised.instance.SpreadSubsample;
 
 /*
  * This classifier extends Bagging, but rewrite the buildClassifier
- * method. It use undersample to create the trainind dataset for each base
+ * methodName. It use undersample to create the trainind dataset for each base
  * classifier
  */
 public class UnderBagging extends Bagging{
     /**
-     * Stump method for building the classifiers.
+     * Stump methodName for building the classifiers.
      *
      * @param data the training data to be used for generating the
      * bagged classifier.
@@ -70,7 +70,7 @@ public class UnderBagging extends Bagging{
                 bagData = data.resampleWithWeights(random, inBag[j]);
             } else {
                 //bagData = data.resampleWithWeights(random);
-                //rewrite the sampling method and use under sampling
+                //rewrite the sampling methodName and use under sampling
                 Instances tempData = new Instances(data);
                 tempData.randomize(random);
                 SpreadSubsample undersample = new SpreadSubsample();

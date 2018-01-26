@@ -14,7 +14,7 @@ import weka.filters.supervised.instance.SMOTE;
 
 public class SmoteBagging extends Bagging{
     /**
-     * Stump method for building the classifiers.
+     * Stump methodName for building the classifiers.
      *
      * @param data the training data to be used for generating the
      * bagged classifier.
@@ -67,7 +67,7 @@ public class SmoteBagging extends Bagging{
             bagData = data.resampleWithWeights(random, inBag[j]);
           } else {
             //bagData = data.resampleWithWeights(random);
-              //rewrite the sampling method and use under sampling
+              //rewrite the sampling methodName and use under sampling
               Instances tempData = new Instances(data);
               tempData.randomize(random);
               SMOTE smotesample = new SMOTE();

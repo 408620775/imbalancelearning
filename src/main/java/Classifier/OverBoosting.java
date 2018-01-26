@@ -17,7 +17,7 @@ public class OverBoosting extends AdaBoostM1 {
     private static final long serialVersionUID = -6717894908824625225L;
 
     /**
-     * Boosting method. Boosts using resampling
+     * Boosting methodName. Boosts using resampling
      *
      * @param data
      *            the training data to be used for generating the boosted

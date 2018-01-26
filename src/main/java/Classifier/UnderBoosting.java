@@ -12,7 +12,7 @@ import weka.filters.supervised.instance.SpreadSubsample;
 public class UnderBoosting extends AdaBoostM1 {
 
     /**
-     * Boosting method. Boosts using resampling
+     * Boosting methodName. Boosts using resampling
      *
      * @param data
      *            the training data to be used for generating the boosted

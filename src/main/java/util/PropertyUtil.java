@@ -22,11 +22,13 @@ public class PropertyUtil {
     public static String FILE_PATH_DELIMITER = "/";
     public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
     //public static String[] BASE_LEARNERS = {"j48", "RF", "naivebayes", "smo"};
-    public static String[] BASE_LEARNERS = {"j48", "RF"};
+    public static String[] BASE_LEARNERS = {"naivebayes", "smo"};
     public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
             "MySynapse", "MyTomcat", "MyVoldemort"};
-    public static List<String> METHOD_NAMES = Arrays.asList("Simple", "ROS", "RUS", "Smote",
-            "Bag", "ROSBag", "RUSBag", "SmoteBag", "Boost", "ROSBoost", "RUSBoost", "SmoteBoost");
+
+    //Be careful to change!
+    public static String[] METHOD_NAMES = {"Simple", "ROS", "RUS", "Smote", "Bag", "ROSBag", "RUSBag", "SmoteBag",
+            "Boost", "ROSBoost", "RUSBoost", "SmoteBoost"};
 
     //2,3,6,7,10,11 is no use.
     public static boolean[] METHOD_USE_MAP = {true, true, true, true, true, true, true, true, true, true, true, true};

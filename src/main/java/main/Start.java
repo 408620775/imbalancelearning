@@ -4,10 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import org.apache.log4j.Logger;
-import util.DataProcessUtil;
-import util.DataStorageUtil;
-import util.PrintUtil;
-import util.PropertyUtil;
+import util.*;
 import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -27,6 +24,7 @@ public class Start {
         PropertyUtil.CALCULATION_COST = calcuteCost;
         logger.info("Arff Fold is :" + arffPath);
         logger.info("Calculate cost = " + calcuteCost);
+        FileUtil.checkFolder();
         for (String base : baseLearners) {
             String output_file_name = PropertyUtil.RESULT_FOLDER_PATH + PropertyUtil.FILE_PATH_DELIMITER + base + "Result.csv";
             File outFile = new File(output_file_name);
@@ -66,15 +64,15 @@ public class Start {
                         .attributeStats(data.numAttributes() - 1);
                 int count[] = as.nominalCounts;
                 logger.info("Number of buggy instances: " + count[1]);
-                Map<Instance, List<Integer>> ins_Loc = null;
+                Map<Instance, List<Integer>> ins_Loc = new LinkedHashMap<>();
                 if (PropertyUtil.CALCULATION_COST) {
-                    if (!initialInsLoc(ins_Loc, data, locFilePath, project)){
+                    if (!initialInsLoc(ins_Loc, data, locFilePath, project)) {
                         return;
                     }
                     DataStorageUtil.method_cost20pbs_skOne_basedOnProject = new LinkedHashMap<>();
                     for (int j = 0; j < PropertyUtil.METHOD_USE_MAP.length; j++) {
                         if (PropertyUtil.METHOD_USE_MAP[j]) {
-                            DataStorageUtil.method_cost20pbs_skOne_basedOnProject.put(PropertyUtil.METHOD_NAMES.get(j),
+                            DataStorageUtil.method_cost20pbs_skOne_basedOnProject.put(PropertyUtil.METHOD_NAMES[j],
                                     new ArrayList<>());
                         }
                     }
@@ -89,7 +87,6 @@ public class Start {
     private static boolean initialInsLoc(Map<Instance, List<Integer>> ins_loc, Instances data, String locFilePath,
                                          String project) throws IOException {
         List<List<Integer>> changedLineList = new ArrayList<>();
-        ins_loc = new LinkedHashMap<>();
         BufferedReader br = new BufferedReader(new FileReader(new File(locFilePath
                 + "/" + project + "LOC")));
         String line;

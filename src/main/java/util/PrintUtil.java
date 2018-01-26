@@ -139,7 +139,7 @@ public class PrintUtil {
         saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + typeString);
     }
 
-    public static void printSKOneMap(Map<String, List<Double>> map, String savePath) throws IOException {
+    public static void printSKOneMap(Map<String, List<Double>> map, String savePath, int decimal) throws IOException {
         List<Map.Entry<String, List<Double>>> list = new ArrayList<>();
         list.addAll(map.entrySet());
         StringBuffer sBuffer = new StringBuffer();
@@ -155,9 +155,9 @@ public class PrintUtil {
         int len = list.get(0).getValue().size();
         for (int i = 0; i < len; i++) {
             for (int j = 0; j < list.size() - 1; j++) {
-                sBuffer.append(list.get(j).getValue().get(i) + ",");
+                sBuffer.append(PrintUtil.formatDouble(decimal, list.get(j).getValue().get(i)) + ",");
             }
-            sBuffer.append(list.get(list.size() - 1).getValue().get(i) + "\n");
+            sBuffer.append(PrintUtil.formatDouble(decimal, list.get(list.size() - 1).getValue().get(i)) + "\n");
         }
         saveResult(sBuffer.toString(), savePath);
     }

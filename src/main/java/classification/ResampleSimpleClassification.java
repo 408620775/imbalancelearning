@@ -1,6 +1,5 @@
 package classification;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +13,8 @@ import evaluation.MyEvaluation;
 
 public class ResampleSimpleClassification extends BasicClassification {
     private static Logger logger = Logger.getLogger(ResampleSimpleClassification.class);
-    public static List<String> METHOD_NAMES = Arrays.asList("ROS", "RUS", "Smote");
 
-    public ResampleSimpleClassification(Instances data,
-                                        Map<Instance, List<Integer>> ins_Loc) {
+    public ResampleSimpleClassification(Instances data, Map<Instance, List<Integer>> ins_Loc) {
         super(data, ins_Loc);
     }
 
@@ -27,64 +24,67 @@ public class ResampleSimpleClassification extends BasicClassification {
         String predictResult = "";
         predictResult += getOverClassificationResult(classifier,
                 classifier_name, times);
-        predictResult += getUnderBagClassificationResult(classifier,
+        predictResult += getUnderClassificationResult(classifier,
                 classifier_name, times);
-        predictResult += getSmoteBagClassificationResult(classifier,
+        predictResult += getSmoteClassificationResult(classifier,
                 classifier_name, times);
         return predictResult;
     }
 
-    private String getSmoteBagClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
-        logger.info(METHOD_NAMES.get(2));
+    private String getSmoteClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
+        String methodName = PropertyUtil.METHOD_NAMES[3];
+        logger.info(methodName);
         validationResult = new double[4];
-        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertyUtil.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(2), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(classifier, randomSeed, "smote");
             updateResult(validationResult, eval);
-            updateCostEffective(eval, METHOD_NAMES.get(0));
+            updateCostEffective(eval, methodName);
         }
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult("," + METHOD_NAMES.get(2), classifier_name, validationResult, times);
+        return getResult("," + methodName, classifier_name, validationResult, times);
     }
 
-    private String getUnderBagClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
-        logger.info(METHOD_NAMES.get(1));
+    private String getUnderClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
+        String methodName = PropertyUtil.METHOD_NAMES[2];
+        logger.info(methodName);
         validationResult = new double[4];
-        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertyUtil.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(1), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(classifier, randomSeed, "under");
             updateResult(validationResult, eval);
-            updateCostEffective(eval, METHOD_NAMES.get(0));
+            updateCostEffective(eval, methodName);
         }
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult("," + METHOD_NAMES.get(1), classifier_name, validationResult, times);
+        return getResult("," + methodName, classifier_name, validationResult, times);
     }
 
     private String getOverClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
-        logger.info(METHOD_NAMES.get(0));
+        String methodName = PropertyUtil.METHOD_NAMES[1];
+        logger.info(methodName);
         validationResult = new double[4];
-        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertyUtil.CUR_DETAIL_FILENAME);
-        PrintUtil.appendResult(METHOD_NAMES.get(0), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
+        PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
+        PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         startTime = System.currentTimeMillis();
         ratioes = new double[MyEvaluation.COST_EFFECTIVE_RATIO_STEP];
         for (int randomSeed = 1; randomSeed <= times; randomSeed++) {
             MyEvaluation eval = evaluate(classifier, randomSeed, "over");
             updateResult(validationResult, eval);
-            updateCostEffective(eval, METHOD_NAMES.get(0));
+            updateCostEffective(eval, methodName);
         }
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult(METHOD_NAMES.get(0), classifier_name, validationResult, times);
+        return getResult(methodName, classifier_name, validationResult, times);
     }
 }

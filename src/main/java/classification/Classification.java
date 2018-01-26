@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import util.DataStorageUtil;
+import util.PrintUtil;
 import util.PropertyUtil;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
@@ -93,6 +95,8 @@ public class Classification {
             use_classification = new ResampleInBoostingClassification(data, ins_Loc);
             predict_result += "," + use_classification.classify(times, classifier, classifier_name);
         }
+        PrintUtil.printSKOneMap(DataStorageUtil.method_cost20pbs_skOne_basedOnProject,PropertyUtil
+                .CUR_COST_20PB_SK_ONE,2);
         return predict_result;
     }
 }
