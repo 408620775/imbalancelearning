@@ -33,20 +33,20 @@ public class DataProcessUtil {
     static void writeTwoRankAccordEvaluation(Map<String, Map<String, Map<String, Double>>>
                                                      method_evaluation_project_rank, String base) throws IOException {
         for (String evaluationName : Classification.EVALUATION_NAMES) {
-            String saveFileName = PropertyUtil.FOR_TWO_RANK + PropertyUtil.FILE_SEPARATOR + base + "_" +
+            String saveFileName = PropertyUtil.FOR_TWO_RANK + PropertyUtil.FILE_PATH_DELIMITER + base + "_" +
                     evaluationName + "_FirstRank.csv";
             File saveFile = new File(saveFileName);
             if (saveFile.exists()) {
                 saveFile.delete();
             }
             StringBuffer line = new StringBuffer();
-            for (String methodName : Classification.METHOD_NAMES) {
+            for (String methodName : PropertyUtil.METHOD_NAMES) {
                 line.append(methodName + ",");
             }
             PrintUtil.appendResult(line.toString(), saveFileName);
             for (String project : PropertyUtil.PROJECTS) {
                 line = new StringBuffer();
-                for (String methodName : Classification.METHOD_NAMES) {
+                for (String methodName : PropertyUtil.METHOD_NAMES) {
                     line.append(method_evaluation_project_rank.get(methodName).get(evaluationName).get(project) + ",");
                 }
                 PrintUtil.appendResult(line.toString(), saveFileName);
@@ -65,7 +65,7 @@ public class DataProcessUtil {
         }
         line.append(AVERAGE_NAME);
         PrintUtil.appendResult(line.toString(), savePath);
-        for (String methodName : Classification.METHOD_NAMES) {
+        for (String methodName : PropertyUtil.METHOD_NAMES) {
             for (int i = 0; i < Classification.EVALUATION_NAMES.size(); i++) {
                 line = new StringBuffer();
                 if (i == 0) {
@@ -101,13 +101,13 @@ public class DataProcessUtil {
                     }
                     projectName = project;
                     line = bReader.readLine();
-                    for (int i = 0; i < Classification.METHOD_NAMES.size(); i++) {
+                    for (int i = 0; i < PropertyUtil.METHOD_NAMES.size(); i++) {
                         line = bReader.readLine();
-                        for (int j = 0; j < Classification.METHOD_NAMES.size(); j++) {
-                            if (!line.split(",")[0].replace("\"", "").equals(Classification.METHOD_NAMES.get(j))) {
+                        for (int j = 0; j < PropertyUtil.METHOD_NAMES.size(); j++) {
+                            if (!line.split(",")[0].replace("\"", "").equals(PropertyUtil.METHOD_NAMES.get(j))) {
                                 continue;
                             }
-                            methodName = Classification.METHOD_NAMES.get(j);
+                            methodName = PropertyUtil.METHOD_NAMES.get(j);
                             rankValue = Double.parseDouble(line.split(",")[1]);
                             method_evaluation_project_rank.get(methodName).get(evaluation).put(projectName, rankValue);
                             break;
@@ -124,7 +124,7 @@ public class DataProcessUtil {
 
     private static void AddAverageRankAccordProject(Map<String, Map<String, Map<String, Double>>>
                                                             method_evaluation_project_rank) {
-        for (String methodName : Classification.METHOD_NAMES) {
+        for (String methodName : PropertyUtil.METHOD_NAMES) {
             for (String evaluationName : Classification.EVALUATION_NAMES) {
                 double avgRank = 0.0;
                 int projectNum = 0;
@@ -141,7 +141,7 @@ public class DataProcessUtil {
 
     private static Map<String, Map<String, Map<String, Double>>> initialPaperTableMap() {
         Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = new LinkedHashMap<>();
-        for (String methodName : Classification.METHOD_NAMES) {
+        for (String methodName : PropertyUtil.METHOD_NAMES) {
             Map<String, Map<String, Double>> evaluation_project_rank = new LinkedHashMap<>();
             for (String evaluationName : Classification.EVALUATION_NAMES) {
                 Map<String, Double> project_rank = new LinkedHashMap<>();
@@ -267,7 +267,7 @@ public class DataProcessUtil {
                 continue;
             }
             if (methodName.equals("")) {
-                for (String name : Classification.METHOD_NAMES) {
+                for (String name : PropertyUtil.METHOD_NAMES) {
                     if (line.substring(line.lastIndexOf(')') + 2).equals(name)) {
                         methodName = name;
                         break;
@@ -296,7 +296,7 @@ public class DataProcessUtil {
 
     private static void addAvgTime(Map<String, Map<String, Integer>> res) {
         res.put(PropertyUtil.AVG_NAME, new LinkedHashMap<>());
-        for (String methodName : Classification.METHOD_NAMES) {
+        for (String methodName : PropertyUtil.METHOD_NAMES) {
             long time = 0;
             for (String project : PropertyUtil.PROJECTS) {
                 time += res.get(project).get(methodName);
@@ -315,19 +315,11 @@ public class DataProcessUtil {
 
     public static Map<String, Map<String, Double>> getCost20PbUnderSpecifyBase(String costFolderPath, String base)
             throws IOException {
-        if (base.equals("J") || base.equals("j48")) {
-            base = "j48";
-        } else if (base.equals("N") || base.equals("naivebayes")) {
-            base = "naivebayes";
-        } else if (base.equals("R") || base.equals("RF")) {
-            base = "RF";
-        } else if (base.equals("S") || base.equals("smo")) {
-            base = "smo";
-        } else {
+        base = judgeBaseName(base);
+        if (base == null) {
             return null;
         }
         Map<String, Map<String, Double>> project_method_cost = new LinkedHashMap<>();
-
         for (String project : PropertyUtil.PROJECTS) {
             project_method_cost.put(project, new LinkedHashMap<>());
         }
@@ -352,7 +344,7 @@ public class DataProcessUtil {
     private static void AddAvgCost(Map<String, Map<String, Double>> project_method_cost) {
         project_method_cost.put(PropertyUtil.AVG_NAME, new LinkedHashMap<>());
         Map<String, Double> avg_map = project_method_cost.get(PropertyUtil.AVG_NAME);
-        for (String methodName : Classification.METHOD_NAMES) {
+        for (String methodName : PropertyUtil.METHOD_NAMES) {
             double value = 0.0;
             for (String project : PropertyUtil.PROJECTS) {
                 value += project_method_cost.get(project).get(methodName);
@@ -362,9 +354,79 @@ public class DataProcessUtil {
         }
     }
 
+    public static Map<String, Map<String, Double>> getPaperResultMapForBase(String resultCsvFilePath) throws IOException {
+        if (resultCsvFilePath == null || resultCsvFilePath.length() == 0) {
+            logger.error("Empty result file to get paper result file.");
+            return null;
+        }
+        File resultFile = new File(resultCsvFilePath);
+        Map<String, Map<String, Double>> evaluation_method_value = new LinkedHashMap<>();
+        for (String evaluationName : Classification.EVALUATION_NAMES) {
+            evaluation_method_value.put(evaluationName, new LinkedHashMap<>());
+        }
+        BufferedReader bReader = new BufferedReader(new FileReader(resultFile));
+        String line;
+        int projectNum = 0;
+
+        while ((line = bReader.readLine()) != null) {
+            if (line.equals("") || line.startsWith("project")) {
+                continue;
+            }
+            String[] array = line.split(",");
+            String methodNmae = array[1];
+            if (methodNmae.equals(PropertyUtil.METHOD_NAMES.get(0))) {
+                projectNum++;
+            }
+            for (int i = 0; i < Classification.EVALUATION_NAMES.size(); i++) {
+                addValueOfMethodUnderEvaluation(evaluation_method_value, Classification.EVALUATION_NAMES.get(i),
+                        methodNmae, Double.parseDouble(array[i + 2]));
+            }
+        }
+        bReader.close();
+        for (String evaluation : Classification.EVALUATION_NAMES) {
+            for (String method : PropertyUtil.METHOD_NAMES) {
+                double originValue = evaluation_method_value.get(evaluation).get(method);
+                evaluation_method_value.get(evaluation).put(method, PrintUtil.formatDouble(2, originValue / projectNum));
+            }
+        }
+        return evaluation_method_value;
+    }
+
+    private static void addValueOfMethodUnderEvaluation(Map<String, Map<String, Double>> evaluation_method_value,
+                                                        String evaluation, String methodName, Double value) {
+        if (!evaluation_method_value.get(evaluation).containsKey(methodName)) {
+            evaluation_method_value.get(evaluation).put(methodName, 0.0);
+        }
+        double originValue = evaluation_method_value.get(evaluation).get(methodName);
+        evaluation_method_value.get(evaluation).put(methodName, originValue + value);
+    }
+
+    private static String judgeBaseName(String resultFileName) {
+        if (resultFileName == null || resultFileName.length() == 0) {
+            logger.error("Can't judge base name by empty name!");
+            return null;
+        }
+        if (resultFileName.startsWith("j") || resultFileName.startsWith("J")) {
+            return "J";
+        } else if (resultFileName.startsWith("n") || resultFileName.startsWith("N")) {
+            return "N";
+        } else if (resultFileName.startsWith("s") || resultFileName.startsWith("S")) {
+            return "S";
+        } else if (resultFileName.startsWith("r")||resultFileName.startsWith("R")){
+            return "RF";
+        }else {
+            logger.error("Can't judge base name by name " + resultFileName);
+            return null;
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         //getForTwoRankCsv("SK_RESULT");
         //getRunTimeCsvFile("TimeFolder/smo_time_log", "TimeFolder", "s");
-        getCost20Pb("CostFiles");
+        //getCost20Pb("CostFiles");
+        Map<String, Map<String, Double>> eva_method_value = getPaperResultMapForBase
+                ("Arffs_Old_Paper_All_Result/ResultFiles/smoResult.csv");
+        PrintUtil.printDoubleTable(eva_method_value, "s", "Arffs_Old_Paper_All_Result/ResultFiles", "PaperResult" +
+                ".csv");
     }
 }

@@ -1,12 +1,7 @@
 package main;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import util.PrintUtil;
@@ -20,38 +15,43 @@ public class Start {
     private static Logger logger = Logger.getLogger(Start.class);
 
     public static void main(String argv[]) throws Exception {
-        getClassificationResult(PropertyUtil.LOC_FILE_PATH, PropertyUtil.ARFF_PATH, PropertyUtil.PROJECTS, PropertyUtil.BASE_LEARNERS, 100);
+        getClassificationResult(PropertyUtil.LOC_FILE_PATH, PropertyUtil.ARFF_PATH, PropertyUtil.PROJECTS, PropertyUtil
+                .BASE_LEARNERS, 100, true);
     }
 
     private static void getClassificationResult(String locFilePath, String arffPath, String[] projects,
-                                                String[] baseLearners, int times) throws Exception {
+                                                String[] baseLearners, int times, boolean calcuteCost) throws Exception {
         String predict_result = "";
+        PropertyUtil.CALCULATION_COST = calcuteCost;
         logger.info("Arff Fold is :" + arffPath);
+        logger.info("Calculate cost = " + calcuteCost);
         for (String base : baseLearners) {
-            String output_file_name = PropertyUtil.RESULT_FILES_PATH + PropertyUtil.FILE_SEPARATOR + base + "Result.csv";
+            String output_file_name = PropertyUtil.RESULT_FOLDER_PATH + PropertyUtil.FILE_PATH_DELIMITER + base + "Result.csv";
             File outFile = new File(output_file_name);
             if (outFile.exists()) {
                 outFile.delete();
             }
+            outFile.createNewFile();
             String measure_name = "project, method, recall-1, precision-1, fMeasure-1, auc";
             PrintUtil.saveResult(measure_name, output_file_name);
             logger.info(base + " for detail");
             for (int i = 0; i < projects.length; i++) {
                 String project = projects[i];
-                backupData();
-                PropertyUtil.CUR_DETAIL_FILENAME = PropertyUtil.DETAIL_FILES_PATH + PropertyUtil
-                        .FILE_SEPARATOR + PropertyUtil.FILE_SEPARATOR + base + "_" + project + "_" + "DETAIL";
-                PropertyUtil.CUR_COST_EFFECTIVE_RECORD = PropertyUtil.COST_FILES_PATH + PropertyUtil
-                        .FILE_SEPARATOR + base + "_" + project + "_" + "COST";
+                PropertyUtil.CUR_DETAIL_FILENAME = PropertyUtil.DETAIL_FOLDER_PATH + PropertyUtil
+                        .FILE_PATH_DELIMITER + PropertyUtil.FILE_PATH_DELIMITER + base + "_" + project + "_" + "DETAIL";
+                PropertyUtil.CUR_COST_EFFECTIVE_RECORD = PropertyUtil.COST_FOLDER_PATH + PropertyUtil
+                        .FILE_PATH_DELIMITER + base + "_" + project + "_" + "COST";
                 File cur_detail_file = new File(PropertyUtil.CUR_DETAIL_FILENAME);
                 cur_detail_file.delete();
+                cur_detail_file.createNewFile();
                 File cur_cost_file = new File(PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
                 cur_cost_file.delete();
+                cur_detail_file.createNewFile();
                 logger.info(project);
                 String inputfile = arffPath + "/" + project + ".arff";
-                FileReader fr = new FileReader(inputfile);
-                BufferedReader br = new BufferedReader(fr);
+                BufferedReader br = new BufferedReader(new FileReader(inputfile));
                 Instances data = new Instances(br);
+                br.close();
                 data.setClassIndex(data.numAttributes() - 1);
                 logger.info("Total number of instances in Arff file : "
                         + data.numInstances());
@@ -60,33 +60,8 @@ public class Start {
                 int count[] = as.nominalCounts;
                 logger.info("Number of buggy instances: " + count[1]);
                 Map<Instance, List<Integer>> ins_Loc = null;
-                List<List<Integer>> changedLineList = null;
                 if (PropertyUtil.CALCULATION_COST) {
-                    ins_Loc = new LinkedHashMap<>();
-                    changedLineList = new ArrayList<>();
-                    br = new BufferedReader(new FileReader(new File(locFilePath
-                            + "/" + project + "LOC")));
-                    String line;
-                    while ((line = br.readLine()) != null && (!line.equals(""))) {
-                        if (line.startsWith("commit_id")) {
-                            continue;
-                        }
-                        String[] array = line.split(",");
-                        List<Integer> tmp = new ArrayList<>();
-                        for (int j = 0; j < array.length; j++) {
-                            tmp.add(Integer.parseInt(array[j]));
-                        }
-                        changedLineList.add(tmp);
-                    }
-                    br.close();
-                    if (changedLineList.size() != data.numInstances()) {
-                        logger.error("Error! The number in LOC File is different "
-                                + "with the number in Arff File!");
-                        continue;
-                    }
-                    for (int j = 0; j < data.numInstances(); j++) {
-                        ins_Loc.put(data.instance(j), changedLineList.get(j));
-                    }
+                    initialInsLoc(ins_Loc, data, locFilePath, project);
                 }
                 Classification classification = new Classification(data);
                 predict_result = classification.predict(base, project, times, ins_Loc);
@@ -95,7 +70,32 @@ public class Start {
         }
     }
 
-    private static void backupData() {
-
+    private static void initialInsLoc(Map<Instance, List<Integer>> ins_loc, Instances data, String locFilePath,
+                                      String project) throws IOException {
+        List<List<Integer>> changedLineList = new ArrayList<>();
+        ins_loc = new LinkedHashMap<>();
+        BufferedReader br = new BufferedReader(new FileReader(new File(locFilePath
+                + "/" + project + "LOC")));
+        String line;
+        while ((line = br.readLine()) != null && (!line.equals(""))) {
+            if (line.startsWith("commit_id")) {
+                continue;
+            }
+            String[] array = line.split(",");
+            List<Integer> tmp = new ArrayList<>();
+            for (int j = 0; j < array.length; j++) {
+                tmp.add(Integer.parseInt(array[j]));
+            }
+            changedLineList.add(tmp);
+        }
+        br.close();
+        if (changedLineList.size() != data.numInstances()) {
+            logger.error("Error! The number in LOC File is different "
+                    + "with the number in Arff File!");
+            return;
+        }
+        for (int j = 0; j < data.numInstances(); j++) {
+            ins_loc.put(data.instance(j), changedLineList.get(j));
+        }
     }
 }

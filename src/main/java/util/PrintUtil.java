@@ -1,12 +1,10 @@
 package util;
 
-import classification.Classification;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +104,7 @@ public class PrintUtil {
         }
         write.append("," + PropertyUtil.AVG_NAME);
         write.append("\n");
-        for (String methodName : Classification.METHOD_NAMES) {
+        for (String methodName : PropertyUtil.METHOD_NAMES) {
             write.append(methodName + ",");
             for (String project : PropertyUtil.PROJECTS) {
                 write.append(project_method_value.get(project).get(methodName) + ",");
@@ -120,17 +118,19 @@ public class PrintUtil {
     public static void printDoubleTable(Map<String, Map<String, Double>> project_method_value, String baseLearn,
                                         String saveFolderPath, String typeString) throws IOException {
         StringBuffer write = new StringBuffer();
-        for (String project : PropertyUtil.PROJECTS) {
-            write.append("," + project);
+        List<String> colNames = new ArrayList<>();
+        colNames.addAll(project_method_value.keySet());
+        for (String colName : colNames) {
+            write.append("," + colName);
         }
-        write.append("," + PropertyUtil.AVG_NAME);
         write.append("\n");
-        for (String methodName : Classification.METHOD_NAMES) {
-            write.append(methodName + ",");
-            for (String project : PropertyUtil.PROJECTS) {
-                write.append(project_method_value.get(project).get(methodName) + ",");
+        List<String> rowNames = new ArrayList<>();
+        rowNames.addAll(project_method_value.get(colNames.get(0)).keySet());
+        for (String rowName : rowNames) {
+            write.append(rowName + ",");
+            for (String colName : colNames) {
+                write.append(project_method_value.get(colName).get(rowName) + ",");
             }
-            write.append(project_method_value.get(PropertyUtil.AVG_NAME).get(methodName));
             write.append("\n");
         }
         saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + typeString);
