@@ -36,6 +36,6 @@ public class SimpleClassification extends BasicClassification {
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult(methodName, classifier_name, validationResult, times);
+        return getResult("," + methodName, classifier_name, validationResult, times);
     }
 }

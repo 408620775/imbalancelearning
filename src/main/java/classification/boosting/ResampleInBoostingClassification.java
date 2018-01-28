@@ -27,12 +27,9 @@ public class ResampleInBoostingClassification extends BasicClassification {
     public String getClassificationResult(Classifier classifier,
                                           String classifier_name, int times) throws Exception {
         String predictResult = "";
-        predictResult = getOverBoostClassificationResult(classifier,
-                classifier_name, times);
-        predictResult += getUnderBoostClassificationResult(classifier,
-                classifier_name, times);
-        predictResult += getSmoteBoostClassificationResult(classifier,
-                classifier_name, times);
+        predictResult = getOverBoostClassificationResult(classifier, classifier_name, times);
+        predictResult += getUnderBoostClassificationResult(classifier, classifier_name, times);
+        predictResult += getSmoteBoostClassificationResult(classifier, classifier_name, times);
         return predictResult;
     }
 

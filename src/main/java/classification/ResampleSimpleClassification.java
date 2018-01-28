@@ -22,12 +22,9 @@ public class ResampleSimpleClassification extends BasicClassification {
     public String getClassificationResult(Classifier classifier,
                                           String classifier_name, int times) throws Exception {
         String predictResult = "";
-        predictResult += getOverClassificationResult(classifier,
-                classifier_name, times);
-        predictResult += getUnderClassificationResult(classifier,
-                classifier_name, times);
-        predictResult += getSmoteClassificationResult(classifier,
-                classifier_name, times);
+        predictResult += getOverClassificationResult(classifier, classifier_name, times);
+        predictResult += getUnderClassificationResult(classifier, classifier_name, times);
+        predictResult += getSmoteClassificationResult(classifier, classifier_name, times);
         return predictResult;
     }
 
@@ -85,6 +82,6 @@ public class ResampleSimpleClassification extends BasicClassification {
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult(methodName, classifier_name, validationResult, times);
+        return getResult("," + methodName, classifier_name, validationResult, times);
     }
 }
