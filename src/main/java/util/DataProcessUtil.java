@@ -30,7 +30,7 @@ public class DataProcessUtil {
         }
     }
 
-    static void writeTwoRankAccordEvaluation(Map<String, Map<String, Map<String, Double>>>
+    private static void writeTwoRankAccordEvaluation(Map<String, Map<String, Map<String, Double>>>
                                                      method_evaluation_project_rank, String base) throws IOException {
         for (String evaluationName : Classification.EVALUATION_NAMES) {
             String saveFileName = PropertyUtil.FOR_TWO_RANK + PropertyUtil.FILE_PATH_DELIMITER + base + "_" +
@@ -83,7 +83,7 @@ public class DataProcessUtil {
         }
     }
 
-    static Map<String, Map<String, Map<String, Double>>> getPaperTable(String baseLearner) throws IOException {
+    private static Map<String, Map<String, Map<String, Double>>> getPaperTable(String baseLearner) throws IOException {
         Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = initialPaperTableMap();
         for (String evaluation : Classification.EVALUATION_NAMES) {
             String fileName = SK_RESULT_FOLDER + "/" + Character.toUpperCase(baseLearner.charAt(0)) + FILENAME_DELIMITER +
