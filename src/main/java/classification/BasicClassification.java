@@ -72,7 +72,7 @@ public class BasicClassification {
     public String getResult(String methodNamename, String classifiername,
                             double validationResult[], int times) throws Exception {
         df = (DecimalFormat) NumberFormat.getInstance();
-        df.applyPattern("0.0");
+        df.applyPattern("0.00");
         double recall_1 = validationResult[0] * 100 / times;
         double precison_1 = validationResult[1] * 100 / times;
         double fmeasure_1 = validationResult[2] * 100 / times;

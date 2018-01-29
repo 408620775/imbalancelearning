@@ -54,7 +54,7 @@ public class DataProcessUtil {
         }
     }
 
-    static void writePaperTableAccordBase(Map<String, Map<String, Map<String, Double>>>
+    private static void writePaperTableAccordBase(Map<String, Map<String, Map<String, Double>>>
                                                   method_evaluation_project_rank, String baseLearner) throws IOException {
         String savePath = PAPER_TABLE_SAVE_PATH + "/" + baseLearner + "_paperRank.csv";
         File saveFile = new File(savePath);
@@ -425,9 +425,10 @@ public class DataProcessUtil {
         //getForTwoRankCsv("SK_RESULT");
         //getRunTimeCsvFile("TimeFolder/smo_time_log", "TimeFolder", "s");
         //getCost20Pb("CostFiles");
-        Map<String, Map<String, Double>> eva_method_value = getPaperResultMapForBase
-                ("Arffs_Old_Paper_All_Result/ResultFiles/smoResult.csv");
-        PrintUtil.printDoubleTable(eva_method_value, "s", "Arffs_Old_Paper_All_Result/ResultFiles", "PaperResult" +
-                ".csv");
+//        Map<String, Map<String, Double>> eva_method_value = getPaperResultMapForBase
+//                ("Arffs_Old_Paper_All_Result/ResultFiles/smoResult.csv");
+//        PrintUtil.printDoubleTable(eva_method_value, "s", "Arffs_Old_Paper_All_Result/ResultFiles", "PaperResult" +
+//                ".csv");
+        getForTwoRankCsv("SK_RESULT");
     }
 }

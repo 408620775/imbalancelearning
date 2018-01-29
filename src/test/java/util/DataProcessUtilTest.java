@@ -8,12 +8,6 @@ import java.util.Map;
 
 public class DataProcessUtilTest {
 
-    public void getProjectRankOfMethod() throws Exception {
-        Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = DataProcessUtil.getPaperTable
-                ("J");
-        DataProcessUtil.writePaperTableAccordBase(method_evaluation_project_rank, "J");
-    }
-
     public void covertAllDetailFileToSK_ESDFile() throws Exception {
         DataProcessUtil.covertAllDetailFileToSK_ESDFile("testCovert", "SK_ESD",
                 Classification.DETAIL_NUM, PropertyUtil.METHOD_NAMES, Classification.EVALUATION_NAMES);

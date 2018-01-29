@@ -27,7 +27,7 @@ public class Classification {
     Instances data;
     String classifier_name;
     Classifier classifier;
-    public static List<String> EVALUATION_NAMES = Arrays.asList("R1", "P1", "F1", "AUC");
+    public static List<String> EVALUATION_NAMES = Arrays.asList("R1", "P1", "F1", "AUC","COST20Pb");
     public static int DETAIL_NUM = 1000;
 
     public Classification(Instances data) {
