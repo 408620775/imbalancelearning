@@ -55,4 +55,9 @@ public class PrintUtilTest {
             Assert.assertTrue(sBuffer.toString().equals(cBuffer.toString()));
         }
     }
+
+    @Test
+    public void testSystemType(){
+        System.out.println(System.getProperty("os.name"));
+    }
 }
