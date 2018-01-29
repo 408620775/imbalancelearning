@@ -5,6 +5,7 @@ import java.util.List;
 
 public class PropertyUtil {
     public static int PENCENTAGE_OF_CONCERN = 20;
+    public static int NUMBER_PRECISION = 2;
     public static boolean CALCULATION_COST = true;
     public static String FOR_TWO_RANK = "For_Two_Rank";
     public static String DETAIL_FOLDER_PATH = "DetailFiles";

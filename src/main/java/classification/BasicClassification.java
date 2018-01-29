@@ -32,7 +32,6 @@ public class BasicClassification {
     Map<Instance, List<Integer>> ins_Loc;
     protected double validationResult[] = new double[4];
     public static double[] ratioes;
-    public static int BIT_NUM_AFTER_DECIMAL = 2;
 
     public BasicClassification(Instances data,
                                Map<Instance, List<Integer>> ins_Loc) {
@@ -77,9 +76,10 @@ public class BasicClassification {
         double precison_1 = validationResult[1] * 100 / times;
         double fmeasure_1 = validationResult[2] * 100 / times;
         double auc = validationResult[3] * 100 / times;
-        return methodNamename + ", " + df.format(recall_1) + ", "
-                + df.format(precison_1) + ", " + df.format(fmeasure_1) + ","
-                + df.format(auc) + "\n";
+        return methodNamename + ", " + PrintUtil.formatDouble(PropertyUtil.NUMBER_PRECISION, recall_1)
+                + ", " + PrintUtil.formatDouble(PropertyUtil.NUMBER_PRECISION, precison_1) + ", "
+                + PrintUtil.formatDouble(PropertyUtil.NUMBER_PRECISION, fmeasure_1) + ","
+                + PrintUtil.formatDouble(PropertyUtil.NUMBER_PRECISION, auc) + "\n";
     }
 
     public void updateResult(double validationResult[], Evaluation eval) {
@@ -133,9 +133,10 @@ public class BasicClassification {
     protected void writeCostEffective(int times) throws IOException {
         if (PropertyUtil.CALCULATION_COST) {
             double[] cost = getCostEffective(times);
-            PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, BIT_NUM_AFTER_DECIMAL), PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
-            PrintUtil.appendResult(PrintUtil.formatDouble(BIT_NUM_AFTER_DECIMAL, cost[PropertyUtil.PENCENTAGE_OF_CONCERN]) + "", PropertyUtil
+            PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, PropertyUtil.NUMBER_PRECISION), PropertyUtil
                     .CUR_COST_EFFECTIVE_RECORD);
+            PrintUtil.appendResult(PrintUtil.formatDouble(PropertyUtil.NUMBER_PRECISION, cost[PropertyUtil.PENCENTAGE_OF_CONCERN]) +
+                            "", PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         }
     }
 }
