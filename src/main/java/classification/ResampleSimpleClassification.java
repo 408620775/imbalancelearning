@@ -19,12 +19,17 @@ public class ResampleSimpleClassification extends BasicClassification {
     }
 
     // get the classification result without bagging
-    public String getClassificationResult(Classifier classifier,
-                                          String classifier_name, int times) throws Exception {
+    public String getClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
         String predictResult = "";
-        predictResult += getOverClassificationResult(classifier, classifier_name, times);
-        predictResult += getUnderClassificationResult(classifier, classifier_name, times);
-        predictResult += getSmoteClassificationResult(classifier, classifier_name, times);
+        if (PropertyUtil.METHOD_USE_MAP[1]) {
+            predictResult += getOverClassificationResult(classifier, classifier_name, times);
+        }
+        if (PropertyUtil.METHOD_USE_MAP[2]) {
+            predictResult += getUnderClassificationResult(classifier, classifier_name, times);
+        }
+        if (PropertyUtil.METHOD_USE_MAP[3]) {
+            predictResult += getSmoteClassificationResult(classifier, classifier_name, times);
+        }
         return predictResult;
     }
 

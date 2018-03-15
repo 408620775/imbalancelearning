@@ -27,7 +27,7 @@ public class Classification {
     Instances data;
     String classifier_name;
     Classifier classifier;
-    public static List<String> EVALUATION_NAMES = Arrays.asList("R1", "P1", "F1", "AUC","COST20Pb");
+    public static List<String> EVALUATION_NAMES = Arrays.asList("R1", "P1", "F1", "AUC", "COST20Pb");
     public static int DETAIL_NUM = 1000;
 
     public Classification(Instances data) {
@@ -71,30 +71,24 @@ public class Classification {
         String predict_result = project;
         BasicClassification use_classification = null;
         DETAIL_NUM = times * 10;
-        if (PropertyUtil.METHOD_USE_MAP[0]) {
-            use_classification = new SimpleClassification(data, ins_Loc);
-            predict_result += use_classification.classify(times, classifier, classifier_name);
-        }
-        if (PropertyUtil.METHOD_USE_MAP[1]) {
-            use_classification = new ResampleSimpleClassification(data, ins_Loc);
-            predict_result += use_classification.classify(times, classifier, classifier_name);
-        }
-        if (PropertyUtil.METHOD_USE_MAP[4]) {
-            use_classification = new BaggingClassification(data, ins_Loc);
-            predict_result += use_classification.classify(times, classifier, classifier_name);
-        }
-        if (PropertyUtil.METHOD_USE_MAP[5]) {
-            use_classification = new ResampleInBaggingClassification(data, ins_Loc);
-            predict_result += use_classification.classify(times, classifier, classifier_name);
-        }
-        if (PropertyUtil.METHOD_USE_MAP[8]) {
-            use_classification = new BoostingClassification(data, ins_Loc);
-            predict_result += use_classification.classify(times, classifier, classifier_name);
-        }
-        if (PropertyUtil.METHOD_USE_MAP[9]) {
-            use_classification = new ResampleInBoostingClassification(data, ins_Loc);
-            predict_result += use_classification.classify(times, classifier, classifier_name);
-        }
+        use_classification = new SimpleClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
+
+        use_classification = new ResampleSimpleClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
+
+        use_classification = new BaggingClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
+
+        use_classification = new ResampleInBaggingClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
+
+        use_classification = new BoostingClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
+
+        use_classification = new ResampleInBoostingClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
+
         PrintUtil.printSKOneMap(DataStorageUtil.method_cost20pbs_skOne_basedOnProject, PropertyUtil
                 .CUR_COST_20PB_SK_ONE, 2);
         return predict_result;

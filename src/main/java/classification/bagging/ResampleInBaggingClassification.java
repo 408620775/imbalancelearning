@@ -24,15 +24,17 @@ public class ResampleInBaggingClassification extends BasicClassification {
         super(data, ins_Loc);
     }
 
-    public String getClassificationResult(Classifier classifier,
-                                          String classifier_name, int times) throws Exception {
+    public String getClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
         String predictResult = "";
-        predictResult += getOverBagClassificationResult(classifier,
-                classifier_name, times);
-        predictResult += getUnderBagClassificationResult(classifier,
-                classifier_name, times);
-        predictResult += getSmoteBagClassificationResult(classifier,
-                classifier_name, times);
+        if (PropertyUtil.METHOD_USE_MAP[5]) {
+            predictResult += getOverBagClassificationResult(classifier, classifier_name, times);
+        }
+        if (PropertyUtil.METHOD_USE_MAP[6]) {
+            predictResult += getUnderBagClassificationResult(classifier, classifier_name, times);
+        }
+        if (PropertyUtil.METHOD_USE_MAP[7]) {
+            predictResult += getSmoteBagClassificationResult(classifier, classifier_name, times);
+        }
         return predictResult;
     }
 

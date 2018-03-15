@@ -23,6 +23,9 @@ public class BoostingClassification extends BasicClassification {
 
     public String getClassificationResult(Classifier classifier,
                                           String classifier_name, int times) throws Exception {
+        if (!PropertyUtil.METHOD_USE_MAP[8]) {
+            return "";
+        }
         AdaBoostM1 boost_classifier = new AdaBoostM1();
         boost_classifier.setClassifier(classifier);
         String methodName = PropertyUtil.METHOD_NAMES[8];

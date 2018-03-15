@@ -22,8 +22,10 @@ public class BaggingClassification extends BasicClassification {
         super(data, ins_Loc);
     }
 
-    public String getClassificationResult(Classifier classifier,
-                                          String classifier_name, int times) throws Exception {
+    public String getClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
+        if (!PropertyUtil.METHOD_USE_MAP[4]) {
+            return "";
+        }
         Bagging bag_classifier = new Bagging();
         bag_classifier.setClassifier(classifier);
         String methodName = PropertyUtil.METHOD_NAMES[4];
@@ -41,7 +43,7 @@ public class BaggingClassification extends BasicClassification {
         writeCostEffective(times);
         endTime = System.currentTimeMillis();
         logger.info("Time:" + (endTime - startTime));
-        return getResult(","+methodName, classifier_name, validationResult, times);
+        return getResult("," + methodName, classifier_name, validationResult, times);
     }
 
 }

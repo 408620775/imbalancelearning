@@ -33,14 +33,12 @@ public class BasicClassification {
     protected double validationResult[] = new double[4];
     public static double[] ratioes;
 
-    public BasicClassification(Instances data,
-                               Map<Instance, List<Integer>> ins_Loc) {
+    public BasicClassification(Instances data, Map<Instance, List<Integer>> ins_Loc) {
         this.data = data;
         this.ins_Loc = ins_Loc;
     }
 
-    public String classify(int times, Classifier classifier,
-                           String classifier_name) throws Exception {
+    public String classify(int times, Classifier classifier, String classifier_name) throws Exception {
         String predictResult = getClassificationResult(classifier,
                 classifier_name, times);// get the result without bagging
         return predictResult;
@@ -136,7 +134,7 @@ public class BasicClassification {
             PrintUtil.appendResult(PrintUtil.arrayStringFormat(cost, PropertyUtil.NUMBER_PRECISION), PropertyUtil
                     .CUR_COST_EFFECTIVE_RECORD);
             PrintUtil.appendResult(PrintUtil.formatDouble(PropertyUtil.NUMBER_PRECISION, cost[PropertyUtil.PENCENTAGE_OF_CONCERN]) +
-                            "", PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
+                    "", PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         }
     }
 }

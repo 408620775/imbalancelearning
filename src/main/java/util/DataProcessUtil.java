@@ -31,7 +31,7 @@ public class DataProcessUtil {
     }
 
     private static void writeTwoRankAccordEvaluation(Map<String, Map<String, Map<String, Double>>>
-                                                     method_evaluation_project_rank, String base) throws IOException {
+                                                             method_evaluation_project_rank, String base) throws IOException {
         for (String evaluationName : Classification.EVALUATION_NAMES) {
             String saveFileName = PropertyUtil.FOR_TWO_RANK + PropertyUtil.FILE_PATH_DELIMITER + base + "_" +
                     evaluationName + "_FirstRank.csv";
@@ -55,7 +55,7 @@ public class DataProcessUtil {
     }
 
     private static void writePaperTableAccordBase(Map<String, Map<String, Map<String, Double>>>
-                                                  method_evaluation_project_rank, String baseLearner) throws IOException {
+                                                          method_evaluation_project_rank, String baseLearner) throws IOException {
         String savePath = PAPER_TABLE_SAVE_PATH + "/" + baseLearner + "_paperRank.csv";
         File saveFile = new File(savePath);
         StringBuffer line = new StringBuffer();
@@ -316,7 +316,7 @@ public class DataProcessUtil {
 
     public static Map<String, Map<String, Double>> getCost20PbUnderSpecifyBase(String costFolderPath, String base)
             throws IOException {
-        base = judgeBaseName(base);
+        //base = judgeBaseName(base);
         if (base == null) {
             return null;
         }
@@ -429,6 +429,7 @@ public class DataProcessUtil {
 //                ("Arffs_Old_Paper_All_Result/ResultFiles/smoResult.csv");
 //        PrintUtil.printDoubleTable(eva_method_value, "s", "Arffs_Old_Paper_All_Result/ResultFiles", "PaperResult" +
 //                ".csv");
-        getForTwoRankCsv("SK_RESULT");
+        //getForTwoRankCsv("SK_RESULT");
+        getCost20Pb("/home/niubinbin/ideaProjects/imbalancelearning/JITArff_All_Result/CostFiles");
     }
 }
