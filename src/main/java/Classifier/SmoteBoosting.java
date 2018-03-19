@@ -2,6 +2,7 @@ package Classifier;
 
 import java.util.Random;
 
+import util.PropertyUtil;
 import weka.classifiers.Evaluation;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.core.AttributeStats;
@@ -69,7 +70,10 @@ public class SmoteBoosting extends AdaBoostM1 {
                 int count[] = as.nominalCounts;
                 int max = Math.max(count[0], count[1]);
                 int min = Math.min(count[0], count[1]);
-                double percent = 100 * ((double) max / min) - 100;
+                double percent = 0;
+                if ((double) max / min >= PropertyUtil.SAMPLE_RATIO) {
+                    percent = ((double) 1 / PropertyUtil.SAMPLE_RATIO * max - min) / min * 100;
+                }
                 SMOTE smote = new SMOTE();
                 smote.setPercentage(percent);
                 smote.setInputFormat(tempData);// smote resample
@@ -86,7 +90,7 @@ public class SmoteBoosting extends AdaBoostM1 {
             if (Utils.grOrEq(epsilon, 0.5) || Utils.eq(epsilon, 0)) {
                 if (m_NumIterationsPerformed == 0) {
                     m_NumIterationsPerformed = 1; // If we're the first we have
-                                                    // to to use it
+                    // to to use it
                 }
                 break;
             }

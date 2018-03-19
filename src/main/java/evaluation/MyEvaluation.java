@@ -99,15 +99,11 @@ public abstract class MyEvaluation extends Evaluation {
             actual_predict_change.add((double) changedLine);
             rankTable.add(actual_predict_change);
         }
-        Collections.sort(rankTable, new Comparator<List<Double>>() {
-
-            @Override
-            public int compare(List<Double> o1, List<Double> o2) {
-                if (o1.get(1).doubleValue() != o2.get(1).doubleValue()) {
-                    return (int) (o2.get(1) - o1.get(1));
-                } else {
-                    return (int) (o1.get(2) - o2.get(2));
-                }
+        Collections.sort(rankTable, (o1, o2) -> {
+            if (o1.get(1).doubleValue() != o2.get(1).doubleValue()) {
+                return (int) (o2.get(1) - o1.get(1));
+            } else {
+                return (int) (o1.get(2) - o2.get(2));
             }
         });
         double alreadyFind = 0.0;
@@ -195,9 +191,7 @@ public abstract class MyEvaluation extends Evaluation {
             np = (NominalPrediction) predictions.elementAt(n);
             actual_predict[0] = np.actual();
             actual_predict[1] = np.predicted();
-            ins_actual_predict.put(
-                    test.instance(n - (predictions.size() - num_inst)),
-                    actual_predict);
+            ins_actual_predict.put(test.instance(n - (predictions.size() - num_inst)), actual_predict);
         }
         for (int n = 0; n < cur_predictions.size(); n++) {
             np = (NominalPrediction) cur_predictions.elementAt(n);

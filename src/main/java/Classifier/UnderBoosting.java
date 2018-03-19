@@ -2,6 +2,7 @@ package Classifier;
 
 import java.util.Random;
 
+import util.PropertyUtil;
 import weka.classifiers.Evaluation;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.core.Instances;
@@ -14,11 +15,9 @@ public class UnderBoosting extends AdaBoostM1 {
     /**
      * Boosting methodName. Boosts using resampling
      *
-     * @param data
-     *            the training data to be used for generating the boosted
-     *            classifier.
-     * @throws Exception
-     *             if the classifier could not be built successfully
+     * @param data the training data to be used for generating the boosted
+     *             classifier.
+     * @throws Exception if the classifier could not be built successfully
      */
     protected void buildClassifierUsingResampling(Instances data)
             throws Exception {
@@ -71,9 +70,7 @@ public class UnderBoosting extends AdaBoostM1 {
 
                 SpreadSubsample undersample = new SpreadSubsample();
                 undersample.setInputFormat(tempData);
-                undersample.setDistributionSpread(1);// set the ratio of the
-                                                        // major class sample to
-                                                        // the minor clas
+                undersample.setDistributionSpread(PropertyUtil.SAMPLE_RATIO);
                 sample = Filter.useFilter(tempData, undersample);
 
                 // Build and evaluate classifier
@@ -89,7 +86,7 @@ public class UnderBoosting extends AdaBoostM1 {
             if (Utils.grOrEq(epsilon, 0.5) || Utils.eq(epsilon, 0)) {
                 if (m_NumIterationsPerformed == 0) {
                     m_NumIterationsPerformed = 1; // If we're the first we have
-                                                    // to to use it
+                    // to to use it
                 }
                 break;
             }

@@ -3,6 +3,7 @@ package Classifier;
 import java.util.Random;
 
 import resample.OverSubsample;
+import util.PropertyUtil;
 import weka.classifiers.Classifier;
 import weka.classifiers.meta.Bagging;
 import weka.core.Instances;
@@ -78,7 +79,7 @@ public class OverBagging extends Bagging {
                 tempData.randomize(random);
                 OverSubsample oversample = new OverSubsample();
                 oversample.setInputFormat(tempData);
-                oversample.setDistributionSpread(1);// set the ratio of the
+                oversample.setDistributionSpread(PropertyUtil.SAMPLE_RATIO);// set the ratio of the
                                                     // major class sample to the
                                                     // minor class
                 bagData = Filter.useFilter(tempData, oversample);

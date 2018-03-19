@@ -2,11 +2,13 @@ package Classifier;
 
 import java.util.Random;
 
+import util.PropertyUtil;
 import weka.classifiers.Classifier;
 import weka.classifiers.meta.Bagging;
 import weka.core.Instances;
 import weka.core.Randomizable;
 import weka.core.Utils;
+import weka.core.pmml.FieldMetaInfo;
 import weka.filters.Filter;
 import weka.filters.supervised.instance.SpreadSubsample;
 
@@ -75,7 +77,8 @@ public class UnderBagging extends Bagging{
                 tempData.randomize(random);
                 SpreadSubsample undersample = new SpreadSubsample();
                 undersample.setInputFormat(tempData);
-                undersample.setDistributionSpread(1);//set the ratio of the major class sample to the minor clas
+                undersample.setDistributionSpread(PropertyUtil.SAMPLE_RATIO);//set the ratio of the major class sample to the
+                // minor clas
                 bagData = Filter.useFilter(tempData, undersample);
                 if (bagSize < data.numInstances()) {
                     bagData.randomize(random);

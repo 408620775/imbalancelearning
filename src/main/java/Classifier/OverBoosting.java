@@ -3,6 +3,7 @@ package Classifier;
 import java.util.Random;
 
 import resample.OverSubsample;
+import util.PropertyUtil;
 import weka.classifiers.Evaluation;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.core.Instances;
@@ -75,7 +76,7 @@ public class OverBoosting extends AdaBoostM1 {
                 tempData.randomize(randomInstance);
                 OverSubsample oversample = new OverSubsample();
                 oversample.setInputFormat(tempData);
-                oversample.setDistributionSpread(1);// set the ratio of the
+                oversample.setDistributionSpread(PropertyUtil.SAMPLE_RATIO);// set the ratio of the
                                                     // major class sample to the
                                                     // minor class
                 sample = Filter.useFilter(tempData, oversample);
