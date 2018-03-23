@@ -10,6 +10,7 @@ import weka.core.Randomizable;
 import weka.core.Utils;
 import weka.core.pmml.FieldMetaInfo;
 import weka.filters.Filter;
+import weka.filters.supervised.instance.Resample;
 import weka.filters.supervised.instance.SpreadSubsample;
 
 /*
@@ -73,12 +74,14 @@ public class UnderBagging extends Bagging{
             } else {
                 //bagData = data.resampleWithWeights(random);
                 //rewrite the sampling methodName and use under sampling
+
                 Instances tempData = new Instances(data);
                 tempData.randomize(random);
+                Resample resample = new Resample();
+
                 SpreadSubsample undersample = new SpreadSubsample();
                 undersample.setInputFormat(tempData);
-                undersample.setDistributionSpread(PropertyUtil.SAMPLE_RATIO);//set the ratio of the major class sample to the
-                // minor clas
+                undersample.setDistributionSpread(PropertyUtil.SAMPLE_RATIO);//set the ratio of the major class
                 bagData = Filter.useFilter(tempData, undersample);
                 if (bagSize < data.numInstances()) {
                     bagData.randomize(random);

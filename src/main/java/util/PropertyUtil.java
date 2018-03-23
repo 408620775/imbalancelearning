@@ -7,6 +7,9 @@ public class PropertyUtil {
     public static int PENCENTAGE_OF_CONCERN = 20;
     public static int NUMBER_PRECISION = 2;
     public static boolean CALCULATION_COST = true;
+    public static boolean CALCULATION_FILE_TO_HUNK_COST = true;
+    public static String CUR_DATABASE = "";
+    public static String HUNK_TABLE_NAME = "metaHunk";
     public static String FOR_TWO_RANK = "For_Two_Rank";
     public static String DETAIL_FOLDER_PATH = "DetailFiles";
     public static String COST_FOLDER_PATH = "CostFiles";
@@ -24,7 +27,7 @@ public class PropertyUtil {
     public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
     public static String[] BASE_LEARNERS = {"j48", "RF"};
     //public static String[] BASE_LEARNERS = {"naivebayes", "smo"};
-    public static int SAMPLE_RATIO = 2;
+    public static int SAMPLE_RATIO = 1;
     public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
             "MySynapse", "MyTomcat", "MyVoldemort"};
 

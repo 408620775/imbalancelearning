@@ -22,8 +22,9 @@ public class InstanceUtilTest {
 	public static void setUpBeforeClass() throws Exception {
 	}
 
+	@Test
 	public void testInstanceEquel() throws IOException {
-		String testArffFilePathString = "Arffs/MyVoldemort.arff";
+		String testArffFilePathString = "TestFolder/MyVoldemort.arff";
 		BufferedReader bReader = new BufferedReader(new FileReader(new File(
 				testArffFilePathString)));
 		Instances instances1 = new Instances(bReader);

@@ -9,6 +9,7 @@ import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
 import classification.Classification;
+import weka.core.pmml.FieldMetaInfo;
 
 public class Start {
     private static Logger logger = Logger.getLogger(Start.class);
@@ -24,6 +25,7 @@ public class Start {
         PropertyUtil.CALCULATION_COST = calcuteCost;
         logger.info("Arff Fold is :" + arffPath);
         logger.info("Calculate cost = " + calcuteCost);
+        logger.info("Resample ratio = "+ PropertyUtil.SAMPLE_RATIO);
         FileUtil.checkFolder();
         for (String base : baseLearners) {
             String output_file_name = PropertyUtil.RESULT_FOLDER_PATH + PropertyUtil.FILE_PATH_DELIMITER + base + "Result.csv";
@@ -58,10 +60,8 @@ public class Start {
                 Instances data = new Instances(br);
                 br.close();
                 data.setClassIndex(data.numAttributes() - 1);
-                logger.info("Total number of instances in Arff file : "
-                        + data.numInstances());
-                AttributeStats as = data
-                        .attributeStats(data.numAttributes() - 1);
+                logger.info("Total number of instances in Arff file : " + data.numInstances());
+                AttributeStats as = data.attributeStats(data.numAttributes() - 1);
                 int count[] = as.nominalCounts;
                 logger.info("Number of buggy instances: " + count[1]);
                 Map<Instance, List<Integer>> ins_Loc = new LinkedHashMap<>();
@@ -103,8 +103,7 @@ public class Start {
         }
         br.close();
         if (changedLineList.size() != data.numInstances()) {
-            logger.error("Error! The number in LOC File is different "
-                    + "with the number in Arff File!");
+            logger.error("Error! The number in LOC File is different with the number in Arff File!");
             return false;
         }
         for (int j = 0; j < data.numInstances(); j++) {
