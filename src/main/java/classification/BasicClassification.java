@@ -1,6 +1,7 @@
 package classification;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
@@ -97,7 +98,7 @@ public class BasicClassification {
         return;
     }
 
-    public void updateCostEffective(MyEvaluation eval, String methodName_name) {
+    public void updateCostEffective(MyEvaluation eval, String methodName_name) throws SQLException {
         if (!PropertyUtil.CALCULATION_COST) {
             return;
         }

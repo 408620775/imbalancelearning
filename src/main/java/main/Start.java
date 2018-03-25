@@ -1,6 +1,7 @@
 package main;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.util.*;
 
 import org.apache.log4j.Logger;
@@ -23,9 +24,11 @@ public class Start {
                                                 String[] baseLearners, int times, boolean calcuteCost) throws Exception {
         String predict_result = "";
         PropertyUtil.CALCULATION_COST = calcuteCost;
+        PropertyUtil.CALCULATION_FILE_TO_HUNK_COST = true;
         logger.info("Arff Fold is :" + arffPath);
         logger.info("Calculate cost = " + calcuteCost);
-        logger.info("Resample ratio = "+ PropertyUtil.SAMPLE_RATIO);
+        logger.info("Resample ratio = " + PropertyUtil.SAMPLE_RATIO);
+        logger.info("Calculate cost from file to hunk is :"+PropertyUtil.CALCULATION_FILE_TO_HUNK_COST);
         FileUtil.checkFolder();
         for (String base : baseLearners) {
             String output_file_name = PropertyUtil.RESULT_FOLDER_PATH + PropertyUtil.FILE_PATH_DELIMITER + base + "Result.csv";
@@ -45,6 +48,7 @@ public class Start {
                         .FILE_PATH_DELIMITER + base + "_" + project + "_" + "COST";
                 PropertyUtil.CUR_COST_20PB_SK_ONE = PropertyUtil.COST_FOLDER_PATH + PropertyUtil
                         .FILE_PATH_DELIMITER + "COST20Pb_" + base + "_" + project + "_DETAIL.csv";
+                PropertyUtil.CUR_DATABASE = projects[i];
                 File cur_detail_file = new File(PropertyUtil.CUR_DETAIL_FILENAME);
                 cur_detail_file.delete();
                 cur_detail_file.createNewFile();
@@ -55,6 +59,7 @@ public class Start {
                 cur_cost20pb_file.delete();
                 cur_cost20pb_file.createNewFile();
                 logger.info(project);
+
                 String inputfile = arffPath + "/" + project + ".arff";
                 BufferedReader br = new BufferedReader(new FileReader(inputfile));
                 Instances data = new Instances(br);
@@ -66,6 +71,11 @@ public class Start {
                 logger.info("Number of buggy instances: " + count[1]);
                 Map<Instance, List<Integer>> ins_Loc = new LinkedHashMap<>();
                 if (PropertyUtil.CALCULATION_COST) {
+                    if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST) {
+                        PropertyUtil.sqlL = new SQLConnection(PropertyUtil.CUR_DATABASE);
+                        PropertyUtil.stmt = PropertyUtil.sqlL.getStmt();
+                        PropertyUtil.COMMITID_FILEID_CHANGEDLINE_ISBUGS = new LinkedHashMap<>();
+                    }
                     if (!initialInsLoc(ins_Loc, data, locFilePath, project)) {
                         return;
                     }
@@ -77,6 +87,7 @@ public class Start {
                         }
                     }
                 }
+
                 Classification classification = new Classification(data);
                 predict_result = classification.predict(base, project, times, ins_Loc);
                 PrintUtil.appendResult(predict_result, output_file_name);
@@ -85,7 +96,7 @@ public class Start {
     }
 
     private static boolean initialInsLoc(Map<Instance, List<Integer>> ins_loc, Instances data, String locFilePath,
-                                         String project) throws IOException {
+                                         String project) throws IOException, SQLException {
         List<List<Integer>> changedLineList = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(new File(locFilePath
                 + "/" + project + "LOC")));
@@ -98,6 +109,26 @@ public class Start {
             List<Integer> tmp = new ArrayList<>();
             for (int j = 0; j < array.length; j++) {
                 tmp.add(Integer.parseInt(array[j]));
+            }
+            if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST) {
+                PropertyUtil.resultSet = PropertyUtil.stmt.executeQuery("select count(*) from " + PropertyUtil.HUNK_TABLE_NAME
+                        + " where commit_id=" + tmp.get(0) + " and file_id=" + tmp.get(1) + " and bug_introducing = 1");
+                while (PropertyUtil.resultSet.next()) {
+                    PropertyUtil.TOTAL_ACTUAL_HUNK_BUG_NUM += PropertyUtil.resultSet.getInt(1);
+                }
+                PropertyUtil.resultSet = PropertyUtil.stmt.executeQuery("select la+ld,bug_introducing from " + PropertyUtil.HUNK_TABLE_NAME
+                        + " where commit_id=" + tmp.get(0) + " and file_id=" + tmp.get(1) + " order by la+ld asc");
+                List<Integer> commitId_fileId = new ArrayList<>();
+                commitId_fileId.add(tmp.get(0));
+                commitId_fileId.add(tmp.get(1));
+                List<List<Integer>> changedLine_isBugs = new ArrayList<>();
+                while (PropertyUtil.resultSet.next()) {
+                    List<Integer> changedLine_isBug = new ArrayList<>();
+                    changedLine_isBug.add(PropertyUtil.resultSet.getInt(1));
+                    changedLine_isBug.add(PropertyUtil.resultSet.getInt(2));
+                    changedLine_isBugs.add(changedLine_isBug);
+                }
+                PropertyUtil.COMMITID_FILEID_CHANGEDLINE_ISBUGS.put(commitId_fileId, changedLine_isBugs);
             }
             changedLineList.add(tmp);
         }

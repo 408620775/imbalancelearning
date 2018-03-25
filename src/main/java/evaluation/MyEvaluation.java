@@ -28,9 +28,6 @@ public abstract class MyEvaluation extends Evaluation {
     public static int COST_EFFECTIVE_RATIO_STEP = 101;
     public static int INSTANCE_CHANGE_LINE_INDEX = 4;
     public static int EVALUATION_INDEX_NUM = 4;
-    SQLConnection sqlL = null;
-    Statement stmt = null;
-    ResultSet resultSet = null;
     int num_inst = 0;
     double[] num_correct = null;
     double[] num_tp1 = null;
@@ -71,11 +68,7 @@ public abstract class MyEvaluation extends Evaluation {
         return 0;
     }
 
-    public double[] getCostEffectiveness() throws SQLException {
-        if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST){
-            sqlL = new SQLConnection(PropertyUtil.CUR_DATABASE);
-            stmt = sqlL.getStmt();
-        }
+    public double[] getCostEffectiveness() {
         int total_actual_bug_num = 0;
         double total_changedLine_num = 0;
         List<List<Double>> rankTable = new ArrayList<>();
@@ -104,26 +97,21 @@ public abstract class MyEvaluation extends Evaluation {
             int file_id = ins_loc.get(ins).get(1);
             total_changedLine_num += changedLine;
 
-            if (actual_predict[0] == 1 ){
-                if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST){
-                    resultSet = stmt.executeQuery("select count(*) from "+PropertyUtil.HUNK_TABLE_NAME
-                            +" where commit_id="+commit_id+" and file_id="+file_id+" and bug_introducing = 1");
-                    while (resultSet.next()){
-                        total_actual_bug_num += resultSet.getInt(1);
-                    }
-                }else{
-                    total_actual_bug_num++;
-                }
+            if (actual_predict[0] == 1) {
+                total_actual_bug_num++;
             }
             List<Double> actual_predict_change = new ArrayList<Double>();
             actual_predict_change.add(actual_predict[0]);
             actual_predict_change.add(actual_predict[1]);
             actual_predict_change.add((double) changedLine);
-            if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST){
+            if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST) {
                 actual_predict_change.add((double) commit_id);
                 actual_predict_change.add((double) file_id);
             }
             rankTable.add(actual_predict_change);
+        }
+        if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST) {
+            total_actual_bug_num = (int) PropertyUtil.TOTAL_ACTUAL_HUNK_BUG_NUM;
         }
         Collections.sort(rankTable, (o1, o2) -> {
             if (o1.get(1).doubleValue() != o2.get(1).doubleValue()) {
@@ -134,38 +122,39 @@ public abstract class MyEvaluation extends Evaluation {
         });
         double alreadyFind = 0.0;
         double alreadyCheckLine = 0;
-            for (int i = 0; i < rankTable.size(); i++) {
-                List<Double> actual_predict_change = rankTable.get(i);
-                double findRatio = 0;
-                double x = 0;
-                double upper = 0;
-                if (Math.abs(actual_predict_change.get(0).doubleValue() - 1) < 0.01) {
-                    if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST){
-                        resultSet = stmt.executeQuery("select la+ld,bug_introducing from "+PropertyUtil.HUNK_TABLE_NAME
-                                +" where commit_id="+actual_predict_change.get(3)+" and file_id="+actual_predict_change.get(4)
-                                +" order by la+ld asc");
-                        while (resultSet.next()){
-                            alreadyCheckLine += resultSet.getInt(1);
-                            if (resultSet.getInt(2)==1){
-                                alreadyFind +=1;
-                                findRatio = alreadyFind/total_actual_bug_num*100;
-                                x = alreadyCheckLine/total_changedLine_num*100;
-                                upper = Math.ceil(x);
-                                costEffectiveness[(int) upper] = findRatio;
-                            }
+        for (int i = 0; i < rankTable.size(); i++) {
+            List<Double> actual_predict_change = rankTable.get(i);
+            double findRatio = 0;
+            double x = 0;
+            double upper = 0;
+            if (Math.abs(actual_predict_change.get(0).doubleValue() - 1) < 0.01) {
+                if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST) {
+                    List<Integer> key = new ArrayList<>();
+                    key.add((int) actual_predict_change.get(3).doubleValue());
+                    key.add((int) actual_predict_change.get(4).doubleValue());
+                    List<List<Integer>> changedLine_isBugs = PropertyUtil.COMMITID_FILEID_CHANGEDLINE_ISBUGS.get(key);
+                    for (List<Integer> changedLine_isBug : changedLine_isBugs) {
+                        alreadyCheckLine += changedLine_isBug.get(0);
+                        if (changedLine_isBug.get(1) == 1) {
+                            alreadyFind += 1;
+                            findRatio = alreadyFind / total_actual_bug_num * 100;
+                            x = alreadyCheckLine / total_changedLine_num * 100;
+                            upper = Math.ceil(x);
+                            costEffectiveness[(int) upper] = findRatio;
                         }
-                    }else{
-                        alreadyFind += 1;
-                        alreadyCheckLine += actual_predict_change.get(2);
-                        findRatio = alreadyFind / total_actual_bug_num * 100;
-                        x = alreadyCheckLine / total_changedLine_num * 100;
-                        upper = Math.ceil(x);
-                        costEffectiveness[(int) upper] = findRatio;
                     }
                 } else {
+                    alreadyFind += 1;
                     alreadyCheckLine += actual_predict_change.get(2);
+                    findRatio = alreadyFind / total_actual_bug_num * 100;
+                    x = alreadyCheckLine / total_changedLine_num * 100;
+                    upper = Math.ceil(x);
+                    costEffectiveness[(int) upper] = findRatio;
                 }
+            } else {
+                alreadyCheckLine += actual_predict_change.get(2);
             }
+        }
 
         // smooth
         for (int i = 1; i < costEffectiveness.length; i++) {

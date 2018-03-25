@@ -1,13 +1,16 @@
 package util;
 
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class PropertyUtil {
     public static int PENCENTAGE_OF_CONCERN = 20;
     public static int NUMBER_PRECISION = 2;
     public static boolean CALCULATION_COST = true;
-    public static boolean CALCULATION_FILE_TO_HUNK_COST = true;
+    public static boolean CALCULATION_FILE_TO_HUNK_COST = false;
     public static String CUR_DATABASE = "";
     public static String HUNK_TABLE_NAME = "metaHunk";
     public static String FOR_TWO_RANK = "For_Two_Rank";
@@ -19,8 +22,8 @@ public class PropertyUtil {
     public static String CUR_DETAIL_FILENAME = "";
     public static String CUR_COST_EFFECTIVE_RECORD = "";
     public static String CUR_COST_20PB_SK_ONE = "";
-    public static String LOC_FILE_PATH = "HunkLOCFiles";
-    public static String ARFF_PATH = "HunkArffs";
+    public static String LOC_FILE_PATH = "LOCFiles";
+    public static String ARFF_PATH = "Arffs_old_paper";
     public static String AVG_NAME = "Avg";
     public static String FILE_NAME_DELIMITER = "_";
     public static String FILE_PATH_DELIMITER = "/";
@@ -36,4 +39,9 @@ public class PropertyUtil {
             "Boost", "ROSBoost", "RUSBoost", "SmoteBoost"};
     public static boolean[] METHOD_USE_MAP = {false, false, false, false, false, false, true, false, false, false, false,
             false};
+    public static SQLConnection sqlL = null;
+    public static Statement stmt = null;
+    public static ResultSet resultSet = null;
+    public static double TOTAL_ACTUAL_HUNK_BUG_NUM = 0.0;
+    public static Map<List<Integer>, List<List<Integer>>> COMMITID_FILEID_CHANGEDLINE_ISBUGS = null;
 }
