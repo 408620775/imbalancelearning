@@ -1,11 +1,7 @@
 package evaluation;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +11,6 @@ import org.apache.log4j.Logger;
 import util.InstanceUtil;
 import util.PrintUtil;
 import util.PropertyUtil;
-import util.SQLConnection;
 import weka.classifiers.Evaluation;
 import weka.classifiers.evaluation.NominalPrediction;
 import weka.classifiers.evaluation.ThresholdCurve;
@@ -112,6 +107,7 @@ public abstract class MyEvaluation extends Evaluation {
         }
         if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST) {
             total_actual_bug_num = (int) PropertyUtil.TOTAL_ACTUAL_HUNK_BUG_NUM;
+            total_changedLine_num = PropertyUtil.TOTAL_CHANGED_HUNK_LINE_NUM;
         }
         Collections.sort(rankTable, (o1, o2) -> {
             if (o1.get(1).doubleValue() != o2.get(1).doubleValue()) {
@@ -152,7 +148,17 @@ public abstract class MyEvaluation extends Evaluation {
                     costEffectiveness[(int) upper] = findRatio;
                 }
             } else {
-                alreadyCheckLine += actual_predict_change.get(2);
+                if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST) {
+                    List<Integer> key = new ArrayList<>();
+                    key.add((int) actual_predict_change.get(3).doubleValue());
+                    key.add((int) actual_predict_change.get(4).doubleValue());
+                    List<List<Integer>> changedLine_isBugs = PropertyUtil.COMMITID_FILEID_CHANGEDLINE_ISBUGS.get(key);
+                    for (List<Integer> changedLine_isBug : changedLine_isBugs) {
+                        alreadyCheckLine += changedLine_isBug.get(0);
+                    }
+                } else {
+                    alreadyCheckLine += actual_predict_change.get(2);
+                }
             }
         }
 

@@ -10,7 +10,6 @@ import weka.core.AttributeStats;
 import weka.core.Instance;
 import weka.core.Instances;
 import classification.Classification;
-import weka.core.pmml.FieldMetaInfo;
 
 public class Start {
     private static Logger logger = Logger.getLogger(Start.class);
@@ -28,7 +27,7 @@ public class Start {
         logger.info("Arff Fold is :" + arffPath);
         logger.info("Calculate cost = " + calcuteCost);
         logger.info("Resample ratio = " + PropertyUtil.SAMPLE_RATIO);
-        logger.info("Calculate cost from file to hunk is :"+PropertyUtil.CALCULATION_FILE_TO_HUNK_COST);
+        logger.info("Calculate cost from file to hunk is :" + PropertyUtil.CALCULATION_FILE_TO_HUNK_COST);
         FileUtil.checkFolder();
         for (String base : baseLearners) {
             String output_file_name = PropertyUtil.RESULT_FOLDER_PATH + PropertyUtil.FILE_PATH_DELIMITER + base + "Result.csv";
@@ -75,6 +74,8 @@ public class Start {
                         PropertyUtil.sqlL = new SQLConnection(PropertyUtil.CUR_DATABASE);
                         PropertyUtil.stmt = PropertyUtil.sqlL.getStmt();
                         PropertyUtil.COMMITID_FILEID_CHANGEDLINE_ISBUGS = new LinkedHashMap<>();
+                        PropertyUtil.TOTAL_ACTUAL_HUNK_BUG_NUM = 0;
+                        PropertyUtil.TOTAL_CHANGED_HUNK_LINE_NUM = 0;
                     }
                     if (!initialInsLoc(ins_Loc, data, locFilePath, project)) {
                         return;
@@ -127,12 +128,15 @@ public class Start {
                     changedLine_isBug.add(PropertyUtil.resultSet.getInt(1));
                     changedLine_isBug.add(PropertyUtil.resultSet.getInt(2));
                     changedLine_isBugs.add(changedLine_isBug);
+                    PropertyUtil.TOTAL_CHANGED_HUNK_LINE_NUM += PropertyUtil.resultSet.getInt(1);
                 }
                 PropertyUtil.COMMITID_FILEID_CHANGEDLINE_ISBUGS.put(commitId_fileId, changedLine_isBugs);
             }
             changedLineList.add(tmp);
         }
         br.close();
+        logger.info("total_actual_bug_num =" + PropertyUtil.TOTAL_ACTUAL_HUNK_BUG_NUM);
+        logger.info("total_changedLine_num =" + PropertyUtil.TOTAL_CHANGED_HUNK_LINE_NUM);
         if (changedLineList.size() != data.numInstances()) {
             logger.error("Error! The number in LOC File is different with the number in Arff File!");
             return false;

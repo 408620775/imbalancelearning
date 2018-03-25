@@ -12,7 +12,7 @@ import weka.filters.supervised.instance.SMOTE;
 import weka.filters.supervised.instance.SpreadSubsample;
 
 import java.io.*;
-import java.util.Map;
+import java.util.*;
 
 public class DataProcessUtilTest {
 
@@ -74,7 +74,55 @@ public class DataProcessUtilTest {
         asTmp = tmpData.attributeStats(data.numAttributes() - 1);
         System.out.println(asTmp.nominalCounts[0] + "," + asTmp.nominalCounts[1]);
         Assert.assertEquals(asTmp.nominalCounts[1], bugNum);
-        Assert.assertEquals(asTmp.nominalCounts[0], bugNum*2);
+        Assert.assertEquals(asTmp.nominalCounts[0], bugNum * 2);
     }
 
+    @Test
+    public void testChangedLineBetweenFileAndHunk() throws IOException {
+        File hunkFile = new File("TestFolder/MyItextpdfHunkLOC");
+        File changeFile = new File("TestFolder/MyItextpdfLOC");
+        Map<List<Integer>, Integer> commitId_FileId_changedLine = new LinkedHashMap<>();
+        BufferedReader bReader = new BufferedReader(new FileReader(hunkFile));
+        String line;
+        while ((line = bReader.readLine()) != null) {
+            if (line.startsWith("commit")) {
+                continue;
+            }
+            String[] content = line.trim().split(",");
+            List<Integer> key = Arrays.asList(Integer.parseInt(content[0]), Integer.parseInt(content[1]));
+            if (commitId_FileId_changedLine.containsKey(key)) {
+                commitId_FileId_changedLine.put(key, commitId_FileId_changedLine.get(key) + Integer.parseInt(content[4]));
+            } else {
+                commitId_FileId_changedLine.put(key, Integer.parseInt(content[4]));
+            }
+        }
+        System.out.println(commitId_FileId_changedLine.size());
+        bReader.close();
+        Set<List<Integer>> change_commitId_FileId_key = new HashSet<>();
+        bReader = new BufferedReader(new FileReader(changeFile));
+        while ((line = bReader.readLine()) != null) {
+            if (line.startsWith("commit")) {
+                continue;
+            }
+            String[] content = line.trim().split(",");
+            List<Integer> key = Arrays.asList(Integer.parseInt(content[0]), Integer.parseInt(content[1]));
+            change_commitId_FileId_key.add(key);
+            if (commitId_FileId_changedLine.get(key)==null){
+                System.out.println(key+" null");
+                continue;
+            }
+            if (commitId_FileId_changedLine.get(key).intValue()!=Integer.parseInt(content[4])){
+                System.out.println(key);
+            }
+            double hunk_changed_line = 0;
+            for (List<Integer> commit_file : commitId_FileId_changedLine.keySet()) {
+                hunk_changed_line+=commitId_FileId_changedLine.get(commit_file);
+            }
+        }
+        for (List<Integer> key : commitId_FileId_changedLine.keySet()) {
+            if (!change_commitId_FileId_key.contains(key)){
+                System.out.println("Hunk contains key "+key+" but file level  don't contains.");
+            }
+        }
+    }
 }

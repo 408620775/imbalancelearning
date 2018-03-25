@@ -31,9 +31,9 @@ public class PropertyUtil {
     public static String[] BASE_LEARNERS = {"j48", "RF"};
     //public static String[] BASE_LEARNERS = {"naivebayes", "smo"};
     public static int SAMPLE_RATIO = 1;
-    public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
-            "MySynapse", "MyTomcat", "MyVoldemort"};
-
+    //public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
+           // "MySynapse", "MyTomcat", "MyVoldemort"};
+    public static String[] PROJECTS = {"MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat", "MyVoldemort"};
     //Be careful to change!
     public static final String[] METHOD_NAMES = {"Simple", "ROS", "RUS", "Smote", "Bag", "ROSBag", "RUSBag", "SmoteBag",
             "Boost", "ROSBoost", "RUSBoost", "SmoteBoost"};
@@ -43,5 +43,6 @@ public class PropertyUtil {
     public static Statement stmt = null;
     public static ResultSet resultSet = null;
     public static double TOTAL_ACTUAL_HUNK_BUG_NUM = 0.0;
+    public static int TOTAL_CHANGED_HUNK_LINE_NUM = 0;
     public static Map<List<Integer>, List<List<Integer>>> COMMITID_FILEID_CHANGEDLINE_ISBUGS = null;
 }
