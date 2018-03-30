@@ -22,8 +22,8 @@ public class PropertyUtil {
     public static String CUR_DETAIL_FILENAME = "";
     public static String CUR_COST_EFFECTIVE_RECORD = "";
     public static String CUR_COST_20PB_SK_ONE = "";
-    public static String LOC_FILE_PATH = "LOCFiles";
-    public static String ARFF_PATH = "Arffs_old_paper";
+    public static String LOC_FILE_PATH = "FileChange/LOCFiles";
+    public static String ARFF_PATH = "FileChange/Arffs_old_paper";
     public static String AVG_NAME = "Avg";
     public static String FILE_NAME_DELIMITER = "_";
     public static String FILE_PATH_DELIMITER = "/";
@@ -31,9 +31,9 @@ public class PropertyUtil {
     public static String[] BASE_LEARNERS = {"j48", "RF"};
     //public static String[] BASE_LEARNERS = {"naivebayes", "smo"};
     public static int SAMPLE_RATIO = 1;
-    //public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
-           // "MySynapse", "MyTomcat", "MyVoldemort"};
-    public static String[] PROJECTS = {"MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat", "MyVoldemort"};
+    public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
+    "MySynapse", "MyTomcat", "MyVoldemort"};
+    //public static String[] PROJECTS = {"MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat", "MyVoldemort"};
     //Be careful to change!
     public static final String[] METHOD_NAMES = {"Simple", "ROS", "RUS", "Smote", "Bag", "ROSBag", "RUSBag", "SmoteBag",
             "Boost", "ROSBoost", "RUSBoost", "SmoteBoost"};

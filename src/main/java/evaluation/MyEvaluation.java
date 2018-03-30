@@ -155,6 +155,13 @@ public abstract class MyEvaluation extends Evaluation {
                     List<List<Integer>> changedLine_isBugs = PropertyUtil.COMMITID_FILEID_CHANGEDLINE_ISBUGS.get(key);
                     for (List<Integer> changedLine_isBug : changedLine_isBugs) {
                         alreadyCheckLine += changedLine_isBug.get(0);
+                        if (changedLine_isBug.get(1) == 1) {
+                            alreadyFind += 1;
+                            findRatio = alreadyFind / total_actual_bug_num * 100;
+                            x = alreadyCheckLine / total_changedLine_num * 100;
+                            upper = Math.ceil(x);
+                            costEffectiveness[(int) upper] = findRatio;
+                        }
                     }
                 } else {
                     alreadyCheckLine += actual_predict_change.get(2);
