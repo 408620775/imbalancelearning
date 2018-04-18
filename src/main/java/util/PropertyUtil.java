@@ -36,9 +36,9 @@ public class PropertyUtil {
     //public static String[] PROJECTS = {"MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat", "MyVoldemort"};
     //Be careful to change!
     public static final String[] METHOD_NAMES = {"Simple", "ROS", "RUS", "Smote", "Bag", "ROSBag", "RUSBag", "SmoteBag",
-            "Boost", "ROSBoost", "RUSBoost", "SmoteBoost"};
+            "Boost", "ROSBoost", "RUSBoost", "SmoteBoost", "BagMax","ROSBagMax","RUSBagMax","SmoteBagMax"};
     public static boolean[] METHOD_USE_MAP = {false, false, false, false, false, false, true, false, false, false, false,
-            false};
+            false, false, false, false, false};
     public static SQLConnection sqlL = null;
     public static Statement stmt = null;
     public static ResultSet resultSet = null;

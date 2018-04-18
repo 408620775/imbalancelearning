@@ -1,40 +1,15 @@
 package Classifier;
 
-import java.util.Random;
-
 import resample.OverSubsample;
 import util.PropertyUtil;
-import weka.classifiers.Classifier;
-import weka.classifiers.meta.Bagging;
 import weka.core.Instances;
 import weka.core.Randomizable;
 import weka.core.Utils;
 import weka.filters.Filter;
 
-/*
- * This classifier extends Bagging, but rewrite the buildClassifier
- * methodName. It use oversample to create the trainind dataset for each base
- * classifier
- */
-public class OverBagging extends Bagging {
+import java.util.Random;
 
-    /**
-     * Stump methodName for building the classifiers.
-     *
-     * @param data
-     *            the training data to be used for generating the bagged
-     *            classifier.
-     * @exception Exception
-     *                if the classifier could not be built successfully
-     */
-    public void checkClassifier(Instances data) throws Exception {
-
-        if (m_Classifier == null) {
-            throw new Exception("A base classifier has not been specified!");
-        }
-        m_Classifiers = Classifier.makeCopies(m_Classifier, m_NumIterations);
-    }
-
+public class ROSBagMax extends BaggingMax{
 
     @Override
     public void buildClassifier(Instances data) throws Exception {
@@ -46,14 +21,14 @@ public class OverBagging extends Bagging {
         data = new Instances(data);
         data.deleteWithMissingClass();
 
-        checkClassifier(data);
+        super.buildClassifier(data);
 
         if (m_CalcOutOfBag && (m_BagSizePercent != 100)) {
             throw new IllegalArgumentException("Bag size needs to be 100% if "
                     + "out-of-bag error is to be calculated!");
         }
 
-        int bagSize = data.numInstances() * m_BagSizePercent / 100;
+        int bagSize = (int) (data.numInstances() * (m_BagSizePercent / 100.0));
         Random random = new Random(m_Seed);
 
         boolean[][] inBag = null;
@@ -69,15 +44,13 @@ public class OverBagging extends Bagging {
                 // bagData = resampleWithWeights(data, random, inBag[j]);
                 bagData = data.resampleWithWeights(random, inBag[j]);
             } else {
-                // bagData = data.rCopyOfUnderBaggingesampleWithWeights(random);
-                // rewrite the sampling methodName and use under sampling
                 Instances tempData = new Instances(data);
                 tempData.randomize(random);
                 OverSubsample oversample = new OverSubsample();
                 oversample.setInputFormat(tempData);
                 oversample.setDistributionSpread(PropertyUtil.SAMPLE_RATIO);// set the ratio of the
-                                                    // major class sample to the
-                                                    // minor class
+                // major class sample to the
+                // minor class
                 bagData = Filter.useFilter(tempData, oversample);
                 if (bagSize < data.numInstances()) {
                     bagData.randomize(random);
@@ -115,16 +88,14 @@ public class OverBagging extends Bagging {
                         continue;
 
                     voteCount++;
-                    // double pred =
-                    // m_Classifiers[j].classifyInstance(data.instance(i));
+                    // double pred = m_Classifiers[j].classifyInstance(data.instance(i));
                     if (numeric) {
                         // votes[0] += pred;
-                        votes[0] = m_Classifiers[j].classifyInstance(data
-                                .instance(i));
+                        votes[0] += m_Classifiers[j].classifyInstance(data.instance(i));
                     } else {
                         // votes[(int) pred]++;
-                        double[] newProbs = m_Classifiers[j]
-                                .distributionForInstance(data.instance(i));
+                        double[] newProbs = m_Classifiers[j].distributionForInstance(data
+                                .instance(i));
                         // average the probability estimates
                         for (int k = 0; k < newProbs.length; k++) {
                             votes[k] += newProbs[k];
@@ -149,8 +120,7 @@ public class OverBagging extends Bagging {
                 // error for instance
                 outOfBagCount += data.instance(i).weight();
                 if (numeric) {
-                    errorSum += StrictMath.abs(vote
-                            - data.instance(i).classValue())
+                    errorSum += StrictMath.abs(vote - data.instance(i).classValue())
                             * data.instance(i).weight();
                 } else {
                     if (vote != data.instance(i).classValue())
