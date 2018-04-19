@@ -40,14 +40,18 @@ public class DataProcessUtil {
                 saveFile.delete();
             }
             StringBuffer line = new StringBuffer();
-            for (String methodName : PropertyUtil.METHOD_NAMES) {
-                line.append(methodName + ",");
+            for (String[] methodNames : PropertyUtil.METHOD_NAMES) {
+                for (String methodName : methodNames) {
+                    line.append(methodName + ",");
+                }
             }
             PrintUtil.appendResult(line.toString(), saveFileName);
             for (String project : PropertyUtil.PROJECTS) {
                 line = new StringBuffer();
-                for (String methodName : PropertyUtil.METHOD_NAMES) {
-                    line.append(method_evaluation_project_rank.get(methodName).get(evaluationName).get(project) + ",");
+                for (String[] methodNames : PropertyUtil.METHOD_NAMES) {
+                    for (String methodName : methodNames) {
+                        line.append(method_evaluation_project_rank.get(methodName).get(evaluationName).get(project) + ",");
+                    }
                 }
                 PrintUtil.appendResult(line.toString(), saveFileName);
             }
@@ -65,20 +69,22 @@ public class DataProcessUtil {
         }
         line.append(AVERAGE_NAME);
         PrintUtil.appendResult(line.toString(), savePath);
-        for (String methodName : PropertyUtil.METHOD_NAMES) {
-            for (int i = 0; i < Classification.EVALUATION_NAMES.size(); i++) {
-                line = new StringBuffer();
-                if (i == 0) {
-                    line.append(methodName);
-                }
-                line.append("," + Classification.EVALUATION_NAMES.get(i));
-                for (String project : PropertyUtil.PROJECTS) {
+        for (String[] methodNames : PropertyUtil.METHOD_NAMES) {
+            for (String methodName : methodNames) {
+                for (int i = 0; i < Classification.EVALUATION_NAMES.size(); i++) {
+                    line = new StringBuffer();
+                    if (i == 0) {
+                        line.append(methodName);
+                    }
+                    line.append("," + Classification.EVALUATION_NAMES.get(i));
+                    for (String project : PropertyUtil.PROJECTS) {
+                        line.append("," + method_evaluation_project_rank.get(methodName).get(Classification.EVALUATION_NAMES
+                                .get(i)).get(project));
+                    }
                     line.append("," + method_evaluation_project_rank.get(methodName).get(Classification.EVALUATION_NAMES
-                            .get(i)).get(project));
+                            .get(i)).get(AVERAGE_NAME));
+                    PrintUtil.appendResult(line.toString(), savePath);
                 }
-                line.append("," + method_evaluation_project_rank.get(methodName).get(Classification.EVALUATION_NAMES
-                        .get(i)).get(AVERAGE_NAME));
-                PrintUtil.appendResult(line.toString(), savePath);
             }
         }
     }
@@ -104,13 +110,16 @@ public class DataProcessUtil {
                     for (int i = 0; i < PropertyUtil.METHOD_NAMES.length; i++) {
                         line = bReader.readLine();
                         for (int j = 0; j < PropertyUtil.METHOD_NAMES.length; j++) {
-                            if (!line.split(",")[0].replace("\"", "").equals(PropertyUtil.METHOD_NAMES[j])) {
-                                continue;
+                            for (int k = 0; k < PropertyUtil.METHOD_NAMES[0].length; k++) {
+                                if (!line.split(",")[0].replace("\"", "").equals(PropertyUtil.METHOD_NAMES[j][k])) {
+                                    continue;
+                                }
+                                methodName = PropertyUtil.METHOD_NAMES[j][k];
+                                rankValue = Double.parseDouble(line.split(",")[1]);
+                                method_evaluation_project_rank.get(methodName).get(evaluation).put(projectName, rankValue);
+                                break;
                             }
-                            methodName = PropertyUtil.METHOD_NAMES[j];
-                            rankValue = Double.parseDouble(line.split(",")[1]);
-                            method_evaluation_project_rank.get(methodName).get(evaluation).put(projectName, rankValue);
-                            break;
+
                         }
                     }
                     break;
@@ -124,30 +133,34 @@ public class DataProcessUtil {
 
     private static void AddAverageRankAccordProject(Map<String, Map<String, Map<String, Double>>>
                                                             method_evaluation_project_rank) {
-        for (String methodName : PropertyUtil.METHOD_NAMES) {
-            for (String evaluationName : Classification.EVALUATION_NAMES) {
-                double avgRank = 0.0;
-                int projectNum = 0;
-                Map<String, Double> project_rank = method_evaluation_project_rank.get(methodName).get(evaluationName);
-                for (String projectName : project_rank.keySet()) {
-                    avgRank += project_rank.get(projectName);
-                    projectNum++;
+        for (String[] methodNames : PropertyUtil.METHOD_NAMES) {
+            for (String methodName : methodNames) {
+                for (String evaluationName : Classification.EVALUATION_NAMES) {
+                    double avgRank = 0.0;
+                    int projectNum = 0;
+                    Map<String, Double> project_rank = method_evaluation_project_rank.get(methodName).get(evaluationName);
+                    for (String projectName : project_rank.keySet()) {
+                        avgRank += project_rank.get(projectName);
+                        projectNum++;
+                    }
+                    avgRank /= projectNum;
+                    method_evaluation_project_rank.get(methodName).get(evaluationName).put(AVERAGE_NAME, avgRank);
                 }
-                avgRank /= projectNum;
-                method_evaluation_project_rank.get(methodName).get(evaluationName).put(AVERAGE_NAME, avgRank);
             }
         }
     }
 
     private static Map<String, Map<String, Map<String, Double>>> initialPaperTableMap() {
         Map<String, Map<String, Map<String, Double>>> method_evaluation_project_rank = new LinkedHashMap<>();
-        for (String methodName : PropertyUtil.METHOD_NAMES) {
-            Map<String, Map<String, Double>> evaluation_project_rank = new LinkedHashMap<>();
-            for (String evaluationName : Classification.EVALUATION_NAMES) {
-                Map<String, Double> project_rank = new LinkedHashMap<>();
-                evaluation_project_rank.put(evaluationName, project_rank);
+        for (String[] methodNames : PropertyUtil.METHOD_NAMES) {
+            for (String methodName : methodNames) {
+                Map<String, Map<String, Double>> evaluation_project_rank = new LinkedHashMap<>();
+                for (String evaluationName : Classification.EVALUATION_NAMES) {
+                    Map<String, Double> project_rank = new LinkedHashMap<>();
+                    evaluation_project_rank.put(evaluationName, project_rank);
+                }
+                method_evaluation_project_rank.put(methodName, evaluation_project_rank);
             }
-            method_evaluation_project_rank.put(methodName, evaluation_project_rank);
         }
         return method_evaluation_project_rank;
     }
@@ -268,10 +281,12 @@ public class DataProcessUtil {
                 continue;
             }
             if (methodName.equals("")) {
-                for (String name : PropertyUtil.METHOD_NAMES) {
-                    if (line.substring(line.lastIndexOf(')') + 2).equals(name)) {
-                        methodName = name;
-                        break;
+                for (String[] names : PropertyUtil.METHOD_NAMES) {
+                    for (String name : names) {
+                        if (line.substring(line.lastIndexOf(')') + 2).equals(name)) {
+                            methodName = name;
+                            break;
+                        }
                     }
                 }
                 continue;
@@ -297,13 +312,15 @@ public class DataProcessUtil {
 
     private static void addAvgTime(Map<String, Map<String, Integer>> res) {
         res.put(PropertyUtil.AVG_NAME, new LinkedHashMap<>());
-        for (String methodName : PropertyUtil.METHOD_NAMES) {
-            long time = 0;
-            for (String project : PropertyUtil.PROJECTS) {
-                time += res.get(project).get(methodName);
+        for (String[] methodNames : PropertyUtil.METHOD_NAMES) {
+            for (String methodName : methodNames) {
+                long time = 0;
+                for (String project : PropertyUtil.PROJECTS) {
+                    time += res.get(project).get(methodName);
+                }
+                int avg = (int) (time / (long) PropertyUtil.PROJECTS.length);
+                res.get(PropertyUtil.AVG_NAME).put(methodName, avg);
             }
-            int avg = (int) (time / (long) PropertyUtil.PROJECTS.length);
-            res.get(PropertyUtil.AVG_NAME).put(methodName, avg);
         }
     }
 
@@ -345,13 +362,15 @@ public class DataProcessUtil {
     private static void AddAvgCost(Map<String, Map<String, Double>> project_method_cost) {
         project_method_cost.put(PropertyUtil.AVG_NAME, new LinkedHashMap<>());
         Map<String, Double> avg_map = project_method_cost.get(PropertyUtil.AVG_NAME);
-        for (String methodName : PropertyUtil.METHOD_NAMES) {
-            double value = 0.0;
-            for (String project : PropertyUtil.PROJECTS) {
-                value += project_method_cost.get(project).get(methodName);
+        for (String[] methodNames : PropertyUtil.METHOD_NAMES) {
+            for (String methodName : methodNames) {
+                double value = 0.0;
+                for (String project : PropertyUtil.PROJECTS) {
+                    value += project_method_cost.get(project).get(methodName);
+                }
+                value /= PropertyUtil.PROJECTS.length;
+                avg_map.put(methodName, PrintUtil.formatDouble(2, value));
             }
-            value /= PropertyUtil.PROJECTS.length;
-            avg_map.put(methodName, PrintUtil.formatDouble(2, value));
         }
     }
 
@@ -385,9 +404,11 @@ public class DataProcessUtil {
         }
         bReader.close();
         for (String evaluation : Classification.EVALUATION_NAMES) {
-            for (String method : PropertyUtil.METHOD_NAMES) {
-                double originValue = evaluation_method_value.get(evaluation).get(method);
-                evaluation_method_value.get(evaluation).put(method, PrintUtil.formatDouble(2, originValue / projectNum));
+            for (String[] methods : PropertyUtil.METHOD_NAMES) {
+                for (String method : methods) {
+                    double originValue = evaluation_method_value.get(evaluation).get(method);
+                    evaluation_method_value.get(evaluation).put(method, PrintUtil.formatDouble(2, originValue / projectNum));
+                }
             }
         }
         return evaluation_method_value;

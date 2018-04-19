@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import classification.baggingMax.BaggingMaxClassification;
-import classification.baggingMax.ResampleInBaggingMaxClassification;
+import classification.bagging.BaggingMaxClassification;
+import classification.bagging.ResampleInBaggingMaxClassification;
 import util.DataStorageUtil;
 import util.PrintUtil;
 import util.PropertyUtil;

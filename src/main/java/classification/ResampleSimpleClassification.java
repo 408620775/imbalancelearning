@@ -21,20 +21,20 @@ public class ResampleSimpleClassification extends BasicClassification {
     // get the classification result without bagging
     public String getClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
         String predictResult = "";
-        if (PropertyUtil.METHOD_USE_MAP[1]) {
+        if (PropertyUtil.METHOD_USE_MAP[0][1]) {
             predictResult += getOverClassificationResult(classifier, classifier_name, times);
         }
-        if (PropertyUtil.METHOD_USE_MAP[2]) {
+        if (PropertyUtil.METHOD_USE_MAP[0][2]) {
             predictResult += getUnderClassificationResult(classifier, classifier_name, times);
         }
-        if (PropertyUtil.METHOD_USE_MAP[3]) {
+        if (PropertyUtil.METHOD_USE_MAP[0][3]) {
             predictResult += getSmoteClassificationResult(classifier, classifier_name, times);
         }
         return predictResult;
     }
 
     private String getSmoteClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
-        String methodName = PropertyUtil.METHOD_NAMES[3];
+        String methodName = PropertyUtil.METHOD_NAMES[0][3];
         logger.info(methodName);
         validationResult = new double[4];
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
@@ -53,7 +53,7 @@ public class ResampleSimpleClassification extends BasicClassification {
     }
 
     private String getUnderClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
-        String methodName = PropertyUtil.METHOD_NAMES[2];
+        String methodName = PropertyUtil.METHOD_NAMES[0][2];
         logger.info(methodName);
         validationResult = new double[4];
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
@@ -72,7 +72,7 @@ public class ResampleSimpleClassification extends BasicClassification {
     }
 
     private String getOverClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
-        String methodName = PropertyUtil.METHOD_NAMES[1];
+        String methodName = PropertyUtil.METHOD_NAMES[0][1];
         logger.info(methodName);
         validationResult = new double[4];
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);

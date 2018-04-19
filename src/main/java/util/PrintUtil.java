@@ -107,13 +107,15 @@ public class PrintUtil {
         }
         write.append("," + PropertyUtil.AVG_NAME);
         write.append("\n");
-        for (String methodName : PropertyUtil.METHOD_NAMES) {
-            write.append(methodName + ",");
-            for (String project : PropertyUtil.PROJECTS) {
-                write.append(project_method_value.get(project).get(methodName) + ",");
+        for (String[] methodNames : PropertyUtil.METHOD_NAMES) {
+            for (String methodName : methodNames) {
+                write.append(methodName + ",");
+                for (String project : PropertyUtil.PROJECTS) {
+                    write.append(project_method_value.get(project).get(methodName) + ",");
+                }
+                write.append(project_method_value.get(PropertyUtil.AVG_NAME).get(methodName));
+                write.append("\n");
             }
-            write.append(project_method_value.get(PropertyUtil.AVG_NAME).get(methodName));
-            write.append("\n");
         }
         saveResult(write.toString(), saveFolderPath + "/" + Character.toUpperCase(baseLearn.charAt(0)) + typeString);
     }

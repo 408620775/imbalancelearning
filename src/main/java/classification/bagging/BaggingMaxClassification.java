@@ -1,4 +1,4 @@
-package classification.baggingMax;
+package classification.bagging;
 
 import classification.BasicClassification;
 import evaluation.MyEvaluation;
@@ -14,19 +14,18 @@ import java.util.Map;
 
 public class BaggingMaxClassification extends BasicClassification {
     public static Logger logger = Logger.getLogger(BaggingMaxClassification.class);
-    public static int methodIndex = 12;
 
     public BaggingMaxClassification(Instances data, Map<Instance, List<Integer>> ins_Loc) {
         super(data, ins_Loc);
     }
 
     public String getClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
-        if (!PropertyUtil.METHOD_USE_MAP[methodIndex]) {
+        if (!PropertyUtil.METHOD_USE_MAP[3][0]) {
             return "";
         }
         MaxBag bag_classifier = new MaxBag();
         bag_classifier.setClassifier(classifier);
-        String methodName = PropertyUtil.METHOD_NAMES[methodIndex];
+        String methodName = PropertyUtil.METHOD_NAMES[3][0];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);

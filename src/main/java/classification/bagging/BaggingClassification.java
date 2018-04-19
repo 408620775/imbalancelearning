@@ -23,12 +23,12 @@ public class BaggingClassification extends BasicClassification {
     }
 
     public String getClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
-        if (!PropertyUtil.METHOD_USE_MAP[4]) {
+        if (!PropertyUtil.METHOD_USE_MAP[1][0]) {
             return "";
         }
         Bagging bag_classifier = new Bagging();
         bag_classifier.setClassifier(classifier);
-        String methodName = PropertyUtil.METHOD_NAMES[4];
+        String methodName = PropertyUtil.METHOD_NAMES[1][0];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);

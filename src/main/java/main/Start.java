@@ -25,7 +25,7 @@ public class Start {
         PropertyUtil.CALCULATION_COST = calcuteCost;
         PropertyUtil.CALCULATION_FILE_TO_HUNK_COST = false;
         logger.info("Arff Fold is :" + arffPath);
-        logger.info("LOC Fold is :"+locFilePath);
+        logger.info("LOC Fold is :" + locFilePath);
         logger.info("Calculate cost = " + calcuteCost);
         logger.info("Resample ratio = " + PropertyUtil.SAMPLE_RATIO);
         logger.info("Calculate cost from file to hunk is :" + PropertyUtil.CALCULATION_FILE_TO_HUNK_COST);
@@ -83,9 +83,11 @@ public class Start {
                     }
                     DataStorageUtil.method_cost20pbs_skOne_basedOnProject = new LinkedHashMap<>();
                     for (int j = 0; j < PropertyUtil.METHOD_USE_MAP.length; j++) {
-                        if (PropertyUtil.METHOD_USE_MAP[j]) {
-                            DataStorageUtil.method_cost20pbs_skOne_basedOnProject.put(PropertyUtil.METHOD_NAMES[j],
-                                    new ArrayList<>());
+                        for (int k = 0; k < PropertyUtil.METHOD_USE_MAP[0].length; k++) {
+                            if (PropertyUtil.METHOD_USE_MAP[j][k]) {
+                                DataStorageUtil.method_cost20pbs_skOne_basedOnProject.put(PropertyUtil.METHOD_NAMES[j][k],
+                                        new ArrayList<>());
+                            }
                         }
                     }
                 }
@@ -136,7 +138,7 @@ public class Start {
             changedLineList.add(tmp);
         }
         br.close();
-        if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST){
+        if (PropertyUtil.CALCULATION_FILE_TO_HUNK_COST) {
             logger.info("total_actual_bug_num =" + PropertyUtil.TOTAL_ACTUAL_HUNK_BUG_NUM);
             logger.info("total_changedLine_num =" + PropertyUtil.TOTAL_CHANGED_HUNK_LINE_NUM);
         }

@@ -23,12 +23,12 @@ public class BoostingClassification extends BasicClassification {
 
     public String getClassificationResult(Classifier classifier,
                                           String classifier_name, int times) throws Exception {
-        if (!PropertyUtil.METHOD_USE_MAP[8]) {
+        if (!PropertyUtil.METHOD_USE_MAP[2][0]) {
             return "";
         }
         AdaBoostM1 boost_classifier = new AdaBoostM1();
         boost_classifier.setClassifier(classifier);
-        String methodName = PropertyUtil.METHOD_NAMES[8];
+        String methodName = PropertyUtil.METHOD_NAMES[2][0];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);

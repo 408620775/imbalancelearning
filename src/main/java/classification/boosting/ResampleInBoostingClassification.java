@@ -27,13 +27,13 @@ public class ResampleInBoostingClassification extends BasicClassification {
     public String getClassificationResult(Classifier classifier,
                                           String classifier_name, int times) throws Exception {
         String predictResult = "";
-        if (PropertyUtil.METHOD_USE_MAP[9]) {
+        if (PropertyUtil.METHOD_USE_MAP[2][1]) {
             predictResult = getOverBoostClassificationResult(classifier, classifier_name, times);
         }
-        if (PropertyUtil.METHOD_USE_MAP[10]) {
+        if (PropertyUtil.METHOD_USE_MAP[2][2]) {
             predictResult += getUnderBoostClassificationResult(classifier, classifier_name, times);
         }
-        if (PropertyUtil.METHOD_USE_MAP[11]) {
+        if (PropertyUtil.METHOD_USE_MAP[2][3]) {
             predictResult += getSmoteBoostClassificationResult(classifier, classifier_name, times);
         }
         return predictResult;
@@ -44,7 +44,7 @@ public class ResampleInBoostingClassification extends BasicClassification {
         SmoteBoosting boost_classifier = new SmoteBoosting();
         boost_classifier.setClassifier(classifier);
         boost_classifier.setUseResampling(true);
-        String methodName = PropertyUtil.METHOD_NAMES[11];
+        String methodName = PropertyUtil.METHOD_NAMES[2][3];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
@@ -66,7 +66,7 @@ public class ResampleInBoostingClassification extends BasicClassification {
     public String getUnderBoostClassificationResult(Classifier classifier,
                                                     String classifier_name, int times) throws Exception {
         UnderBoosting boost_classifier = new UnderBoosting();
-        String methodName = PropertyUtil.METHOD_NAMES[10];
+        String methodName = PropertyUtil.METHOD_NAMES[2][2];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
@@ -90,7 +90,7 @@ public class ResampleInBoostingClassification extends BasicClassification {
     private String getOverBoostClassificationResult(Classifier classifier,
                                                     String classifier_name, int times) throws Exception {
         OverBoosting boost_classifier = new OverBoosting();
-        String methodName = PropertyUtil.METHOD_NAMES[9];
+        String methodName = PropertyUtil.METHOD_NAMES[2][1];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);

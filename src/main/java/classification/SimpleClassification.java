@@ -21,10 +21,10 @@ public class SimpleClassification extends BasicClassification {
 
     public String getClassificationResult(Classifier classifier,
                                           String classifier_name, int times) throws Exception {
-        if (!PropertyUtil.METHOD_USE_MAP[0]) {
+        if (!PropertyUtil.METHOD_USE_MAP[0][0]) {
             return "";
         }
-        String methodName = PropertyUtil.METHOD_NAMES[0];
+        String methodName = PropertyUtil.METHOD_NAMES[0][0];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);

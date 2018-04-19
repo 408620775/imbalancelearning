@@ -32,13 +32,19 @@ public class PropertyUtil {
     //public static String[] BASE_LEARNERS = {"naivebayes", "smo"};
     public static int SAMPLE_RATIO = 1;
     public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
-    "MySynapse", "MyTomcat", "MyVoldemort"};
+            "MySynapse", "MyTomcat", "MyVoldemort"};
     //public static String[] PROJECTS = {"MyItextpdf", "MyJedit", "MyLucene", "MySynapse", "MyTomcat", "MyVoldemort"};
     //Be careful to change!
-    public static final String[] METHOD_NAMES = {"Simple", "ROS", "RUS", "Smote", "Bag", "ROSBag", "RUSBag", "SmoteBag",
-            "Boost", "ROSBoost", "RUSBoost", "SmoteBoost", "BagMax","ROSMaxBag","RUSMaxBag","SmoteMaxBag"};
-    public static boolean[] METHOD_USE_MAP = {false, false, false, false, false, false, false, false, false, false, false,
-            false, false, false, true, false};
+    public static final String[][] METHOD_NAMES = {{"Simple", "ROS", "RUS", "Smote"},
+            {"Bag", "ROSBag", "RUSBag", "SmoteBag"},
+            {"Boost", "ROSBoost", "RUSBoost", "SmoteBoost"},
+            {"MaxBag", "ROSMaxBag", "RUSMaxBag", "SmoteMaxBag"},
+            {"VoteBag", "ROSVoteBag", "RUSVoteBag", "SmoteVoteBag"}};
+    public static boolean[][] METHOD_USE_MAP = {{false, false, false, false},
+            {false, false, false, false},
+            {false, false, false, false},
+            {false, false, true, false},
+            {false, false, false, false}};
     public static SQLConnection sqlL = null;
     public static Statement stmt = null;
     public static ResultSet resultSet = null;

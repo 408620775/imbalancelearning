@@ -26,13 +26,13 @@ public class ResampleInBaggingClassification extends BasicClassification {
 
     public String getClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
         String predictResult = "";
-        if (PropertyUtil.METHOD_USE_MAP[5]) {
+        if (PropertyUtil.METHOD_USE_MAP[1][1]) {
             predictResult += getOverBagClassificationResult(classifier, classifier_name, times);
         }
-        if (PropertyUtil.METHOD_USE_MAP[6]) {
+        if (PropertyUtil.METHOD_USE_MAP[1][2]) {
             predictResult += getUnderBagClassificationResult(classifier, classifier_name, times);
         }
-        if (PropertyUtil.METHOD_USE_MAP[7]) {
+        if (PropertyUtil.METHOD_USE_MAP[1][3]) {
             predictResult += getSmoteBagClassificationResult(classifier, classifier_name, times);
         }
         return predictResult;
@@ -42,7 +42,7 @@ public class ResampleInBaggingClassification extends BasicClassification {
                                                   String classifier_name, int times) throws Exception {
         SmoteBagging bag_classifier = new SmoteBagging();
         bag_classifier.setClassifier(classifier);
-        String methodName = PropertyUtil.METHOD_NAMES[7];
+        String methodName = PropertyUtil.METHOD_NAMES[1][3];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
@@ -64,7 +64,7 @@ public class ResampleInBaggingClassification extends BasicClassification {
                                                   String classifier_name, int times) throws Exception {
         UnderBagging bag_classifier = new UnderBagging();
         bag_classifier.setClassifier(classifier);
-        String methodName = PropertyUtil.METHOD_NAMES[6];
+        String methodName = PropertyUtil.METHOD_NAMES[1][2];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
@@ -88,7 +88,7 @@ public class ResampleInBaggingClassification extends BasicClassification {
                                                   String classifier_name, int times) throws Exception {
         OverBagging bag_classifier = new OverBagging();
         bag_classifier.setClassifier(classifier);
-        String methodName = PropertyUtil.METHOD_NAMES[5];
+        String methodName = PropertyUtil.METHOD_NAMES[1][1];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
