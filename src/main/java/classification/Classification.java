@@ -4,8 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import classification.bagging.BaggingMaxClassification;
-import classification.bagging.ResampleInBaggingMaxClassification;
+import classification.bagging.*;
 import util.DataStorageUtil;
 import util.PrintUtil;
 import util.PropertyUtil;
@@ -19,8 +18,6 @@ import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
 import weka.core.Instances;
-import classification.bagging.BaggingClassification;
-import classification.bagging.ResampleInBaggingClassification;
 import classification.boosting.BoostingClassification;
 import classification.boosting.ResampleInBoostingClassification;
 
@@ -91,12 +88,17 @@ public class Classification {
         use_classification = new ResampleInBoostingClassification(data, ins_Loc);
         predict_result += use_classification.classify(times, classifier, classifier_name);
 
-        use_classification = new BaggingMaxClassification(data,ins_Loc);
-        predict_result +=use_classification.classify(times, classifier, classifier_name);
+        use_classification = new BaggingMaxClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
 
-        use_classification = new ResampleInBaggingMaxClassification(data,ins_Loc);
-        predict_result += use_classification.classify(times,classifier,classifier_name);
+        use_classification = new ResampleInBaggingMaxClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
 
+        use_classification = new BaggingVoteClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
+
+        use_classification = new ResampleInBaggingVoteClassification(data, ins_Loc);
+        predict_result += use_classification.classify(times, classifier, classifier_name);
         PrintUtil.printSKOneMap(DataStorageUtil.method_cost20pbs_skOne_basedOnProject, PropertyUtil
                 .CUR_COST_20PB_SK_ONE, 2);
         return predict_result;

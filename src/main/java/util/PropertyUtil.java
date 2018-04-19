@@ -28,7 +28,7 @@ public class PropertyUtil {
     public static String FILE_NAME_DELIMITER = "_";
     public static String FILE_PATH_DELIMITER = "/";
     public static String[] indicators = {"recall-1", "precision-1", "fMeasure-1", "auc"};
-    public static String[] BASE_LEARNERS = {"j48", "RF", "naivebayes", "smo"};
+    public static String[] BASE_LEARNERS = {"j48", "RF"};
     //public static String[] BASE_LEARNERS = {"naivebayes", "smo"};
     public static int SAMPLE_RATIO = 1;
     public static String[] PROJECTS = {"MyAnt", "MyBuck", "MyFlink", "MyHadoop", "MyItextpdf", "MyJedit", "MyLucene",
@@ -44,7 +44,7 @@ public class PropertyUtil {
             {false, false, false, false},
             {false, false, false, false},
             {false, false, true, false},
-            {false, false, false, false}};
+            {false, false, true, false}};
     public static SQLConnection sqlL = null;
     public static Statement stmt = null;
     public static ResultSet resultSet = null;

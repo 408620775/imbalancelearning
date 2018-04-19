@@ -1,6 +1,7 @@
 package classification.bagging;
 
 import bagging.ROSMaxBag;
+import bagging.RUSMaxBag;
 import bagging.SmoteMaxBag;
 import classification.BasicClassification;
 import evaluation.MyEvaluation;
@@ -14,34 +15,32 @@ import weka.core.Instances;
 import java.util.List;
 import java.util.Map;
 
-import bagging.RUSMaxBag;
+public class ResampleInBaggingVoteClassification extends BasicClassification {
+    public static Logger logger = Logger.getLogger(ResampleInBaggingVoteClassification.class);
 
-public class ResampleInBaggingMaxClassification extends BasicClassification {
-    public static Logger logger = Logger.getLogger(ResampleInBaggingMaxClassification.class);
-
-    public ResampleInBaggingMaxClassification(Instances data, Map<Instance, List<Integer>> ins_Loc) {
+    public ResampleInBaggingVoteClassification(Instances data, Map<Instance, List<Integer>> ins_Loc) {
         super(data, ins_Loc);
     }
 
     public String getClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
         String predictResult = "";
-        if (PropertyUtil.METHOD_USE_MAP[3][1]) {
-            predictResult += getROSMaxBagClassificationResult(classifier, classifier_name, times);
+        if (PropertyUtil.METHOD_USE_MAP[4][1]) {
+            predictResult += getROSVoteBagClassificationResult(classifier, classifier_name, times);
         }
-        if (PropertyUtil.METHOD_USE_MAP[3][2]) {
-            predictResult += getRUSMaxBagClassificationResult(classifier, classifier_name, times);
+        if (PropertyUtil.METHOD_USE_MAP[4][2]) {
+            predictResult += getRUSVoteBagClassificationResult(classifier, classifier_name, times);
         }
-        if (PropertyUtil.METHOD_USE_MAP[3][3]) {
-            predictResult += getSmoteMaxBagClassificationResult(classifier, classifier_name, times);
+        if (PropertyUtil.METHOD_USE_MAP[4][3]) {
+            predictResult += getSmoteVoteBagClassificationResult(classifier, classifier_name, times);
         }
         return predictResult;
     }
 
-    public String getSmoteMaxBagClassificationResult(Classifier classifier,
-                                                  String classifier_name, int times) throws Exception {
+    public String getSmoteVoteBagClassificationResult(Classifier classifier,
+                                                     String classifier_name, int times) throws Exception {
         SmoteMaxBag bag_classifier = new SmoteMaxBag();
         bag_classifier.setClassifier(classifier);
-        String methodName = PropertyUtil.METHOD_NAMES[3][3];
+        String methodName = PropertyUtil.METHOD_NAMES[4][3];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
@@ -59,11 +58,11 @@ public class ResampleInBaggingMaxClassification extends BasicClassification {
         return getResult("," + methodName, classifier_name, validationResult, times);
     }
 
-    public String getRUSMaxBagClassificationResult(Classifier classifier,
-                                                  String classifier_name, int times) throws Exception {
+    public String getRUSVoteBagClassificationResult(Classifier classifier,
+                                                   String classifier_name, int times) throws Exception {
         RUSMaxBag bag_classifier = new RUSMaxBag();
         bag_classifier.setClassifier(classifier);
-        String methodName = PropertyUtil.METHOD_NAMES[3][2];
+        String methodName = PropertyUtil.METHOD_NAMES[4][2];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
@@ -83,11 +82,11 @@ public class ResampleInBaggingMaxClassification extends BasicClassification {
     }
 
 
-    private String getROSMaxBagClassificationResult(Classifier classifier,
-                                                  String classifier_name, int times) throws Exception {
+    private String getROSVoteBagClassificationResult(Classifier classifier,
+                                                    String classifier_name, int times) throws Exception {
         ROSMaxBag bag_classifier = new ROSMaxBag();
         bag_classifier.setClassifier(classifier);
-        String methodName = PropertyUtil.METHOD_NAMES[3][1];
+        String methodName = PropertyUtil.METHOD_NAMES[4][1];
         logger.info(methodName);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_DETAIL_FILENAME);
         PrintUtil.appendResult(methodName, PropertyUtil.CUR_COST_EFFECTIVE_RECORD);
