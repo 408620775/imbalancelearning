@@ -1,8 +1,6 @@
 package classification.bagging;
 
-import bagging.ROSMaxBag;
-import bagging.RUSMaxBag;
-import bagging.SmoteMaxBag;
+import bagging.*;
 import classification.BasicClassification;
 import evaluation.MyEvaluation;
 import org.apache.log4j.Logger;
@@ -38,7 +36,7 @@ public class ResampleInBaggingVoteClassification extends BasicClassification {
 
     public String getSmoteVoteBagClassificationResult(Classifier classifier,
                                                      String classifier_name, int times) throws Exception {
-        SmoteMaxBag bag_classifier = new SmoteMaxBag();
+        SmoteVoteBag bag_classifier = new SmoteVoteBag();
         bag_classifier.setClassifier(classifier);
         String methodName = PropertyUtil.METHOD_NAMES[4][3];
         logger.info(methodName);
@@ -60,7 +58,7 @@ public class ResampleInBaggingVoteClassification extends BasicClassification {
 
     public String getRUSVoteBagClassificationResult(Classifier classifier,
                                                    String classifier_name, int times) throws Exception {
-        RUSMaxBag bag_classifier = new RUSMaxBag();
+        RUSVoteBag bag_classifier = new RUSVoteBag();
         bag_classifier.setClassifier(classifier);
         String methodName = PropertyUtil.METHOD_NAMES[4][2];
         logger.info(methodName);
@@ -84,7 +82,7 @@ public class ResampleInBaggingVoteClassification extends BasicClassification {
 
     private String getROSVoteBagClassificationResult(Classifier classifier,
                                                     String classifier_name, int times) throws Exception {
-        ROSMaxBag bag_classifier = new ROSMaxBag();
+        ROSVoteBag bag_classifier = new ROSVoteBag();
         bag_classifier.setClassifier(classifier);
         String methodName = PropertyUtil.METHOD_NAMES[4][1];
         logger.info(methodName);
