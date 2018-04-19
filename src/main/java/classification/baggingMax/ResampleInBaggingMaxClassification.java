@@ -1,7 +1,8 @@
 package classification.baggingMax;
 
+import bagging.ROSMaxBag;
+import bagging.SmoteMaxBag;
 import classification.BasicClassification;
-import classification.ResampleSimpleClassification;
 import evaluation.MyEvaluation;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
@@ -12,9 +13,8 @@ import weka.core.Instances;
 
 import java.util.List;
 import java.util.Map;
-import Classifier.SmoteBagMax;
-import Classifier.ROSBagMax;
-import Classifier.RUSBagMax;
+
+import bagging.RUSMaxBag;
 
 public class ResampleInBaggingMaxClassification extends BasicClassification {
     public static Logger logger = Logger.getLogger(ResampleInBaggingMaxClassification.class);
@@ -23,9 +23,23 @@ public class ResampleInBaggingMaxClassification extends BasicClassification {
         super(data, ins_Loc);
     }
 
+    public String getClassificationResult(Classifier classifier, String classifier_name, int times) throws Exception {
+        String predictResult = "";
+        if (PropertyUtil.METHOD_USE_MAP[13]) {
+            predictResult += getOverBagClassificationResult(classifier, classifier_name, times);
+        }
+        if (PropertyUtil.METHOD_USE_MAP[14]) {
+            predictResult += getUnderBagClassificationResult(classifier, classifier_name, times);
+        }
+        if (PropertyUtil.METHOD_USE_MAP[15]) {
+            predictResult += getSmoteBagClassificationResult(classifier, classifier_name, times);
+        }
+        return predictResult;
+    }
+
     public String getSmoteBagClassificationResult(Classifier classifier,
                                                   String classifier_name, int times) throws Exception {
-        SmoteBagMax bag_classifier = new SmoteBagMax();
+        SmoteMaxBag bag_classifier = new SmoteMaxBag();
         bag_classifier.setClassifier(classifier);
         String methodName = PropertyUtil.METHOD_NAMES[15];
         logger.info(methodName);
@@ -47,7 +61,7 @@ public class ResampleInBaggingMaxClassification extends BasicClassification {
 
     public String getUnderBagClassificationResult(Classifier classifier,
                                                   String classifier_name, int times) throws Exception {
-        RUSBagMax bag_classifier = new RUSBagMax();
+        RUSMaxBag bag_classifier = new RUSMaxBag();
         bag_classifier.setClassifier(classifier);
         String methodName = PropertyUtil.METHOD_NAMES[14];
         logger.info(methodName);
@@ -71,7 +85,7 @@ public class ResampleInBaggingMaxClassification extends BasicClassification {
 
     private String getOverBagClassificationResult(Classifier classifier,
                                                   String classifier_name, int times) throws Exception {
-        ROSBagMax bag_classifier = new ROSBagMax();
+        ROSMaxBag bag_classifier = new ROSMaxBag();
         bag_classifier.setClassifier(classifier);
         String methodName = PropertyUtil.METHOD_NAMES[13];
         logger.info(methodName);

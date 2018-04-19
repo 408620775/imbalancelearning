@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import classification.baggingMax.BaggingMaxClassification;
+import classification.baggingMax.ResampleInBaggingMaxClassification;
 import util.DataStorageUtil;
 import util.PrintUtil;
 import util.PropertyUtil;
@@ -88,6 +90,12 @@ public class Classification {
 
         use_classification = new ResampleInBoostingClassification(data, ins_Loc);
         predict_result += use_classification.classify(times, classifier, classifier_name);
+
+        use_classification = new BaggingMaxClassification(data,ins_Loc);
+        predict_result +=use_classification.classify(times, classifier, classifier_name);
+
+        use_classification = new ResampleInBaggingMaxClassification(data,ins_Loc);
+        predict_result += use_classification.classify(times,classifier,classifier_name);
 
         PrintUtil.printSKOneMap(DataStorageUtil.method_cost20pbs_skOne_basedOnProject, PropertyUtil
                 .CUR_COST_20PB_SK_ONE, 2);

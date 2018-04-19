@@ -1,17 +1,30 @@
-package Classifier;
+package bagging;
 
+import bagging.MaxBag;
+import resample.OverSubsample;
 import util.PropertyUtil;
+import weka.classifiers.Classifier;
+import weka.classifiers.trees.REPTree;
 import weka.core.Instances;
 import weka.core.Randomizable;
 import weka.core.Utils;
 import weka.filters.Filter;
-import weka.filters.supervised.instance.Resample;
-import weka.filters.supervised.instance.SpreadSubsample;
 
 import java.util.Random;
 
-public class RUSBagMax extends BaggingMax{
-    @Override
+public class ROSMaxBag extends MaxBag {
+
+    public ROSMaxBag(){
+        this.m_Classifier = new REPTree();
+    }
+
+    public void checkClassifier(Instances data) throws Exception {
+        if (m_Classifier == null) {
+            throw new Exception("A base classifier has not been specified!");
+        }
+        m_Classifiers = Classifier.makeCopies(m_Classifier, m_NumIterations);
+    }
+
     public void buildClassifier(Instances data) throws Exception {
 
         // can classifier handle the data?
@@ -21,14 +34,14 @@ public class RUSBagMax extends BaggingMax{
         data = new Instances(data);
         data.deleteWithMissingClass();
 
-        super.buildClassifier(data);
+        checkClassifier(data);
 
         if (m_CalcOutOfBag && (m_BagSizePercent != 100)) {
             throw new IllegalArgumentException("Bag size needs to be 100% if "
                     + "out-of-bag error is to be calculated!");
         }
 
-        int bagSize = (int) (data.numInstances() * (m_BagSizePercent / 100.0));
+        int bagSize = data.numInstances() * m_BagSizePercent / 100;
         Random random = new Random(m_Seed);
 
         boolean[][] inBag = null;
@@ -37,21 +50,19 @@ public class RUSBagMax extends BaggingMax{
 
         for (int j = 0; j < m_Classifiers.length; j++) {
             Instances bagData = null;
-
-            // create the in-bag dataset
             if (m_CalcOutOfBag) {
                 inBag[j] = new boolean[data.numInstances()];
                 // bagData = resampleWithWeights(data, random, inBag[j]);
                 bagData = data.resampleWithWeights(random, inBag[j]);
             } else {
+                // bagData = data.rCopyOfUnderBaggingesampleWithWeights(random);
+                // rewrite the sampling methodName and use under sampling
                 Instances tempData = new Instances(data);
                 tempData.randomize(random);
-                Resample resample = new Resample();
-
-                SpreadSubsample undersample = new SpreadSubsample();
-                undersample.setInputFormat(tempData);
-                undersample.setDistributionSpread(PropertyUtil.SAMPLE_RATIO);//set the ratio of the major class
-                bagData = Filter.useFilter(tempData, undersample);
+                OverSubsample oversample = new OverSubsample();
+                oversample.setInputFormat(tempData);
+                oversample.setDistributionSpread(PropertyUtil.SAMPLE_RATIO);
+                bagData = Filter.useFilter(tempData, oversample);
                 if (bagSize < data.numInstances()) {
                     bagData.randomize(random);
                     Instances newBagData = new Instances(bagData, 0, bagSize);
@@ -88,14 +99,16 @@ public class RUSBagMax extends BaggingMax{
                         continue;
 
                     voteCount++;
-                    // double pred = m_Classifiers[j].classifyInstance(data.instance(i));
+                    // double pred =
+                    // m_Classifiers[j].classifyInstance(data.instance(i));
                     if (numeric) {
                         // votes[0] += pred;
-                        votes[0] += m_Classifiers[j].classifyInstance(data.instance(i));
+                        votes[0] = m_Classifiers[j].classifyInstance(data
+                                .instance(i));
                     } else {
                         // votes[(int) pred]++;
-                        double[] newProbs = m_Classifiers[j].distributionForInstance(data
-                                .instance(i));
+                        double[] newProbs = m_Classifiers[j]
+                                .distributionForInstance(data.instance(i));
                         // average the probability estimates
                         for (int k = 0; k < newProbs.length; k++) {
                             votes[k] += newProbs[k];
@@ -120,7 +133,8 @@ public class RUSBagMax extends BaggingMax{
                 // error for instance
                 outOfBagCount += data.instance(i).weight();
                 if (numeric) {
-                    errorSum += StrictMath.abs(vote - data.instance(i).classValue())
+                    errorSum += StrictMath.abs(vote
+                            - data.instance(i).classValue())
                             * data.instance(i).weight();
                 } else {
                     if (vote != data.instance(i).classValue())

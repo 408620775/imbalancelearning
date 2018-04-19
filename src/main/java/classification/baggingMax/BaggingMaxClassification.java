@@ -1,16 +1,14 @@
 package classification.baggingMax;
 
 import classification.BasicClassification;
-import classification.bagging.BaggingClassification;
 import evaluation.MyEvaluation;
 import org.apache.log4j.Logger;
 import util.PrintUtil;
 import util.PropertyUtil;
 import weka.classifiers.Classifier;
-import weka.classifiers.meta.Bagging;
 import weka.core.Instance;
 import weka.core.Instances;
-import Classifier.BaggingMax;
+import bagging.MaxBag;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +24,7 @@ public class BaggingMaxClassification extends BasicClassification {
         if (!PropertyUtil.METHOD_USE_MAP[methodIndex]) {
             return "";
         }
-        BaggingMax bag_classifier = new BaggingMax();
+        MaxBag bag_classifier = new MaxBag();
         bag_classifier.setClassifier(classifier);
         String methodName = PropertyUtil.METHOD_NAMES[methodIndex];
         logger.info(methodName);
