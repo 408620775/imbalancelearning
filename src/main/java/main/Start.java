@@ -15,8 +15,16 @@ public class Start {
     private static Logger logger = Logger.getLogger(Start.class);
 
     public static void main(String argv[]) throws Exception {
-        getClassificationResult(PropertyUtil.LOC_FILE_PATH, PropertyUtil.ARFF_PATH, PropertyUtil.PROJECTS, PropertyUtil
-                .BASE_LEARNERS, 100, true);
+//        getClassificationResult(PropertyUtil.LOC_FILE_PATH, PropertyUtil.ARFF_PATH, PropertyUtil.PROJECTS, PropertyUtil
+//                .BASE_LEARNERS, 100, true);
+        String[] methodName = {"RUSBag","RUSMaxBag","RUSVoteBag"};
+        List<String> list = new ArrayList<>();
+        list.add("R1");
+        list.add("P1");
+        list.add("F1");
+        list.add("AUC");
+        DataProcessUtil.covertAllDetailFileToSK_ESDFile("interest/DetailFiles","SK_ESD",1000,methodName,list);
+
     }
 
     private static void getClassificationResult(String locFilePath, String arffPath, String[] projects,

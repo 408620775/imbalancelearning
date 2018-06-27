@@ -41,7 +41,7 @@ public class PropertyUtil {
             {"MaxBag", "ROSMaxBag", "RUSMaxBag", "SmoteMaxBag"},
             {"VoteBag", "ROSVoteBag", "RUSVoteBag", "SmoteVoteBag"}};
     public static boolean[][] METHOD_USE_MAP = {{false, false, false, false},
-            {false, false, false, false},
+            {false, false, true, false},
             {false, false, false, false},
             {false, false, true, false},
             {false, false, true, false}};
